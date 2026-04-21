@@ -79,10 +79,11 @@ a h2, a h3, a h4,
     font-size: inherit !important;
 }
 
-/* span[data-as=p] 본문 단락 간격 — 본문 흐름에서만 적용 */
+/* span[data-as=p] 본문 단락 간격 — 본문 흐름에서만 적용
+   !important 없음: 아래 리셋(!important)이 컴포넌트 내부를 확실히 이기도록 */
 #content-area div.mdx-content .prose > span[data-as=p],
 #content-area div.mdx-content.prose > span[data-as=p] {
-    margin-bottom: 1.5em !important;
+    margin-bottom: 1.5em;
 }
 /* 컴포넌트 내부 span은 전부 마진 리셋 (Card, 콜아웃, Tab, Step, Accordion, 링크) */
 a span[data-as=p],
