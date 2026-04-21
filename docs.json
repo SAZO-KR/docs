@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "maple",
   "name": "SAZO Design System",
   "colors": {
     "primary": "#EB4666",
     "light": "#EB4666",
-    "dark": "#EB4666"
+    "dark": "#222222"
   },
   "favicon": "/favicon.svg",
   "fonts": {
