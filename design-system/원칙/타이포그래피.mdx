@@ -50,13 +50,18 @@ Primitive는 세 가지 축으로 구성된다:
 - **fontWeight** : normal(400), medium(500), semibold(600), bold(700)의 4-weight 체계.
 
 ### 네이밍 규칙
-```
-CSS 변수:    --type-{category}-{variant}-{property}
-Tailwind:    text-{category}-{variant}
+**네이밍 패턴**:
 
---type-title-section-lg-size    ← CSS 변수 (size/line-height/weight 개별)
-text-title-section-lg           ← Tailwind 유틸리티 (3속성 복합)
-```
+| 유형 | 패턴 | 비고 |
+|------|------|------|
+| CSS 변수 | `--type-{category}-{variant}-{property}` | size / line-height / weight 개별 |
+| Tailwind 유틸리티 | `text-{category}-{variant}` | 3속성 복합 |
+
+**매핑 예시**:
+
+| 스타일 | CSS 변수 | Tailwind |
+|-------|---------|----------|
+| Section Title LG | `--type-title-section-lg-{size\|line-height\|weight}` | `text-title-section-lg` |
 
 Color 시스템의 `--text-{role}` / `--surface-{role}` 패턴과 병렬 구조를 이룬다.
 
