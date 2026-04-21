@@ -5,30 +5,6 @@ tags:
 - design-system
 ---
 
-<style>{`
-.prose h2,
-.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h2,
-main h2 {
-  margin-top: 5em !important;
-  margin-bottom: 0.6em !important;
-  color: #EB4666 !important;
-}
-.prose h3,
-.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h3,
-main h3 {
-  margin-top: 3em !important;
-  margin-bottom: 0.5em !important;
-}
-/* 페이지 최상단 직후 H2는 과한 공간 방지 */
-.prose > *:first-child + h2,
-article > *:first-child + h2,
-main > *:first-child + h2 {
-  margin-top: 2em !important;
-}
-`}</style>
-
 이 문서는 SAZO.shop의 디지털 제품을 만드는 모든 사람을 위한 가이드입니다.
 
 SAZO 디자인 시스템은 단순히 재사용 가능한 UI 컴포넌트의 모음집이 아닙니다. 이것은 우리의 디자인 원칙을 담은 살아있는 시스템이자, SAZO만의 일관된 사용자 경험을 만들기 위한 **공동의 언어** 이며, 더 나은 제품을 더 효율적으로 만들기 위한 **전략적인 도구** 입니다.

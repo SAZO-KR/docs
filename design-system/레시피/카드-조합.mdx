@@ -7,30 +7,6 @@ tags:
 - card
 ---
 
-<style>{`
-.prose h2,
-.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h2,
-main h2 {
-  margin-top: 5em !important;
-  margin-bottom: 0.6em !important;
-  color: #EB4666 !important;
-}
-.prose h3,
-.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h3,
-main h3 {
-  margin-top: 3em !important;
-  margin-bottom: 0.5em !important;
-}
-/* 페이지 최상단 직후 H2는 과한 공간 방지 */
-.prose > *:first-child + h2,
-article > *:first-child + h2,
-main > *:first-child + h2 {
-  margin-top: 2em !important;
-}
-`}</style>
-
 ## 철학
 SAZO의 카드는 **정보 밀도와 스캔 가능성의 균형** 을 추구한다. 모든 카드는 동일한 색상 계층(gray-900 → gray-700 → gray-600 → gray-500 → gray-400)을 따르며, 이미지-텍스트 간격과 모서리 반경을 통일하여 어떤 맥락에서든 일관된 시각적 경험을 제공한다.
 

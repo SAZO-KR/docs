@@ -7,30 +7,6 @@ tags:
 - button
 ---
 
-<style>{`
-.prose h2,
-.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h2,
-main h2 {
-  margin-top: 5em !important;
-  margin-bottom: 0.6em !important;
-  color: #EB4666 !important;
-}
-.prose h3,
-.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h3,
-main h3 {
-  margin-top: 3em !important;
-  margin-bottom: 0.5em !important;
-}
-/* 페이지 최상단 직후 H2는 과한 공간 방지 */
-.prose > *:first-child + h2,
-article > *:first-child + h2,
-main > *:first-child + h2 {
-  margin-top: 2em !important;
-}
-`}</style>
-
 ## 철학
 ### 왜 브랜드 컬러를 아끼는가
 브랜드 컬러(`brand-500`)는 사용자의 무의식 속에 서비스의 감정적 이미지를 형성한다. "삭제하시겠습니까?" 같은 부정적 맥락에 반복 노출되면 브랜드 자체에 부정적 연상을 학습하므로, 긍정적 기회에만 브랜드 컬러를 사용하고 일반 확인에는 Gray-800, 파괴적 액션에는 Error 컬러를 사용한다. Purple 컬러 재정의에서 다룬 색상 의미론의 연장선이며, Airbnb의 접근을 참조하되 역직구 커머스 맥락에 맞게 조정했다.

@@ -7,30 +7,6 @@ tags:
 - foundation
 ---
 
-<style>{`
-.prose h2,
-.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h2,
-main h2 {
-  margin-top: 5em !important;
-  margin-bottom: 0.6em !important;
-  color: #EB4666 !important;
-}
-.prose h3,
-.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h3,
-main h3 {
-  margin-top: 3em !important;
-  margin-bottom: 0.5em !important;
-}
-/* 페이지 최상단 직후 H2는 과한 공간 방지 */
-.prose > *:first-child + h2,
-article > *:first-child + h2,
-main > *:first-child + h2 {
-  margin-top: 2em !important;
-}
-`}</style>
-
 ## 철학
 SAZO의 아이코노그래피는 사용자가 인터페이스를 빠르고 직관적으로 이해할 수 있도록 돕는 시각적 언어다. 장식적 요소가 아닌, 명확한 의미를 전달하는 기능적 도구로서 **Lucide 아이콘 라이브러리** 를 기반으로 서비스 전반에 통일된 시각적 경험을 제공한다.
 

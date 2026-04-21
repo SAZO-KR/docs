@@ -7,30 +7,6 @@ tags:
 - principles
 ---
 
-<style>{`
-.prose h2,
-.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h2,
-main h2 {
-  margin-top: 5em !important;
-  margin-bottom: 0.6em !important;
-  color: #EB4666 !important;
-}
-.prose h3,
-.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h3,
-main h3 {
-  margin-top: 3em !important;
-  margin-bottom: 0.5em !important;
-}
-/* 페이지 최상단 직후 H2는 과한 공간 방지 */
-.prose > *:first-child + h2,
-article > *:first-child + h2,
-main > *:first-child + h2 {
-  margin-top: 2em !important;
-}
-`}</style>
-
 ## 철학: 문제 해결을 위한 제작
 "언젠가 필요할지도 모른다"는 가정으로 컴포넌트를 미리 만들지 않는다. **"지금 당장 해결해야 할 명확한 사용자 문제가 있는가?"** 라는 질문에서 시작한다.
 

@@ -7,30 +7,6 @@ tags:
 - foundation
 ---
 
-<style>{`
-.prose h2,
-.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h2,
-main h2 {
-  margin-top: 5em !important;
-  margin-bottom: 0.6em !important;
-  color: #EB4666 !important;
-}
-.prose h3,
-.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
-article h3,
-main h3 {
-  margin-top: 3em !important;
-  margin-bottom: 0.5em !important;
-}
-/* 페이지 최상단 직후 H2는 과한 공간 방지 */
-.prose > *:first-child + h2,
-article > *:first-child + h2,
-main > *:first-child + h2 {
-  margin-top: 2em !important;
-}
-`}</style>
-
 ## 철학
 SAZO의 Border Radius는 **Tailwind 기본 스케일을 그대로 사용** 하며, `2xl(16px)`을 핵심 값으로 삼는다. 커스텀 값을 최소화하고 표준 스케일 내에서 일관성을 유지한다.
 
