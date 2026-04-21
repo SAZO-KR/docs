@@ -34,123 +34,136 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 | **5. Caption** | 보조/메타 정보 | `--font-size-12`~`--font-size-14` | `--fw-normal`~`--fw-medium` | `--text-tertiary`~`--text-secondary` | 날짜, 배지, 힌트, 만료일 |
 
 ## 계층별 토큰 상세
-### 계층 1: Display
-| 속성     | Semantic Token            | Primitive         |
-| ------ | ------------------------- | ----------------- |
-| 히어로    | `--type-display-hero`     | `--font-size-60` / `--line-height-60`    |
-| 히어로 서브 | `--type-display-hero-sub` | `--font-size-48` / `--line-height-48`    |
-| 굵기     | `--fw-display`            | `--fw-bold` (700) |
-| 색상     | `--text-strong`           | `--gray-950`      |
+<AccordionGroup>
+  <Accordion title="계층 1: Display">
+    | 속성     | Semantic Token            | Primitive         |
+    | ------ | ------------------------- | ----------------- |
+    | 히어로    | `--type-display-hero`     | `--font-size-60` / `--line-height-60`    |
+    | 히어로 서브 | `--type-display-hero-sub` | `--font-size-48` / `--line-height-48`    |
+    | 굵기     | `--fw-display`            | `--fw-bold` (700) |
+    | 색상     | `--text-strong`           | `--gray-950`      |
 
-사용처: 히어로 배너, 이벤트 랜딩 페이지
+    사용처: 히어로 배너, 이벤트 랜딩 페이지
 
-#### 간격 패턴
-```
-[Display: text-display-hero]         ← 화면당 1개만
-      mt-5 (20px)
-[Body: text-body-large]             ← description
-      mb-10 (40px)
-[다음 섹션]
-```
+    #### 간격 패턴
+    ```
+    [Display: text-display-hero]         ← 화면당 1개만
+          mt-5 (20px)
+    [Body: text-body-large]             ← description
+          mb-10 (40px)
+    [다음 섹션]
+    ```
 
-### 계층 2: Title
-| 속성       | Semantic Token            | Primitive                             |
-| -------- | ------------------------- | ------------------------------------- |
-| 화면 제목    | `--type-title-screen`     | `--font-size-36` / `--line-height-36` |
-| 화면 제목 서브 | `--type-title-screen-sub` | `--font-size-30` / `--line-height-30` |
-| 섹션 xl    | `--type-title-section-xl` | `--font-size-30` / `--line-height-30` |
-| 섹션 lg    | `--type-title-section-lg` | `--font-size-24` / `--line-height-24` |
-| 섹션 md    | `--type-title-section-md` | `--font-size-22` / `--line-height-22` |
-| 섹션 sm    | `--type-title-section-sm` | `--font-size-20` / `--line-height-20` |
-| 굵기       | `--fw-heading`            | `--fw-semibold` (600)                 |
-| 색상       | `--text-strong`           | `--gray-950`                          |
+  </Accordion>
+  <Accordion title="계층 2: Title">
+    | 속성       | Semantic Token            | Primitive                             |
+    | -------- | ------------------------- | ------------------------------------- |
+    | 화면 제목    | `--type-title-screen`     | `--font-size-36` / `--line-height-36` |
+    | 화면 제목 서브 | `--type-title-screen-sub` | `--font-size-30` / `--line-height-30` |
+    | 섹션 xl    | `--type-title-section-xl` | `--font-size-30` / `--line-height-30` |
+    | 섹션 lg    | `--type-title-section-lg` | `--font-size-24` / `--line-height-24` |
+    | 섹션 md    | `--type-title-section-md` | `--font-size-22` / `--line-height-22` |
+    | 섹션 sm    | `--type-title-section-sm` | `--font-size-20` / `--line-height-20` |
+    | 굵기       | `--fw-heading`            | `--fw-semibold` (600)                 |
+    | 색상       | `--text-strong`           | `--gray-950`                          |
 
-사용처: SectionTitle, FeaturedHeading `size="md"/"lg"/"xl"`, 모달 제목
+    사용처: SectionTitle, FeaturedHeading `size="md"/"lg"/"xl"`, 모달 제목
 
-#### 간격 패턴
-```
-[Title: text-title-screen]
-      mb-4 (16px)            ← SectionTitle 표준 하단 마진
-[콘텐츠 영역]
-```
+    #### 간격 패턴
+    ```
+    [Title: text-title-screen]
+          mb-4 (16px)            ← SectionTitle 표준 하단 마진
+    [콘텐츠 영역]
+    ```
 
-### 계층 3: Subtitle
-| 속성 | Semantic Token | Primitive |
-|------|---------------|-----------|
-| 하위 섹션 lg | `--type-title-subsection-lg` | `--font-size-18` / `--line-height-18` / `--fw-semibold` |
-| 하위 섹션 sm | `--type-title-subsection-sm` | `--font-size-16` / `--line-height-16` / `--fw-semibold` |
-| 라벨 lg (카드 제목) | `--type-label-large` | `--font-size-16` / `--line-height-16` / `--fw-medium` |
-| 굵기 (하위 섹션) | — | `--fw-semibold` (600) |
-| 굵기 (라벨) | `--fw-label` | `--fw-medium` (500) |
-| 색상 | `--text-default` | `--gray-900` |
+  </Accordion>
+  <Accordion title="계층 3: Subtitle">
+    | 속성 | Semantic Token | Primitive |
+    |------|---------------|-----------|
+    | 하위 섹션 lg | `--type-title-subsection-lg` | `--font-size-18` / `--line-height-18` / `--fw-semibold` |
+    | 하위 섹션 sm | `--type-title-subsection-sm` | `--font-size-16` / `--line-height-16` / `--fw-semibold` |
+    | 라벨 lg (카드 제목) | `--type-label-large` | `--font-size-16` / `--line-height-16` / `--fw-medium` |
+    | 굵기 (하위 섹션) | — | `--fw-semibold` (600) |
+    | 굵기 (라벨) | `--fw-label` | `--fw-medium` (500) |
+    | 색상 | `--text-default` | `--gray-900` |
 
-사용처: 장바구니 상품명, 주문 내역 상품명, EmptyState 제목, 쿠폰 설명
+    사용처: 장바구니 상품명, 주문 내역 상품명, EmptyState 제목, 쿠폰 설명
 
-#### 간격 패턴
-```
-[배지/태그]            ← 있다면 Subtitle 위
-      gap-1 (4px)
-[Subtitle: text-label-large]
-[Body: text-body-small]        ← 직접 연결 또는 gap 없음
-```
+    #### 간격 패턴
+    ```
+    [배지/태그]            ← 있다면 Subtitle 위
+          gap-1 (4px)
+    [Subtitle: text-label-large]
+    [Body: text-body-small]        ← 직접 연결 또는 gap 없음
+    ```
 
-### 계층 4: Body
-| 속성 | Semantic Token | Primitive |
-|------|---------------|-----------|
-| 대형 | `--type-body-large` | `--font-size-18` / `--line-height-18` |
-| 기본 | `--type-body-default` | `--font-size-16` / `--line-height-16` |
-| 소형 | `--type-body-small` | `--font-size-14` / `--line-height-14` |
-| 극소형 | `--type-body-xs` | `--font-size-12` / `--line-height-12` |
-| 굵기 | `--fw-body` | `--fw-normal` (400) |
-| 색상 (기본) | `--text-secondary` | `--gray-700` |
-| 색상 (3차) | `--text-tertiary` | `--gray-500` |
+  </Accordion>
+  <Accordion title="계층 4: Body">
+    | 속성 | Semantic Token | Primitive |
+    |------|---------------|-----------|
+    | 대형 | `--type-body-large` | `--font-size-18` / `--line-height-18` |
+    | 기본 | `--type-body-default` | `--font-size-16` / `--line-height-16` |
+    | 소형 | `--type-body-small` | `--font-size-14` / `--line-height-14` |
+    | 극소형 | `--type-body-xs` | `--font-size-12` / `--line-height-12` |
+    | 굵기 | `--fw-body` | `--fw-normal` (400) |
+    | 색상 (기본) | `--text-secondary` | `--gray-700` |
+    | 색상 (3차) | `--text-tertiary` | `--gray-500` |
 
-사용처: 옵션 부제목, EmptyState 설명, 모달 본문, 가이드 섹션 본문
+    사용처: 옵션 부제목, EmptyState 설명, 모달 본문, 가이드 섹션 본문
 
-### 계층 5: Caption
-| 속성 | Semantic Token | Primitive |
-|------|---------------|-----------|
-| 기본 | `--type-caption-default` | `--font-size-14` / `--line-height-14` |
-| 소형 | `--type-caption-small` | `--font-size-12` / `--line-height-12` |
-| 굵기 (기본) | — | `--fw-normal` (400) |
-| 굵기 (소형) | — | `--fw-medium` (500) |
-| 색상 (메타/날짜) | `--text-tertiary` | `--gray-500` |
-| 색상 (읽혀야 하는 정보) | `--text-secondary` | `--gray-700` |
+  </Accordion>
+  <Accordion title="계층 5: Caption">
+    | 속성 | Semantic Token | Primitive |
+    |------|---------------|-----------|
+    | 기본 | `--type-caption-default` | `--font-size-14` / `--line-height-14` |
+    | 소형 | `--type-caption-small` | `--font-size-12` / `--line-height-12` |
+    | 굵기 (기본) | — | `--fw-normal` (400) |
+    | 굵기 (소형) | — | `--fw-medium` (500) |
+    | 색상 (메타/날짜) | `--text-tertiary` | `--gray-500` |
+    | 색상 (읽혀야 하는 정보) | `--text-secondary` | `--gray-700` |
 
-<Note>
-  **배지 카운트의 굵기 600은 Caption이 아니라 `--type-label-small` (Label 계층, 12px/600) 토큰을 사용한다.**
+    <Note>
+      **배지 카운트의 굵기 600은 Caption이 아니라 `--type-label-small` (Label 계층, 12px/600) 토큰을 사용한다.**
 
-</Note>
+    </Note>
 
-사용처: 주문 요약 연도, 쿠폰 만료일, 푸터 주소/사업자 정보, 결제 수단 설명
+    사용처: 주문 요약 연도, 쿠폰 만료일, 푸터 주소/사업자 정보, 결제 수단 설명
 
+  </Accordion>
+</AccordionGroup>
 ## 특수 텍스트 레시피
-### 가격 표시
-| 용도 | 타이포 토큰 | 색상 토큰 |
-|------|-----------|----------|
-| 일반 가격 | `text-title-subsection-lg` | `--text-default` |
-| 총합계 가격 | `text-title-section-sm` | `--text-default` |
-| 항목별 라벨 | `text-body-default` | `--text-secondary` |
-| 항목별 금액 | `text-label-large` | `--text-default` |
-| 취소선 원래가격 | `--font-size-16`~`--font-size-20` / `--fw-medium` / `line-through` | `--text-disabled` |
-| 쿠폰 할인 | `text-title-subsection-sm` | `--text-benefit` |
+<AccordionGroup>
+  <Accordion title="가격 표시">
+    | 용도 | 타이포 토큰 | 색상 토큰 |
+    |------|-----------|----------|
+    | 일반 가격 | `text-title-subsection-lg` | `--text-default` |
+    | 총합계 가격 | `text-title-section-sm` | `--text-default` |
+    | 항목별 라벨 | `text-body-default` | `--text-secondary` |
+    | 항목별 금액 | `text-label-large` | `--text-default` |
+    | 취소선 원래가격 | `--font-size-16`~`--font-size-20` / `--fw-medium` / `line-through` | `--text-disabled` |
+    | 쿠폰 할인 | `text-title-subsection-sm` | `--text-benefit` |
 
-### 배지 텍스트
-| 변형 | 타이포 토큰 | 색상 토큰 |
-|------|-----------|----------|
-| 기본 (회색) | `text-caption-small` | `--text-secondary` + `--surface-default` + `--border-default` |
-| 쿠폰 (보라) | `text-caption-small` | `--text-benefit-strong` + `--surface-benefit` |
-| 카운트 | `text-label-small` | `--text-inverse` + `--surface-brand` |
+  </Accordion>
+  <Accordion title="배지 텍스트">
+    | 변형 | 타이포 토큰 | 색상 토큰 |
+    |------|-----------|----------|
+    | 기본 (회색) | `text-caption-small` | `--text-secondary` + `--surface-default` + `--border-default` |
+    | 쿠폰 (보라) | `text-caption-small` | `--text-benefit-strong` + `--surface-benefit` |
+    | 카운트 | `text-label-small` | `--text-inverse` + `--surface-brand` |
 
-### 에러 텍스트
-| 용도 | 타이포 토큰 | 색상 토큰 |
-|------|-----------|----------|
-| 인라인 에러 | `text-caption-default` 또는 `text-caption-small` | `--text-error` |
-| 에러 배지 | Badge `color="error" size="xs"` | `--surface-error` + `--text-error` |
+  </Accordion>
+  <Accordion title="에러 텍스트">
+    | 용도 | 타이포 토큰 | 색상 토큰 |
+    |------|-----------|----------|
+    | 인라인 에러 | `text-caption-default` 또는 `text-caption-small` | `--text-error` |
+    | 에러 배지 | Badge `color="error" size="xs"` | `--surface-error` + `--text-error` |
 
-### 비활성 텍스트
-모든 비활성 상태는 원래 스타일 유지 + 색상만 `--text-disabled`로 오버라이드한다.
+  </Accordion>
+  <Accordion title="비활성 텍스트">
+    모든 비활성 상태는 원래 스타일 유지 + 색상만 `--text-disabled`로 오버라이드한다.
 
+  </Accordion>
+</AccordionGroup>
 ## FeaturedHeading 레시피
 | size | title 토큰                                  | description 토큰                                        | 적합 컨텍스트        |
 | ---- | ----------------------------------------- | ----------------------------------------------------- | -------------- |

@@ -24,32 +24,39 @@ tags:
 | 페이지 이동 네비게이션 | TileButton 또는 Link | TileSelector는 선택 컨트롤이지, 네비게이션이 아님 |
 | 순수 정보 표시 (선택 불가) | 일반 카드 또는 InfoPanel | TileSelector는 선택 가능한 인터랙티브 요소 |
 
-> **TileSelector vs TileButton** : TileSelector는 **상태 선택** (selected/deselected), TileButton은 **액션 트리거** (클릭 → 이동/실행). 선택인지 액션인지로 판단한다.
+<Note>
+  **TileSelector vs TileButton** : TileSelector는 **상태 선택** (selected/deselected), TileButton은 **액션 트리거** (클릭 → 이동/실행). 선택인지 액션인지로 판단한다.
 
-> **TileSelector vs 투명 배경 리스트** : 모달/팝오버 안의 단순 메뉴 선택 → 투명 배경 리스트 컴포넌트. 페이지 내 다른 요소 근처에 배치하여 시각적 구분이 필요 → TileSelector.
+  **TileSelector vs 투명 배경 리스트** : 모달/팝오버 안의 단순 메뉴 선택 → 투명 배경 리스트 컴포넌트. 페이지 내 다른 요소 근처에 배치하여 시각적 구분이 필요 → TileSelector.
+</Note>
 
 ## 선택 가이드
-### 크기 선택
-| Size | Padding | 사용 맥락 | 내부 콘텐츠 예시 |
-|------|---------|-----------|----------------|
-| `sm` | 16px (all) | 밀집 옵션 그리드, 작은 선택지 | 사이즈(S/M/L), 색상, 짧은 라벨 |
-| `md` | 24px 16px | 기본 옵션 카드 (default) | 배송 방법, 결제 수단, 중간 길이 정보 |
-| `lg` | 32px (all) | 대형 옵션 카드, 강조 선택 | 플랜 선택, 이미지+텍스트+가격 조합 |
+<Tabs>
+  <Tab title="크기 선택">
+    | Size | Padding | 사용 맥락 | 내부 콘텐츠 예시 |
+    |------|---------|-----------|----------------|
+    | `sm` | 16px (all) | 밀집 옵션 그리드, 작은 선택지 | 사이즈(S/M/L), 색상, 짧은 라벨 |
+    | `md` | 24px 16px | 기본 옵션 카드 (default) | 배송 방법, 결제 수단, 중간 길이 정보 |
+    | `lg` | 32px (all) | 대형 옵션 카드, 강조 선택 | 플랜 선택, 이미지+텍스트+가격 조합 |
 
-### 내부 콘텐츠 구성
-| 콘텐츠 구성 | 크기 권장 | 예시 |
-|-----------|----------|------|
-| 텍스트만 (한 줄) | `sm` | "S", "M", "L", "XL" |
-| 텍스트 + 부가 정보 | `md` | "일반배송 (3~5일) - 무료" |
-| 아이콘 + 텍스트 | `md` | [택배 아이콘] "일반택배" |
-| 이미지 + 텍스트 + 가격 | `lg` | [상품 이미지] "옵션A" "15,000원" |
-| Radio/Checkbox + 복합 정보 | `md` ~ `lg` | Radio 인디케이터 + 설명 텍스트 |
+  </Tab>
+  <Tab title="내부 콘텐츠 구성">
+    | 콘텐츠 구성 | 크기 권장 | 예시 |
+    |-----------|----------|------|
+    | 텍스트만 (한 줄) | `sm` | "S", "M", "L", "XL" |
+    | 텍스트 + 부가 정보 | `md` | "일반배송 (3~5일) - 무료" |
+    | 아이콘 + 텍스트 | `md` | [택배 아이콘] "일반택배" |
+    | 이미지 + 텍스트 + 가격 | `lg` | [상품 이미지] "옵션A" "15,000원" |
+    | Radio/Checkbox + 복합 정보 | `md` ~ `lg` | Radio 인디케이터 + 설명 텍스트 |
 
-### 시각적 상태
-- Default: `bg-surface-default` + `border-border-default` + `shadow-lowest` (`--shadow-lowest`)
-- Selected: `bg-surface-secondary` + `border-border-strong` (2px) -- 선택됨이 명확히 보여야 함
-- Disabled: `bg-surface-disabled` -- cursor: not-allowed
+  </Tab>
+  <Tab title="시각적 상태">
+    - Default: `bg-surface-default` + `border-border-default` + `shadow-lowest` (`--shadow-lowest`)
+    - Selected: `bg-surface-secondary` + `border-border-strong` (2px) -- 선택됨이 명확히 보여야 함
+    - Disabled: `bg-surface-disabled` -- cursor: not-allowed
 
+  </Tab>
+</Tabs>
 ## 배치 규칙
 | 배치 패턴 | 설명 | 간격 |
 |----------|------|------|
