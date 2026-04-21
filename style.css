@@ -79,10 +79,15 @@ a h2, a h3, a h4,
     font-size: inherit !important;
 }
 
-/* span[data-as=p] 본문 단락 간격 */
+/* span[data-as=p] 본문 단락 간격 — Card/링크 내부는 제외 */
 #content-area div.mdx-content .prose > span[data-as=p],
 #content-area div.mdx-content.prose > span[data-as=p] {
     margin-bottom: 1.5em !important;
+}
+a span[data-as=p],
+[class*="card" i] span[data-as=p],
+[class*="Card"] span[data-as=p] {
+    margin-bottom: 0 !important;
 }
 
 /* 변경 로그 페이지 — Update 컴포넌트 내부 헤딩은 기본값 */
