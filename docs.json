@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "SAZO Design System",
   "colors": {
-    "primary": "#eb4666",
-    "light": "#eb4666",
-    "dark": "#15803D"
+    "primary": "#EB4666",
+    "light": "#EB4666",
+    "dark": "#EB4666"
   },
   "favicon": {
     "light": "/favicon.svg",
