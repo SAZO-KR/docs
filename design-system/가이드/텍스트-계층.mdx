@@ -35,9 +35,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 
 ## 계층별 토큰 상세
 
-<AccordionGroup>
+<Tabs>
 
-<Accordion title="계층 1: Display">
+<Tab title="계층 1: Display">
 
 | 속성     | Semantic Token            | Primitive         |
 | ------ | ------------------------- | ----------------- |
@@ -57,9 +57,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 [다음 섹션]
 ```
 
-</Accordion>
+</Tab>
 
-<Accordion title="계층 2: Title">
+<Tab title="계층 2: Title">
 
 | 속성       | Semantic Token            | Primitive                             |
 | -------- | ------------------------- | ------------------------------------- |
@@ -81,9 +81,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 [콘텐츠 영역]
 ```
 
-</Accordion>
+</Tab>
 
-<Accordion title="계층 3: Subtitle">
+<Tab title="계층 3: Subtitle">
 
 | 속성 | Semantic Token | Primitive |
 |------|---------------|-----------|
@@ -104,9 +104,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 [Body: text-body-small]        ← 직접 연결 또는 gap 없음
 ```
 
-</Accordion>
+</Tab>
 
-<Accordion title="계층 4: Body">
+<Tab title="계층 4: Body">
 
 | 속성 | Semantic Token | Primitive |
 |------|---------------|-----------|
@@ -120,9 +120,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 
 사용처: 옵션 부제목, EmptyState 설명, 모달 본문, 가이드 섹션 본문
 
-</Accordion>
+</Tab>
 
-<Accordion title="계층 5: Caption">
+<Tab title="계층 5: Caption">
 
 | 속성 | Semantic Token | Primitive |
 |------|---------------|-----------|
@@ -141,9 +141,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 
 사용처: 주문 요약 연도, 쿠폰 만료일, 푸터 주소/사업자 정보, 결제 수단 설명
 
-</Accordion>
+</Tab>
 
-</AccordionGroup>
+</Tabs>
 
 ## 특수 텍스트 레시피
 
@@ -215,14 +215,21 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 
 **Do**
 
-- Display는 화면당 1개만
-- Title/Display 색상은 `--text-strong`
-- 카드 내 상품명은 `--fw-medium` (500)
-- 본문 설명은 `--text-secondary`
-- 가격은 `--fw-semibold` (600) + `--text-default`
-- 읽혀야 하는 캡션은 `--text-secondary`, 보조 정보는 `--text-tertiary`
-- 배지 텍스트는 `text-label-small` (12px/600) 또는 `text-caption-small` (12px/500)
-- Title-콘텐츠 사이는 `mb-4` (16px)
+Display는 화면당 1개만
+
+Title/Display 색상은 `--text-strong`
+
+카드 내 상품명은 `--fw-medium` (500)
+
+본문 설명은 `--text-secondary`
+
+가격은 `--fw-semibold` (600) + `--text-default`
+
+읽혀야 하는 캡션은 `--text-secondary`, 보조 정보는 `--text-tertiary`
+
+배지 텍스트는 `text-label-small` (12px/600) 또는 `text-caption-small` (12px/500)
+
+Title-콘텐츠 사이는 `mb-4` (16px)
 
 </Check>
 
@@ -230,13 +237,20 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 
 **Don't**
 
-- 한 화면에 2개 이상의 Display
-- Title에 `--text-secondary` 사용
-- 카드 상품명에 `--fw-semibold` (600) — Title과 혼동
-- 본문에 `--text-default` — Subtitle과 구분 불가
-- 가격에 `--fw-normal` (400)
-- 모든 캡션을 `--text-tertiary`로 통일
-- 배지에 `--fw-normal` (400) — 작은 크기 보상 필요
-- `mb-2`나 `mb-8` 사용
+한 화면에 2개 이상의 Display
+
+Title에 `--text-secondary` 사용
+
+카드 상품명에 `--fw-semibold` (600) — Title과 혼동
+
+본문에 `--text-default` — Subtitle과 구분 불가
+
+가격에 `--fw-normal` (400)
+
+모든 캡션을 `--text-tertiary`로 통일
+
+배지에 `--fw-normal` (400) — 작은 크기 보상 필요
+
+`mb-2`나 `mb-8` 사용
 
 </Warning>

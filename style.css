@@ -18,8 +18,14 @@ main h2 {
 .prose :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)),
 article h3,
 main h3 {
-    margin-top: 3em !important;
+    margin-top: 4em !important;
     margin-bottom: 0.5em !important;
+}
+
+/* Card 높이 조정 — 소개 페이지의 CardGroup이 필요 이상으로 큰 문제 */
+[class*="CardGroup"] [class*="Card"],
+.prose [class*="card"] {
+    min-height: auto !important;
 }
 
 /* ------------------------------------------------------------
