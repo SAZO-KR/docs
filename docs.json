@@ -4,7 +4,7 @@
   "name": "SAZO Design System",
   "colors": {
     "primary": "#EB4666",
-    "light": "#EB4666",
+    "light": "#222222",
     "dark": "#222222"
   },
   "favicon": "/favicon.svg",
