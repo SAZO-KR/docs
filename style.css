@@ -23,9 +23,27 @@ main h3 {
     margin-bottom: 0.5em !important;
 }
 
-/* 페이지 최상단 직후 H2는 과한 공간 방지 */
+/* ------------------------------------------------------------
+   H1 바로 뒤 H2 는 마진탑 제거 (페이지 타이틀과 첫 섹션을 붙임)
+   ------------------------------------------------------------ */
+
+/* Case 1: H1과 H2가 같은 부모 아래 형제일 때 */
+.prose h1 + h2,
+article h1 + h2,
+main h1 + h2,
+h1 + h2 {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Case 2: Mintlify가 frontmatter title을 별도 <header>로 렌더하여
+   본문 최상단이 첫 h2가 되는 경우 */
+.prose > h2:first-child,
 .prose > *:first-child + h2,
+article > h2:first-child,
 article > *:first-child + h2,
+main > h2:first-child,
 main > *:first-child + h2 {
-    margin-top: 2em !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
