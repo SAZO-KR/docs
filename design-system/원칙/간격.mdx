@@ -1,0 +1,161 @@
+---
+title: 간격
+description: ''
+tags:
+- design-system
+- spacing
+- foundation
+---
+
+## 철학
+SAZO의 간격 시스템은 핵심 디자인 원칙인 **'정직한 안내자'** 와 **'본질만 남긴 간결함'** 을 공간으로 구현한다.
+
+- **예측 가능한 질서** : 일관된 간격 규칙으로 시각적 안정감을 만든다. 해외 직구라는 불확실한 과정에서 사용자를 안심시키는 '정직한 안내자'의 역할을 공간이 수행한다.
+- **정보의 명확성** : 적절한 여백으로 정보 그룹을 구분하고, 사용자가 본질에 집중하도록 인지적 소음을 제거한다.
+- **균형 잡힌 밀도** : 너무 빽빽하지도(저가 인상), 너무 여유롭지도(고가 인상) 않은 중간 밀도를 지향한다. 이는 SAZO의 포지셔닝인 '신뢰할 수 있는 가성비'를 공간으로 표현하는 전략적 선택이다.
+
+> 구체적인 px 값과 토큰 매핑은 `02 토큰/spacing/semantic.tokens.json`, `02 토큰/breakpoints.tokens.json`, `02 토큰/css/tokens.css`를 참조한다.
+
+## 토큰 아키텍처
+```
+Primitive (--space-1: 4px, --space-12: 48px ...)
+    ↓ 참조
+Semantic (--space-between-sections-xl, --space-screen-edge-pc)
+    ↓ @theme inline 매핑
+Tailwind (mb-section-xl, gap-component-md, px-screen-edge ...)
+    ↓ 사용
+Component (Spacer, Card Grid, Modal)
+```
+
+Color와 달리 spacing은 **primitive = px 값 자체** 다. hex 코드처럼 추상적이지 않으므로 별도의 primitive 레이어를 두지 않고, 시맨틱 토큰이 px 값을 직접 참조한다.
+
+**Primitive** : `--space-*` CSS 변수 (예: `--space-12: 48px`)
+**Semantic** : 간격의 역할. `--space-between-sections-xl`, `--space-screen-edge-pc` 등
+**Tailwind** : `@theme inline`의 `--spacing-*` 매핑으로 `p-*`/`m-*`/`gap-*` 유틸리티 사용 가능. utilities.css의 `@utility`로 복합 유틸리티도 제공 (`mb-section-xl`, `gap-component-md` 등).
+
+코드에서는 항상 시맨틱 토큰 이름으로 의도를 전달한다. Tailwind 범용 클래스 `mb-12`가 아니라 시맨틱 유틸리티 `mb-section-xl`을 사용한다.
+
+## 네이밍 규칙
+```
+--space-{context}-{variant}              (CSS 변수)
+{property}-{context}-{variant}           (Tailwind @utility 복합)
+{property}-{@theme-key}                  (Tailwind @theme 범용)
+
+--space-screen-edge-pc           → px-screen-edge          (복합 유틸리티)
+--space-between-sections-xl      → mb-section-xl           (복합 유틸리티)
+--space-between-cards-mobile-column  → gap-card-grid-mobile (복합 유틸리티)
+```
+
+**context** : screen-edge, between-sections, section-padding, between-cards, component, between-text, between-options, content-to-button, modal, header, footer
+**variant** : 크기(xs, sm, md, lg, xl) 또는 플랫폼(pc, mobile) 수식
+
+## 기본 스케일
+SAZO의 간격 체계는 **4px 기반 점진적 스케일** 을 사용한다. 엄격한 8px 그리드가 아닌, 4의 배수를 중심으로 2px/6px 등 미세 조정 값을 포함한다.
+
+| CSS 변수       | 값    | 시맨틱 역할                                         |
+| ------------ | ---- | ---------------------------------------------- |
+| `--space-1`  | 4px  | 극소 인라인 간격, 타이틀-서브타이틀 최소 간격                     |
+| `--space-2`  | 8px  | 인라인 옵션, 텍스트 보조 간격, 리스트 뷰 카드 간격                 |
+| `--space-3`  | 12px | Mobile 카드 그리드 열 간격, 소형 컴포넌트 패딩                 |
+| `--space-4`  | 16px | **기본 간격.** 컴포넌트 패딩, 텍스트 블록 간격, SectionTitle 하단 |
+| `--space-5`  | 20px | FeaturedHeading 텍스트 간격, Mobile 화면 가장자리(고정)       |
+| `--space-6`  | 24px | 콘텐츠-버튼 간격, PC 카드 열 간격, 섹션 간격(sm)               |
+| `--space-8`  | 32px | 대형 컴포넌트 패딩, 중간 섹션 간격                             |
+| `--space-10` | 40px | FeaturedHeading 하단, 환불 섹션 간격                   |
+| `--space-12` | 48px | **핵심 리듬.** 메인 페이지 섹션 간격, PC 화면 가장자리            |
+| `--space-16` | 64px | 푸터/빈 상태 대형 섹션 패딩, 모달 오버레이 패딩                   |
+| `--space-20` | 80px | 랜딩 페이지 히어로 섹션 패딩 (예외적 사용)                      |
+
+## 3가지 리듬 원칙
+SAZO의 간격은 3가지 리듬으로 정보의 관계를 시각적으로 전달한다.
+
+## 섹션 리듬 : 48px
+서로 독립적인 콘텐츠 블록 사이의 간격. 메인 페이지의 Guide, SazoPick, SazoRank 섹션 모두 `mb-section-xl`(48px)로 통일되어 있다. PC와 Mobile이 동일한 리듬을 공유한다.
+
+| Tailwind 유틸리티 | CSS 변수 | 값 | 역할 |
+|----------------|---------|-----|------|
+| `mb-section-xl` | `--space-between-sections-xl` | 48px | 메인 섹션 간격 |
+| `py-section-lg` | `--space-section-padding-lg` | 48px | 중형 섹션 패딩 |
+| `gap-card-grid-pc` (row) | `--space-between-cards-pc-row` | 48px | PC 카드 수직 간격 |
+
+## 제목-콘텐츠 리듬 : 16px
+제목과 그에 속한 콘텐츠 사이의 간격. 정보의 종속 관계를 나타낸다.
+
+| Tailwind 유틸리티 | CSS 변수 | 값 | 역할 |
+|----------------|---------|-----|------|
+| `gap-text-md` | `--space-between-text-md` | 16px | 제목-설명 기본 간격 |
+| `gap-component-md` | `--space-component-md` | 16px | 기본 컴포넌트 패딩 |
+| `gap-4` | `--space-between-options-md` | 16px | 옵션 그룹 간 간격 |
+
+## 밀접 리듬 : 8px
+같은 그룹 내 밀접한 요소 사이의 간격. 요소들이 하나의 단위임을 시각적으로 전달한다.
+
+| Tailwind 유틸리티 | CSS 변수 | 값 | 역할 |
+|----------------|---------|-----|------|
+| `gap-text-sm` | `--space-between-text-sm` | 8px | 텍스트 보조 간격 |
+| `gap-2` | `--space-between-options-sm` | 8px | 인라인 옵션 간격 |
+| `gap-card-list` | `--space-between-cards-pc-list` | 8px | 리스트 뷰 카드 간격 |
+
+## 의사결정 트리
+간격 값을 선택할 때 다음 질문을 순서대로 따른다.
+
+```
+1. 이 요소들은 서로 독립적인 섹션인가?
+   → Yes: mb-section-xl (--space-between-sections-xl: 48px)
+   → No: 다음으로
+
+2. 제목-콘텐츠 관계인가?
+   → Yes: gap-text-md (--space-between-text-md: 16px)
+   → No: 다음으로
+
+3. 같은 그룹 내 밀접한 요소인가?
+   → Yes: gap-text-sm / gap-2 (8px)
+   → No: 다음으로
+
+4. 컴포넌트 내부 패딩인가?
+   → 대형 (타일, 계정): gap-component-xl (--space-component-xl: 32px)
+   → 중형 (카드, 아코디언): gap-component-lg (--space-component-lg: 24px)
+   → 기본 (EmptyState, 옵션): gap-component-md (--space-component-md: 16px)
+   → 소형 (안내 박스): gap-component-sm (--space-component-sm: 12px)
+   → 극소 (링크, 탭): gap-component-xs (--space-component-xs: 8px)
+
+5. 화면 가장자리인가?
+   → PC: px-screen-edge (--space-screen-edge-pc: 48px)
+   → Mobile: px-5 (--space-screen-edge-mobile: 20px 고정)
+
+6. 위 어디에도 해당하지 않으면?
+   → 가장 가까운 --space-* 스케일 값을 사용
+```
+
+## PC vs Mobile 비교 패턴
+## 동일한 값
+대부분의 간격은 PC와 Mobile이 같은 값을 공유한다.
+
+| 역할 | PC | Mobile | 비고 |
+|------|-----|--------|------|
+| 메인 섹션 간격 | 48px | 48px | 동일 |
+| 리스트 뷰 카드 간격 | 8px | 8px | 동일 |
+| 텍스트 간격 (전체) | 동일 | 동일 | 스케일 전체 공유 |
+| 컴포넌트 내부 패딩 | 동일 | 동일 | 스케일 전체 공유 |
+
+## 플랫폼별 분기
+화면 크기 차이에 의해 달라지는 값들이다.
+
+| 역할 | PC | Mobile | 비고 |
+|------|-----|--------|------|
+| 화면 가장자리 | 48px | 20px | 각 플랫폼 고정값 |
+| 카드 그리드 수평 | 24px | 12px | Mobile이 절반 |
+| 카드 그리드 수직 | 48px | 32px | Mobile이 2/3 |
+| 헤더 높이 | 116px | 96px (full) / 56px (single) | Mobile에 단일행 변형 |
+| 모달 패딩 | 64px (전방향) | 16px(좌우) / 64px(상하) | Mobile은 좌우만 축소 |
+
+**패턴** : Mobile은 수평 방향(가장자리, 카드 열 간격)을 축소하고, 수직 방향(섹션 간격, 모달 상하)은 PC와 비슷하게 유지한다. 화면 가장자리 패딩은 PC 48px, Mobile 20px으로 각각 고정이다.
+
+## 브레이크포인트와 간격의 관계
+| 브레이크포인트 | px     | 주 사용 플랫폼 | 간격 변화                                                |
+| ------- | ------ | -------- | ---------------------------------------------------- |
+| `ow`    | 0px    | Mobile   | 기본 간격 적용                                             |
+| `xs`    | 375px  | Mobile   | 최소 지원 너비, 변화 없음                                      |
+| `lg`    | 960px  | PC       | PC/Mobile 단일 분기점, 화면 가장자리 48px, max-w-6xl 중앙 정렬 |
+
+> `sm`(480px)·`md`(640px)·`xl`(1280px) 분기는 제거됨. PC/Mobile 분기는 `lg` 단일 기준.

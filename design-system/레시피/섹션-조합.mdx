@@ -1,0 +1,258 @@
+---
+title: 섹션 조합
+description: ''
+tags:
+- design-system
+- recipe
+- layout
+- section
+---
+
+## 철학
+SAZO의 페이지 구조는 **예측 가능한 수직 리듬** 으로 구축된다. 핵심은 세 가지 숫자다.
+
+- **48px (`mb-12`)** : 메인 페이지 섹션 간격의 기본 박자
+- **16px (`mb-4`)** : SectionTitle 아래의 표준 간격
+- **32px (`Divider margin="32"`)** : 결제/설정 페이지의 폼 섹션 구분
+
+모든 페이지는 Page Shell(헤더/콘텐츠/푸터) 위에 섹션들을 쌓는 구조이며, PC와 Mobile은 동일한 리듬을 공유하되 구분자 방식이 다르다(PC: 얇은 Divider, Mobile: 두꺼운 ThickDivider).
+
+## 구조
+## 페이지 쉘
+### PC 쉘 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| html 최소 너비 | -- | `min-w-lg` (960px) |
+| Header 위치 | -- | `sticky top-0 z-[100]` |
+| Header 높이 | `--space-header-height-pc` | `--header-height: 7.25rem` (116px) |
+| Header 배경 | `bg-surface-default` | `bg-white` |
+| Spacer 최대 너비 | -- | `max-w-6xl` (1152px) |
+| Spacer 좌우 여백 | `px-screen-edge` | `px-12` (48px) |
+| main | -- | `flex-1` |
+| Footer 상단 여백 | -- | `mt-[4.5rem]` (72px) |
+| Footer 테두리 | `border-border-subtle` | `border-y border-y-gray-200` |
+
+### Mobile 쉘 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 컨테이너 | -- | `max-w-[960px] mx-auto` |
+| Header 높이 (싱글) | -- | `--single-header-height: 3.5rem` (56px) |
+| Header 높이 (멀티) | -- | `--header-height: 6rem` (96px) |
+| 콘텐츠 오프셋 (멀티) | -- | `.content-pt-by-multi-header` = `pt-[6.25rem]` (100px) |
+| 콘텐츠 오프셋 (싱글) | -- | `.content-pt-by-single-header` = `pt-[3.5rem]` (56px) |
+| Footer 하단 여백 | -- | `pb-[82px]` |
+| BottomDockMenu | -- | `fixed bottom-0 z-40` |
+| BottomDockMenu 모양 | -- | `rounded-t-2xl border-t border-gray-200` |
+| BottomDockMenu 그림자 | `elevation-dock` | `shadow-bottom-menu` |
+
+### PC vs Mobile 쉘 비교
+| 항목 | PC | Mobile |
+|------|-----|--------|
+| 최대 콘텐츠 너비 | 1152px (`max-w-6xl`) | 960px |
+| Header 높이 | 116px (고정) | 56~112px (가변) |
+| 좌우 여백 | Spacer per section | 전체 컨테이너 `mx-auto` |
+| Footer 하단 | 바로 끝 | `pb-[82px]` (도크 겹침 방지) |
+| 바텀 네비게이션 | 없음 | BottomDockMenu |
+
+## 콘텐츠 영역
+### 토큰
+| 요소 | Semantic Token | PC Primitive | Mobile Primitive |
+|------|---------------|-------------|-----------------|
+| 좌우 패딩 (PC) | `--space-screen-edge-pc` | `px-12` (48px) | -- |
+| 좌우 패딩 (Mobile) | `--space-screen-edge-mobile` | -- | `px-5` (20px 고정) |
+
+## 섹션 리듬
+### 토큰
+| 요소 | Semantic Token | Primitive | 사용처 |
+|------|---------------|-----------|--------|
+| 주요 섹션 간 간격 | `mb-section-xl` | `mb-12` (48px) | 메인 페이지 모든 섹션 |
+| 중간 섹션 간격 | `mb-section-lg` | `mb-10` (40px) | FeaturedHeading 하단 |
+| 보조 섹션 간격 | `mb-section-md` | `mb-8` (32px) | 환불 제목-본문, 탈퇴 |
+| 미세 섹션 간격 | `mb-section-sm` | `mb-6` (24px) | 가이드 제목-본문 |
+| 제목-콘텐츠 간격 | `gap-text-md` | `mb-4` (16px) | SectionTitle 하단 |
+
+### SectionTitle 크기 매핑
+| 크기 | Primitive | 글꼴 크기 | 적합 위치 |
+|------|-----------|----------|-----------|
+| `xs` | 18px / 600 | 18px | 하위 섹션 제목 |
+| `sm` | 20px / 600 | 20px | 모바일 섹션, 푸터 CS |
+| `md` (기본) | 22px / 600 | 22px | PC 섹션 기본 |
+| `lg` | 24px / 600 | 24px | 모달 제목, 환불 섹션 |
+| `xl` | 30px / 600 | 30px | 대형 섹션 타이틀 |
+| `2xl` | 36px / 600 | 36px | 페이지 최상위 제목 |
+
+> 모바일에서는 size prop과 관계없이 20px로 오버라이드된다.
+
+## 메인 페이지 섹션 리듬
+```
+PC & Mobile 공통 (간격만 동일)
+
+[MainBannerCarousel]  ← PC: py-12 / Mobile: 패딩 없음
+        mb-12 (48px)
+[Guide]
+        mb-12 (48px)
+[SazoPick]
+        mb-12 (48px)
+[SazoRank]
+```
+
+## 마이페이지 레이아웃
+### PC 토큰
+| 요소 | Primitive | 설명 |
+|------|-----------|------|
+| 전체 컨테이너 | `flex flex-1 flex-col items-stretch` | 풀 높이 |
+| 사이드바 너비 | `min-w-[192px]` | 고정 너비 |
+| 사이드바 그룹 간격 | `gap-8` (32px) | 메뉴 그룹 간 |
+| 배너→주문 간격 | `mt-8` (32px) | 인라인 배너 아래 |
+| 대형 섹션 간격 | `mt-[5rem]` (80px) | 주문→찜, 찜→쿠폰 |
+
+### Mobile 토큰
+| 요소 | Primitive | 설명 |
+|------|-----------|------|
+| 전체 컨테이너 | `pt-16` (64px) | 헤더 오프셋 |
+| 섹션 구분 | `ThickDivider color="gray-100"` | 두꺼운 회색 면 |
+| 섹션 구분 마진 | `ThickDivider margin="24"` | 24px 상하 |
+| 주문 상단 간격 | `pt-6` (24px) | ThickDivider 후 |
+
+### PC vs Mobile 비교
+| 항목 | PC | Mobile |
+|------|-----|--------|
+| 구조 | 사이드바 + 콘텐츠 2단 | 단일 컬럼 |
+| 섹션 구분자 | `mt-[5rem]` (80px) 마진 | ThickDivider (두꺼운 면) |
+| 프로필 영역 | 없음 (사이드바에 포함) | AccountHeader 상단 표시 |
+
+## 페이지 배경색
+결제 맥락(체크아웃, 재결제, 안내장 재결제)에서만, **PC에서만** 서브틀 그레이(`bg-gray-50`) 배경색을 사용한다. 유저가 차분하게 결제를 마무리할 수 있도록 시각적 톤을 낮추는 의도.
+
+## 페이지 최대 너비
+| 너비 | 페이지 | 비고 |
+|------|--------|------|
+| 400px | 회원가입, 회원탈퇴 | |
+| 480px | 이벤트 페이지 | 디벨롭 필요 |
+| 640px | 브릿지, 공지사항 리스트/본문, 알림 리스트 | |
+| 720px | 상품 상세 | 조정 가능 |
+| 734px | 파싱 박스 애니메이션 | |
+
+## GNB
+모바일: **뒤로가기 + 우측 최대 2개 addon** . 현재 페이지 맥락에서 가장 필요할 것 같은 메뉴를 최대 2개 선정한다.
+
+## 이벤트 페이지 섹션 간격
+유저가 스크롤 점핑을 할 것을 고려하여 섹션 간 여백을 **128px** 로 크게 잡는다. 일반 페이지의 48px 섹션 간격과 다른 예외 케이스.
+
+## 결제 페이지 섹션 구분
+### PC 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 페이지 배경 | `bg-surface-secondary` | `bg-gray-50` |
+| 페이지 패딩 | -- | `pt-12 pb-20` (48/80px) |
+| 메인+사이드 | -- | `flex gap-16` (64px) |
+| 메인 카드 | `bg-surface-default` + `border-border-default` | `bg-white border border-gray-300 rounded-2xl p-6` |
+| 섹션 구분선 | -- | `Divider margin="32" color="gray-300"` |
+
+### Mobile 토큰
+| 요소 | Primitive |
+|------|-----------|
+| 헤더 오프셋 | `content-pt-by-single-header` (56px) |
+| 섹션 구분선 | `ThickDivider margin="32" color="gray-100"` |
+| 섹션 내부 좌우 | `px-4` (16px) |
+
+### PC vs Mobile 비교
+| 항목 | PC | Mobile |
+|------|-----|--------|
+| 배경 | `bg-gray-50` (회색) | 기본 흰색 |
+| 메인 카드 | `bg-white rounded-2xl border p-6` | 카드 없이 플랫 |
+| 주문 요약 위치 | 우측 사이드바 | 인라인 (쿠폰 바로 아래) |
+| 구분자 | 얇은 Divider | 두꺼운 ThickDivider |
+
+## 상품 상세 페이지
+### PC ATF 토큰
+| 요소 | Primitive | 설명 |
+|------|-----------|------|
+| ATF 컨테이너 | `flex gap-12 pt-12 mb-20` | 이미지+정보 가로 |
+| 이미지 영역 | `min-w-[408px] max-h/w-[560px]` | 이미지 컬럼 |
+| 정보 영역 | `min-w-[408px] max-w-[464px]` | 정보 컬럼 |
+| h1 제목 | `20px / 600 text-gray-900` | 번역된 상품명 |
+| h2 부제목 | `18px text-gray-700` | 원문 상품명 |
+| 옵션 그룹 | `flex flex-col gap-8` (32px) | 배송/옵션/요청/가격/버튼 |
+
+### PC BTF 토큰
+| 요소 | Primitive | 설명 |
+|------|-----------|------|
+| ATF-BTF 구분 | `ThickDivider margin="8" color="gray-100"` | 영역 전환 |
+| BTF 상단 간격 | `mt-12` (48px) | 구분 후 시작 |
+| 콘텐츠 최대 너비 | `max-w-[720px]` | 가독성 제한 |
+| 섹션 간 구분 | `Divider margin="48"` | 대형 섹션 |
+| SectionTitle 하단 | `mb-8` (32px) | 제목 아래 콘텐츠 |
+
+### PC vs Mobile 상품 상세 비교
+| 항목 | PC | Mobile |
+|------|-----|--------|
+| ATF 레이아웃 | `flex` 가로 | `flex-col` 세로 |
+| 이미지 | `min-w-[408px]` 갤러리 | 전체 너비 슬라이더 |
+| 제목 크기 | 20px | 16px |
+| CTA 버튼 | 정보 영역 하단 인라인 | BottomDock (fixed bottom) |
+
+## 스크롤 고정 요소
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 고정 위치 | -- | `top: var(--header-height)` |
+| 포지셔닝 | -- | `position: sticky` |
+| 그림자 (고정 시) | `shadow-medium` | `shadow-md` |
+| z-index | `--z-header` | `z-[100]` |
+| 배경색 | `bg-surface-default` | `white` |
+
+### 모바일 헤더 접기 모션
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 접기 duration | `--duration-micro` | 200ms |
+| 이징 | `--ease-standard` | CSS `ease-in-out` |
+| 접힌 상태 | -- | `top: -52px` |
+| 펼쳐진 상태 | -- | `top: 0` |
+| 트리거 | -- | 스크롤 방향 감지 |
+
+## 상품 그리드
+### Grid View 토큰
+| 요소 | Semantic Token | PC Primitive | Mobile Primitive |
+|------|---------------|-------------|-----------------|
+| 수평 간격 | `gap-card-grid-*` (column) | `gap-x-6` (24px) | `gap-x-3` (12px) |
+| 수직 간격 | `gap-card-grid-*` (row) | `gap-y-12` (48px) | `gap-y-8` (32px) |
+| 이미지 비율 | -- | `aspect-square` | `aspect-square` |
+| 이미지 radius | `rounded-2xl` | `rounded-2xl` (16px) | `rounded-2xl` (16px) |
+
+### List View 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 카드 간 간격 | `gap-card-list` | `gap-2` (8px) |
+| 이미지 radius | `rounded-2xl` | `rounded-2xl` (16px) |
+
+## Do / Don't
+| Do | Don't |
+|----|-------|
+| 메인 섹션 간격은 항상 `mb-12` (48px) | 섹션마다 다른 간격 (mb-8, mb-16 혼용) |
+| 하단 마진(`mb-*`)으로 섹션 간격 설정 | 상하 패딩(`py-*`)으로 섹션 간격 설정 |
+| PC 콘텐츠는 `<Spacer>` 컴포넌트로 감싸기 | 개별 섹션에 `max-w-6xl mx-auto px-12` 직접 작성 |
+| Mobile Footer에 `pb-[82px]` 포함 | 바텀 도크와 겹치게 방치 |
+| sticky 요소는 `--header-height` CSS 변수 참조 | `top` 값 하드코딩 |
+| PC 결제 페이지는 `bg-gray-50` 배경 | 기본 흰색 배경 |
+| Mobile은 `ThickDivider`로 섹션 구분 | 마진만으로 섹션 구분 (모바일에서 불분명) |
+| 상품 그리드에 `.card-gird-wrap` 클래스 사용 | 개별 gap 값 직접 지정 |
+
+## 페이지 설계 의사결정 체크리스트
+<Steps>
+  <Step title="쉘 선택">
+    PC(`Spacer + flex-1 + Footer`) vs Mobile(`max-w-960px + BottomDock`)
+  </Step>
+  <Step title="헤더 유형">
+    랜딩→LandingGnb(멀티 100px), 상세→BackButtonGnb(싱글 56px)
+  </Step>
+  <Step title="섹션 간격">
+    홈 `mb-12`, 마이페이지 `mt-[5rem]`/ThickDivider, 결제 `Divider margin=32`
+  </Step>
+  <Step title="BottomDockMenu">
+    홈/탐색→표시, 상세/결제→숨김
+  </Step>
+  <Step title="2단 레이아웃">
+    PC 마이페이지(192px 사이드바), PC 결제(gap-16), PC 상세(gap-12), Mobile→항상 단일 컬럼
+  </Step>
+</Steps>

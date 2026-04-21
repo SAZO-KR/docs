@@ -1,0 +1,242 @@
+---
+title: 모션
+description: ''
+tags:
+- design-system
+- motion
+- foundation
+---
+
+## 철학
+SAZO의 모션 시스템은 **'정직한 안내자'** , **'본질만 남긴 간결함'** , **'체계적인 확장'** 이라는 세 가지 원칙을 움직임으로 구현한다.
+
+- **정직한 안내자** : 모션은 다음에 일어날 일을 예측 가능하게 안내한다. 요소의 등장과 사라짐, 상태 변화를 명확히 보여주어 사용자가 인터페이스를 통제하고 있다는 느낌을 준다.
+- **본질만 남긴 간결함** : 과도하거나 복잡한 애니메이션을 지양한다. 모든 움직임은 기능적 목적에 집중하며, 장식적 애니메이션은 배제한다. 모든 움직임의 시간(ms)은 사용자의 시간을 존중하는 방향으로 사용한다.
+- **체계적인 확장** : 미리 정의된 타이밍과 이징 토큰을 기반으로 구현한다. 서비스 전체에 일관된 리듬과 속도감을 부여하여 예측 가능한 경험을 만든다.
+
+> 비대칭 이징 원칙 : **등장은 빠른 감속** (easeOut), **퇴장은 빠른 가속** (easeIn). 현실 세계에서 물체의 가속·감속이 질량과 의도를 전달하듯, SAZO의 이징은 인터랙션의 본질을 강화하는 비언어적 소통 수단이다.
+
+> 구체적인 토큰 값은 `02 토큰/css/tokens.css`의 Semantic Motion 섹션, Tailwind 유틸리티는 `02 토큰/css/utilities.css`의 Motion Composites 섹션을 참조한다.
+
+## 토큰 아키텍처
+```
+Primitive (--dur-200, --ease-out)
+    ↓ 참조
+Semantic (--duration-micro, --ease-enter, --duration-modal-open-sm)
+    ↓ 조합
+Tailwind 유틸리티 / CSS 클래스
+    ↓ 적용
+Component
+```
+
+**Primitive** : 물리적 시간값과 커브값. `--dur-{ms}` + `--ease-{curve}`.
+**Semantic** : 모션의 역할. `--duration-{role}`, `--ease-{role}`, `--delay-{scale}`.
+**유틸리티** : Tailwind `@utility`(transition-micro 등) 또는 CSS 클래스(modal-{type}-open 등).
+
+코드에서는 유틸리티 클래스를 우선 사용하고, 커스텀 전환이 필요할 때 시맨틱 CSS 변수를 참조한다. Primitive를 직접 사용하지 않는다(`--ease-linear` 제외 — `--fw-normal` 패턴).
+
+## 네이밍 규칙
+```
+Primitive:  --dur-{ms}            --ease-{curve}
+Semantic:   --duration-{role}     --ease-{role}
+            --delay-{scale}       --duration-modal-{action}-{size}
+
+--dur-300             → --duration-standard           (범용 전환)
+--dur-300             → --duration-modal-open-sm       (모달 sm 열기)
+--ease-out            → --ease-enter                   (등장 이징)
+--ease-in             → --ease-exit                    (퇴장 이징)
+```
+
+Primitive `--dur-` (약칭, 숫자) vs Semantic `--duration-` (풀네임, 역할어). Spacing의 `--space-1` vs `--space-between-sections-xl` 패턴과 동일.
+
+## Easing
+비대칭 이징 원칙을 기반으로 4종의 primitive 커브와 3종의 semantic 토큰을 정의한다.
+
+## Primitive 커브
+| CSS 변수 | cubic-bezier 값 | 형태 |
+|----------|----------------|------|
+| `--ease-out` | `(0.2, 0, 0, 1)` | 빠른 시작 → 부드러운 감속 |
+| `--ease-in` | `(1, 0, 0.8, 1)` | 느린 시작 → 빠른 가속 |
+| `--ease-in-out` | `(0.6, 0, 0.15, 1)` | 부드러운 가속·감속 |
+| `--ease-linear` | `(0, 0, 1, 1)` | 등속. 시작·끝 구분 없음 |
+
+## Semantic 역할
+| CSS 변수 | Primitive | 역할 | 사용 맥락 |
+|----------|-----------|------|----------|
+| `--ease-enter` | `var(--ease-out)` | 등장 | 화면에 나타나는 모든 요소. 모달 열기, 콘텐츠 진입. |
+| `--ease-exit` | `var(--ease-in)` | 퇴장 | 화면에서 사라지는 모든 요소. 모달 닫기. |
+| `--ease-standard` | `var(--ease-in-out)` | 양방향 전환 | 화면 내 A→B 위치 이동. 드롭다운, 아코디언. |
+| `--ease-linear` | (primitive 직접 사용) | 상태 변화 | opacity·색상 전환. 위치 이동 금지. |
+
+## 비대칭 이징 원리
+모달을 예로 들면:
+- **등장** : `--ease-enter` — ease-out 커브. 빠르게 시작, 부드럽게 감속. 요소가 제자리에 안착.
+- **퇴장** : `--ease-exit` — ease-in 커브. 느리게 시작, 빠르게 가속. 요소가 "힘 없이 떨어지는" 느낌.
+
+이 원칙은 모달뿐 아니라 모든 등장/퇴장 패턴에 적용된다. `--ease-enter`와 `--ease-exit`는 항상 쌍으로 사용한다.
+
+## Duration
+요소의 크기·이동 거리·중요도에 따라 적절한 Duration을 선택한다. 작은 요소는 빠르게, 크고 복잡한 요소는 더 길게 움직인다.
+
+## General
+| 유틸리티 | CSS 변수 | Primitive | 용도 |
+|---------|----------|-----------|------|
+| `transition-micro` | `--duration-micro` | `--dur-200` | 호버 색상, 아이콘 회전, 버튼 pressed, 투명도 전환 |
+| `transition-standard` | `--duration-standard` | `--dur-300` | 드롭다운, 아코디언, 호버 리프트 |
+| `transition-emphasis` | `--duration-emphasis` | `--dur-400` | 강조 전환 |
+| `animate-slide-in` | `--duration-entrance` | `--dur-300` | 콘텐츠 진입 — 옵션 선택자, 가격 영역, 체크아웃 |
+| — | `--duration-entrance-page` | `--dur-1000` | fadeIn — 랜딩 페이지 섹션 페이드인 |
+
+## Modal
+| CSS 변수 | Primitive | 용도 |
+|----------|-----------|------|
+| `--duration-modal-open-sm` | `--dur-300` | small 모달 열기 |
+| `--duration-modal-open-md` | `--dur-400` | medium 모달 열기 |
+| `--duration-modal-open-lg` | `--dur-500` | large 모달 열기 |
+| `--duration-modal-close-sm` | `--dur-200` | small 모달 닫기 |
+| `--duration-modal-close-md` | `--dur-300` | medium 모달 닫기 |
+| `--duration-modal-close-lg` | `--dur-400` | large 모달 닫기 |
+| `--duration-modal-overlay` | `--dur-150` | 오버레이 open/close |
+| `--duration-modal-opacity` | `--dur-100` | 콘텐츠 opacity 레이어 |
+| `--duration-parallax` | `--dur-600` | mo-large-full 배경 패럴렉스 |
+
+## Loading
+로딩 애니메이션은 무한 반복이며, 값은 1회 iteration 기준이다.
+
+| 유틸리티 | CSS 변수 | Primitive | 용도 |
+|---------|----------|-----------|------|
+| `animate-loading-spin` | `--duration-loading-spin` | `--dur-1000` | 로딩 스피너 |
+| `animate-loading-pulse` | `--duration-loading-pulse` | `--dur-2000` | 스켈레톤 UI |
+| — | `--duration-loading-bounce` | `--dur-1000` | 바운스 효과 |
+
+## Delay
+순차 등장, 페이드인 등에서 요소 간 시간차를 만드는 토큰이다. 모든 값은 `--dur-*` primitive를 참조한다.
+
+## General
+| CSS 변수 | Primitive | 용도 |
+|----------|-----------|------|
+| `--delay-none` | `--dur-0` | 기본. 지연 없음 |
+| `--delay-xs` | `--dur-100` | 극소 지연 |
+| `--delay-sm` | `--dur-150` | 소형 지연 |
+| `--delay-md` | `--dur-200` | fadeIn 기본 딜레이 |
+| `--delay-lg` | `--dur-300` | fadeIn 2단계 딜레이 |
+| `--delay-xl` | `--dur-450` | 대형 지연 |
+| `--delay-2xl` | `--dur-600` | fadeIn 최대 딜레이, 순차 등장 마지막 요소 |
+
+## Modal Overlay Close
+| CSS 변수 | Primitive | 용도 |
+|----------|-----------|------|
+| `--delay-modal-overlay-sm` | `--dur-50` | small 모달 오버레이 퇴장 지연 |
+| `--delay-modal-overlay-md` | `--dur-150` | medium 모달 오버레이 퇴장 지연 |
+| `--delay-modal-overlay-lg` | `--dur-250` | large 모달 오버레이 퇴장 지연 |
+
+## 키프레임 패턴
+실제 키프레임은 `utilities.css`에서 정의한다. 여기서는 참조명과 사양만 기록한다.
+
+## sazo-slide-in (콘텐츠 등장)
+Tailwind: `animate-slide-in` | @keyframes: `sazo-slide-in`
+
+| 속성 | 값 |
+|------|-----|
+| 키프레임 | `translateY(-1rem) opacity:0` → `translateY(0) opacity:1` |
+| Duration | `--duration-entrance` (300ms) |
+| Easing | `--ease-enter` |
+
+사용처: 옵션 선택자 시트, 가격 영역(PC/모바일), 체크아웃 아이템, 주소 폼 스텝 전환.
+
+## customBounce (바운스)
+| 속성 | 값 |
+|------|-----|
+| 키프레임 | `translateY(-15%)` ↔ `translateY(0)`, 키프레임별 커스텀 이징 |
+| Duration | `--duration-loading-bounce` (1000ms), 무한 반복 |
+
+사용처: 스크롤 유도 화살표, 주의 끌기 효과.
+
+## fadeIn (페이지 진입)
+| 속성 | 값 |
+|------|-----|
+| 키프레임 | `translateY(20px) opacity:0` → `translateY(0) opacity:1` |
+| Duration | `--duration-entrance-page` (1000ms) |
+| Easing | `--ease-enter` |
+| 딜레이 변형 | `--delay-md`(200ms), `--delay-lg`(300ms), `--delay-2xl`(600ms) |
+
+사용처: 포워딩 랜딩 페이지 섹션별 순차 등장.
+
+## 모달 애니메이션 시스템
+모달은 **오버레이(배경)** , **콘텐츠(본체)** , **opacity** 3개 레이어의 안무로 구성된다.
+
+- **등장** : 오버레이 `--duration-modal-overlay`(150ms) → 콘텐츠 transform + opacity 동시 시작
+- **퇴장** : 콘텐츠가 먼저 사라짐 → 오버레이가 `--delay-modal-overlay-{size}` 후 사라짐
+- **물리적 일관성** : 큰 모달은 묵직하고 느리게, 작은 모달은 가볍고 빠르게
+
+## 7타입 스펙
+| 모달 타입 | Size | 열기 Duration | 닫기 Duration | 오버레이 딜레이 | 키프레임 (Transform) |
+|-----------|------|-------------|-------------|---------------|-------------------|
+| mo-small-center | sm | `--duration-modal-open-sm` (300ms) | `--duration-modal-close-sm` (200ms) | `--delay-modal-overlay-sm` (50ms) | `translateY(50%)` |
+| mo-small-bottom | sm | `--duration-modal-open-sm` (300ms) | `--duration-modal-close-sm` (200ms) | `--delay-modal-overlay-sm` (50ms) | `translateY(100%)` |
+| mo-medium-bottom | md | `--duration-modal-open-md` (400ms) | `--duration-modal-close-md` (300ms) | `--delay-modal-overlay-md` (150ms) | `translateY(100%)` |
+| mo-large-full | lg | `--duration-modal-open-lg` (500ms) | `--duration-modal-close-lg` (400ms) | `--delay-modal-overlay-lg` (250ms) | `translateX(100%)` |
+| pc-small-center | sm | `--duration-modal-open-sm` (300ms) | `--duration-modal-close-sm` (200ms) | `--delay-modal-overlay-sm` (50ms) | `translateY(50%)` |
+| pc-medium-center | md | `--duration-modal-open-md` (400ms) | `--duration-modal-close-md` (300ms) | `--delay-modal-overlay-md` (150ms) | `translateY(30%)` |
+| pc-large-center | lg | `--duration-modal-open-lg` (500ms) | `--duration-modal-close-lg` (400ms) | `--delay-modal-overlay-lg` (250ms) | `translateY(15%)` |
+
+**공유 값** : 모든 타입이 `--ease-enter`(열기), `--ease-exit`(닫기), `--duration-modal-opacity`(100ms), `--duration-modal-overlay`(150ms)를 공유한다.
+
+**Duration은 size 기반** : sm/md/lg에 따라 결정되며 플랫폼(mo/pc)과 무관하다.
+**Transform은 타입 고유** : 방향(Y/X)과 거리(50%/100%/30%/15%)가 타입별로 다르다. PC는 모달이 커질수록 Y 이동 거리가 줄어든다(50% → 30% → 15%).
+
+## 콘텐츠 2-Layer 애니메이션
+콘텐츠 본체는 **transform** (위치 이동)과 **opacity** (투명도)를 별도 타이밍으로 제어한다.
+
+**열기:**
+- Transform: `--duration-modal-open-{size}`, `--ease-enter`
+- Opacity: `--duration-modal-opacity`(100ms), `--ease-linear`, delay 없음
+
+**닫기:**
+- Transform: `--duration-modal-close-{size}`, `--ease-exit`
+- Opacity: `--duration-modal-opacity`(100ms), `--ease-linear`, delay = (close duration - 100ms)
+
+opacity delay 규칙: `--delay-xs`(sm, 200-100=100ms), `--delay-md`(md, 300-100=200ms), `--delay-lg`(lg, 400-100=300ms)
+
+## 패럴렉스 효과
+`mo-large-full` 타입에서만 활성화. **원본 타입이 mo-large-full일 때만** 적용되며, 콘텐츠 오버플로우로 동적 변경된 경우에는 적용하지 않는다.
+
+| 속성 | 값 |
+|------|-----|
+| Transform | `translateX(-20%)` |
+| Duration | `--duration-parallax` (600ms) |
+| Easing | `--ease-enter` |
+
+## Framer Motion 패턴
+CSS만으로 구현 불가능한 경우에만 Framer Motion을 사용한다.
+
+## 패턴 1: 레이아웃 애니메이션 (layoutId)
+탭 선택 시 언더라인이 레이아웃 기반으로 부드럽게 이동. 다른 DOM 노드 간 위치 전환이 CSS만으로 불가능하여 사용.
+```
+<motion.span layoutId="underline" />
+```
+
+## 패턴 2: 스크롤 기반 헤더 접기 (Scroll-Driven)
+스크롤 방향에 따라 헤더를 접거나 펴는 패턴. `useAnimation` 컨트롤러로 명령형 제어.
+```
+variants={{
+  folded: { top: -52, transition: { duration: 0.2, ease: "easeInOut" } },
+  unfolded: { top: 0, transition: { duration: 0.2, ease: "easeInOut" } },
+}}
+```
+
+## 패턴 3: 진입 애니메이션
+페이지 로드 시 헤더가 위에서 슬라이드 등장.
+```
+<AnimatePresence initial={false}>
+  <motion.div initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.2 }} />
+```
+
+## 패턴 4: 순차 리스트 등장
+트렌드 키워드가 순차적으로 회전하며 등장.
+```
+container = { show: { transition: { staggerChildren: 0.5 } } }
+item = { hidden: { opacity: 0, rotateX: 90 }, show: { opacity: 1, rotateX: 0 } }
+```
+
+> 설계 판단 기록은 06 설계 기록/ 참조.

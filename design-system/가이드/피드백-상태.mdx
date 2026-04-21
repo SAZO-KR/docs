@@ -1,0 +1,230 @@
+---
+title: 피드백 상태
+description: ''
+tags:
+- design-system
+- guide
+- state
+- feedback
+---
+
+## 철학
+SAZO의 피드백 시스템은 **모든 데이터 영역이 4가지 상태를 반드시 커버** 하는 것을 원칙으로 한다. 사용자는 항상 "지금 무슨 일이 일어나고 있는지"를 알 수 있어야 한다.
+
+- Empty → Loading → Loaded → Error : 4상태 커버 원칙
+- 목록형 데이터는 Skeleton, 단일 콘텐츠는 Spinner
+- 모든 mutation 성공에는 Toast, 아이콘 상태 변경 피드백 제공
+
+## 4상태 커버 원칙
+| 상태 | 컴포넌트 | 시각적 처리 |
+|------|----------|------------|
+| Empty | EmptyState / EmptyList / SearchEmpty | 제목 + 설명 + CTA(선택) |
+| Loading | Skeleton / Spinner / OverScreenLoader | `animate-pulse` / `animate-spin` + 오버레이 |
+| Loaded | 실제 콘텐츠 | 정상 렌더링 |
+| Error | SearchFail / 인라인 메시지 / 폼 에러 | 에러 색상 + 아이콘 + 메시지 |
+
+```
+데이터 생명주기
+
+             +-----------+
+             | 초기 진입  |
+             +-----+-----+
+                   |
+              API 호출 시작
+                   |
+           +-------v--------+
+           |    Loading      |
+           |  Skeleton /     |  ← animate-pulse (목록)
+           |  Spinner        |    animate-spin (단일)
+           +-------+--------+
+                   |
+         +---------+----------+
+         |                    |
+    성공 (data)          실패 (error)
+         |                    |
+    data.len === 0?      Error UI
+         |
+    +----+----+
+    |         |
+  Empty    Loaded → 사용자 액션 → OverScreenLoader → 성공/실패
+```
+
+## 비어있는 상태
+## 변형별 토큰 비교
+| 요소 | EmptyState | EmptyList | SearchEmpty |
+|------|-----------|-----------|-------------|
+| 테두리 | `--border-subtle` | `--border-subtle` | 없음 |
+| radius | `--radius-2xl` (16px) | `--radius-2xl` (16px) | 없음 |
+| 패딩 | `py-12 px-4` | `px-4 py-16` | `mt-10` |
+| 최소 높이 | 없음 | `min-h-[11.875rem]` (190px) | 없음 |
+| 제목 크기 | 16px | 18px | 24px |
+| 제목 두께 | 500 | 500 | 600 |
+| 제목 색상 | `--text-default` | `--text-default-subtle` | (상속) |
+| 설명 크기 | 14px | 16px | 14px |
+| 설명 색상 | `--text-secondary` | `--text-tertiary` | (상속) |
+| 제목-설명 간격 | `gap-2` (8px) | `gap-1` (4px) | `mt-2` (8px) |
+
+## 변형 선택 기준
+| 상황 | 변형 | 이유 |
+|------|------|------|
+| 장바구니 비어있음 | EmptyState + CTA 버튼 | 상품 탐색으로 유도 |
+| 위시리스트/주문 비어있음 | EmptyList | 목록 내 인라인 표시 |
+| 검색 결과 없음 | SearchEmpty | 검색 전용 안내 |
+| 쿠폰 없음 | EmptyState | 카드형 안내 |
+
+## 로딩 상태
+## Skeleton (스켈레톤)
+### Grid Type 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 애니메이션 | `--duration-loading-pulse` | `animate-pulse` |
+| 이미지 배경 | `--surface-sunken` | `bg-gray-200` |
+| 이미지 비율 | -- | `aspect-square` |
+| 이미지 radius | `--radius-2xl` | `rounded-2xl` (16px) |
+| 텍스트 라인 배경 | `--surface-sunken` | `bg-gray-200` |
+| 텍스트 라인 높이 | -- | `h-3` (12px) |
+| 텍스트 라인 너비 | -- | `w-5/6` |
+| 텍스트 라인 radius | -- | `rounded` (4px) |
+| 카드 간 수평 간격 | -- | `gap-x-3` (12px) |
+| 카드 간 수직 간격 | -- | `gap-y-6` (24px) |
+| 이미지-텍스트 간격 | -- | `pt-2` (8px) |
+
+### List Type 토큰
+| 요소 | Primitive |
+|------|-----------|
+| 이미지 크기 | `min-h-[120px] max-h-[182px]` |
+| 이미지-텍스트 간격 | `gap-5` (20px) |
+| 카드 간 간격 | `gap-12` (48px) |
+
+## Spinner (스피너)
+### 전체 화면
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 애니메이션 | `--duration-loading-spin` | `animate-spin` |
+| 스피너 테두리 | `--border-brand` | `border-brand-500` |
+| 스피너 형태 | `--radius-full` | `rounded-full` |
+| 오버레이 배경 | `--overlay-default` | `bg-whiteOpacity-500` |
+
+### OverScreen Loader
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 오버레이 배경 | `--overlay-default` | `bg-whiteOpacity-500` |
+| z-index | `--z-overscreen` | `z-[9999]` |
+| 위치 | -- | `fixed inset-0` 또는 `absolute` |
+
+## 로딩 유형 선택 기준
+| 상황 | 유형 |
+|------|------|
+| 목록형 데이터 초기 로드 | Skeleton (Grid/List) |
+| 페이지 전체 초기 로딩 | LoadingComponent (Lottie) |
+| 페이지 오버레이 로딩 (결제 등) | OverScreenLoader + LoadingComponent |
+| 섹션 내부 로딩 | AbsoluteCircleLoading |
+| 버튼/인라인 로딩 | SmallLoadingComponent (24px) |
+| 기존 UI 위 업데이트 중 | OverScreenLoader (기존 콘텐츠 유지) |
+
+## 오류 상태
+## 에러 색상 체계
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 에러 텍스트 | `--text-error` | `text-error-600` |
+| 에러 아이콘 | `--icon-error` | `text-error-500` |
+| 에러 입력 테두리 | `--border-error` | `border-error-300` |
+| 에러 배경 (배지) | `--surface-error` | `bg-error-50` |
+| 에러 버튼 배경 | error-600 (primitive 직접) | `bg-error-600` |
+
+## 에러 변형
+| 변형 | 구성 | 사용처 |
+|------|------|--------|
+| 검색 오류 (SearchFail) | 24px/600 제목 + 14px 본문 | 검색 API 실패 |
+| 인라인 오류 | 16px + `--text-default` | 장바구니 로드 실패 |
+| 폼 필드 에러 | 테두리(`error-300`) + 아이콘(`error-500`) + 메시지(`error-600`) | 입력 검증 실패 |
+| 결제 실패 | 30px/600 + `--text-strong` + 아이콘 그림자 | 결제 오류 전체 페이지 |
+
+## 성공 상태
+## Toast 성공
+| 요소 | Primitive |
+|------|-----------|
+| 표시 방식 | `toast.success()` (react-hot-toast) |
+| 자동 소멸 | 3초 |
+| 컨테이너 | `<SazoToaster />` (앱 루트) |
+
+### Toast 메시지 카탈로그
+| 액션 | 메시지 |
+|------|--------|
+| 장바구니 추가 | "카트에 상품을 추가했습니다" |
+| 장바구니 수정 | "장바구니가 업데이트되었습니다." |
+| 찜 추가 | "찜하기에 추가했습니다" |
+| 찜 해제 | "찜하기에서 제거했습니다" |
+| 주문번호 복사 | "주문번호가 복사되었습니다." |
+
+## 아이콘 상태 변경 (찜하기 토글)
+| 상태 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 비활성 | `--overlay-active-light` | `fill-blackOpacity-100` |
+| 비활성 hover | -- | `fill-blackOpacity-200` |
+| 활성 | `--border-brand` | `fill-brand-500 text-brand-500` |
+| 처리 중 | -- | 20x20px 인라인 스피너, `border-brand-500 animate-spin` |
+
+## 배지 성공
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 배경 | `--surface-success` | `bg-success-50` |
+| 텍스트 | `--text-on-success` | `text-success-700` |
+
+## 선택 상태 색상
+| 요소 | 비선택 토큰 | 선택 토큰 |
+|------|------------|----------|
+| Chip 배경 | `--surface-tertiary` | brand-500 (primitive 직접) |
+| Chip 텍스트 | `--text-secondary` | `--text-inverse` |
+| 탭 텍스트 | `--text-tertiary` | brand-500 (primitive 직접) |
+| 탭 인디케이터 | 없음 | brand-400 (primitive 직접) |
+
+## 경고 상태
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| InfoPanel 배경 | `--surface-warning` | `bg-warning-50` |
+| InfoPanel 테두리 | `--border-warning` | `border-warning-200` |
+| InfoPanel 텍스트 | `--text-on-warning` | `text-warning-700` |
+| InfoPanel 아이콘 | `--icon-on-warning` | `text-warning-600` |
+
+## Do / Don't
+| Do | Don't |
+|----|-------|
+| 모든 데이터 fetch 영역에 4상태(Empty/Loading/Loaded/Error) UI 정의 | 에러 상태를 빈 화면으로 방치 |
+| 목록형 데이터는 Skeleton (레이아웃 시프트 방지) | 목록에 전체 화면 스피너 |
+| Skeleton은 실제 콘텐츠와 동일한 레이아웃 유지 | Skeleton 크기/배치가 콘텐츠와 불일치 |
+| 업데이트 중에는 OverScreenLoader로 기존 UI 유지 | 기존 콘텐츠 제거 후 스피너 교체 |
+| 모든 mutation 성공에 `toast.success()` 호출 | 성공 피드백 없이 조용히 처리 |
+| 성공 메시지는 사용자 관점 ("카트에 상품을 추가했습니다") | 개발자 관점 ("POST /cart 200 OK") |
+| 폼 에러는 테두리 + 아이콘 + 메시지 3가지 조합 | 색상으로만 에러 표시 |
+| 빈 상태에 설명 + CTA 제공 | "데이터가 없습니다" 기술적 메시지 |
+| Skeleton 배경색은 `--surface-sunken` 통일 | Skeleton에 다양한 배경색 |
+| 활성 상태는 brand-500 (primitive 직접)으로 통일 | 활성에 다양한 색상 (일관성 파괴) |
+
+## 피드백 설계 체크리스트
+<Steps>
+  <Step title="Empty">
+    제목(사용자 관점) + 설명 + CTA(선택). EmptyState/EmptyList/SearchEmpty 중 선택
+  </Step>
+  <Step title="Loading (목록)">
+    Skeleton, `animate-pulse`, `bg-gray-200`, 실제 레이아웃과 동일 구조
+  </Step>
+  <Step title="Loading (단일)">
+    Spinner, `animate-spin`, `border-brand-500`
+  </Step>
+  <Step title="Loading (업데이트)">
+    OverScreenLoader, `bg-whiteOpacity-500`, 기존 UI 유지
+  </Step>
+  <Step title="Error (폼)">
+    3요소 조합 (테두리 `error-300` + 아이콘 `error-500` + 메시지 `error-600`)
+  </Step>
+  <Step title="Error (API)">
+    SearchFail 또는 인라인 텍스트, 서버 원문 메시지 사용
+  </Step>
+  <Step title="Success">
+    `toast.success()` + Query Invalidation 동시 수행
+  </Step>
+  <Step title="Warning">
+    InfoPanel `color="warning"`, 변경 사항이 있을 때만 조건부 표시
+  </Step>
+</Steps>

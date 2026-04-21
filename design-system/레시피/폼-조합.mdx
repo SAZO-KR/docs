@@ -1,0 +1,188 @@
+---
+title: 폼 조합
+description: ''
+tags:
+- design-system
+- recipe
+- form
+---
+
+## 철학
+SAZO의 폼은 **최소한의 인지 부하로 정확한 입력을 유도** 한다. 핵심 원칙은 세 가지다.
+
+- **일관된 간격** : gap-4`(16px)
+- **3요소 에러** : 테두리(`border-border-error`) + 아이콘(`LuCircleAlert`) + 메시지(`text-text-error`)를 항상 함께 사용
+- **단계적 공개** : 10개 이상 필드는 Progressive Disclosure 패턴으로 분할
+
+## 구조
+## 표준 입력 필드
+### 기본 상태 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| Label 색상 | `text-text-secondary` | `text-gray-700` |
+| Label 크기/두께 | -- | 14px / 500 |
+| Label-Input 간격 | -- | `gap-1.5` (6px) |
+| Input 배경 | `bg-surface-default` | `bg-white` |
+| Input 테두리 | `border-border-default` | `border-gray-300` |
+| Input radius | `rounded-xl` | `rounded-xl` (12px) |
+| Input 패딩 | -- | `px-3.5 py-2.5` (14px / 10px) |
+| Input 텍스트 | `text-text-default` | `text-gray-900` 16px |
+| Placeholder | `text-text-tertiary` | `text-gray-500` |
+| Input-Hint 간격 | -- | `gap-1` (4px) |
+| Hint 색상 | `text-text-tertiary` | `text-gray-500` 12px |
+
+### 에러 상태 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| Label 색상 | `text-text-error` | `text-error-600` |
+| Input 테두리 | `border-border-error` | `border-error-300` |
+| 에러 아이콘 | -- | `LuCircleAlert h-5 w-5 text-error-600 shrink-0` |
+| 에러 메시지 | `text-text-error` | `text-error-600` 12px |
+
+### 비활성 상태 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| Input 배경 | `bg-surface-disabled` | `bg-gray-200` |
+| Input 텍스트 | `text-text-disabled` | `text-gray-400` |
+| Input 테두리 | -- | `border-gray-200` |
+
+### 포커스 상태 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 기본 포커스 | `border-border-strong` | outline `gray-900` |
+| 검색바 포커스 | Primitive (컴포넌트 레벨): `brand-400` | `focus-within:outline-brand-400` |
+
+### 시각적 구조도
+```
+기본 상태                               에러 상태
++--------------------------------------+  +--------------------------------------+
+| Label (sm, medium, gray-700)         |  | Label (sm, medium, error-600)        |
+|        gap-1.5 (6px)                 |  |        gap-1.5 (6px)                 |
+| +----------------------------------+ |  | +----------------------------------+ |
+| | placeholder (gray-500)           | |  | | 입력값              [LuCircleAlert]| |
+| | rounded-xl, border-gray-300      | |  | | border-error-300                  | |
+| +----------------------------------+ |  | +----------------------------------+ |
+|        gap-1 (4px)                   |  |        gap-1 (4px)                   |
+| Hint (xs, gray-500)                 |  | 에러 메시지 (xs, error-600)          |
++--------------------------------------+  +--------------------------------------+
+```
+
+## 필드 간 간격 패턴
+| 컨텍스트 | 토큰 | 값 |
+|----------|------|-----|
+| 독립 페이지 폼 (계정 정보) | `gap-7` | 28px |
+| 모달 내 폼 (회원가입, 스텝 주소) | `gap-4` | 16px |
+| 컴팩트 폼 (개인통관코드) | `gap-2` | 8px |
+
+> 규칙: 독립 페이지 폼은 `gap-7`(28px), 모달 내 폼은 `gap-4`(16px) 또는 `gap-2`(8px).
+
+## 체크박스/라디오 필드
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 체크박스-라벨 간격 (단일) | -- | `gap-2` (8px), `items-center` |
+| 체크박스-설명 간격 (긴 설명) | -- | `gap-3` (12px), `items-start` |
+| CheckBox variant | -- | 항상 `"filled"` |
+| CheckBox color (설정) | -- | `"black"` |
+| CheckBox color (약관) | -- | `"primary"` |
+| Chip 선택 배경 | Primitive (컴포넌트 레벨): `brand-500` | `bg-brand-500` |
+| Chip 미선택 배경 | `bg-surface-tertiary` | `bg-gray-100` |
+| Chip 미선택 텍스트 | `text-text-secondary` | `text-gray-700` |
+| Chip 선택 텍스트 | `text-text-inverse` | `text-white` |
+| Chip radius | `rounded-full` | `rounded-full` |
+
+## 약관 동의 그룹
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 필수/선택 사이 간격 | -- | `space-y-6` (24px) |
+| 필수 약관 내 간격 | -- | `space-y-4` (16px) |
+| 안내 텍스트 색상 | `text-text-tertiary` | `text-gray-500` |
+| 링크 색상 | `text-text-default` | `text-gray-900` |
+| 링크 밑줄 | -- | `underline` |
+| 선택 약관 상단 구분 | -- | `border-t pt-4` |
+| 마케팅 라벨 색상 | `text-text-secondary` | `text-gray-700` 14px |
+
+## 주소 입력 폼
+### 일반 주소 폼
+| 요소 | Primitive | 비고 |
+|------|-----------|------|
+| 폼 간격 | `gap-7` (28px) | 독립 폼 기준 |
+| Divider | `margin="8", color="gray-300"` | 섹션 구분 |
+| InfoPanel | `color="default", size="sm"` | 안내 텍스트 |
+| 제출 버튼 | `filled, primary, lg, justify-center` | 폼 하단 |
+| 체크박스 영역 | `mt-6 flex items-center gap-2 pl-1` | 기본 배송지 |
+
+### 스텝 주소 폼
+| 요소 | Primitive | 비고 |
+|------|-----------|------|
+| 폼 간격 | `gap-4` (16px) | 모달 내 기준 |
+| 폼 방향 | `flex-col-reverse` | 새 필드가 위에 추가 |
+| FeaturedHeading | `size="md"`, `!mb-8` (32px) | 단계별 제목 변경 |
+| 필드 등장 애니메이션 | `animate-slideIn` (300ms) | Progressive Disclosure |
+| 2단 연결 Input | `rounded-t-2xl` / `rounded-b-2xl`, `border-2 border-gray-300` | 배송 요청사항 |
+| 커스텀 Footer | `rounded-t-2xl border-t bg-gray-50 p-4` | 하단 고정 버튼 |
+
+## 단계적 공개 패턴
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 동적 헤딩 | `FeaturedHeading size="md"` | 24px / 600 |
+| 헤딩 하단 간격 | `mb-section-md` | `mb-8` (32px) |
+| 필드 등장 | `animate-slide-in` | 300ms, `translateY(-1rem)` → `translateY(0)` |
+| 필드 진행 트리거 | -- | Enter 키 + `trigger()` 부분 검증 |
+
+```
+[FeaturedHeading: "주소를 알려주세요"]       ← 단계마다 제목 변경
+         mb-8 (32px)
+[주소 필드]                                 ← 입력 완료 후 Enter
+         ↓ animate-slideIn (300ms)
+[상세주소 필드] (새로 등장)                   ← 다음 필드 노출
+         ↓ animate-slideIn (300ms)
+[이름 필드] (새로 등장)
+```
+
+## Do / Don't
+| Do | Don't |
+|----|-------|
+| 에러 표시는 테두리 + 아이콘 + 메시지 3가지 조합 | 색상으로만 에러 표시 (접근성 문제) |
+| 독립 페이지 폼 간격은 `gap-7` (28px) 통일 | 필드마다 다른 간격 사용 |
+| 긴 폼은 단계적 공개 패턴으로 분할 | 10개 이상 필드를 한 번에 표시 |
+| 검증은 `onBlur` 또는 `onSubmit` 모드 사용 | `onChange` 모드 (매 입력마다 검증, UX 저하) |
+| 포커스 시 `border-border-strong` 강한 테두리로 명확한 피드백 | 포커스 시각적 피드백 없음 |
+| CheckBox variant는 항상 `"filled"` | `"outline"` 체크박스 사용 |
+| Chip 선택은 배경 + 텍스트 동시 변경 | 텍스트 색상만 변경 |
+
+## 폼 설계 시 체크리스트
+<Steps>
+  <Step title="필드 간격">
+    독립 페이지 `gap-7`, 모달 `gap-4`, 컴팩트 `gap-2`
+  </Step>
+  <Step title="Label">
+    `text-label-default` + `text-text-secondary`
+  </Step>
+  <Step title="Input radius">
+    `rounded-xl` (12px) 통일
+  </Step>
+  <Step title="에러 3요소">
+    테두리(`error-300`) + 아이콘(`error-600`) + 메시지(`error-600`)
+  </Step>
+  <Step title="비활성">
+    배경 `bg-surface-disabled` + 텍스트 `text-text-disabled`
+  </Step>
+  <Step title="Placeholder">
+    `text-text-tertiary`
+  </Step>
+  <Step title="제출 버튼">
+    `filled`, `primary`, `lg`, `w-full`, `justify-center`
+  </Step>
+  <Step title="약관">
+    필수는 문구만, 선택은 CheckBox + `border-t` 구분
+  </Step>
+  <Step title="안내 문구">
+    12px + `text-text-secondary`
+  </Step>
+  <Step title="폼 하단 여백">
+    Footer 겹침 방지용 `pb-[7rem]` (스텝 모달)
+  </Step>
+</Steps>

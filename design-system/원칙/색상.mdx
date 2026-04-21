@@ -1,0 +1,210 @@
+---
+title: 색상
+description: ''
+tags:
+- design-system
+- color
+- foundation
+---
+
+## 철학
+SAZO의 색상 시스템은 핵심 디자인 원칙인 **'정직한 안내자'** 와 **'본질만 남긴 간결함'** 을 시각적으로 구현한다.
+
+- **명확성** : 모든 색상이 기능적 목적을 갖는다. 장식적인 색상 사용을 지양한다.
+- **일관성** : 정의된 팔레트와 사용 규칙으로 통일된 시각적 경험을 제공한다.
+- **접근성** : 모든 색상 조합은 WCAG AA 레벨 이상의 명도 대비를 충족한다.
+- **체계성** : hex 코드가 아닌 역할 기반 **토큰 이름** 으로 관리한다.
+
+> 구체적인 hex 값과 토큰 매핑은 `02 토큰/color/primitive.tokens.json`, `02 토큰/color/semantic.tokens.json`, `02 토큰/css/tokens.css`를 참조한다. 이 문서에서는 hex 값을 직접 기술하지 않는다.
+
+## 토큰 아키텍처
+```
+Primitive (--gray-900, --brand-500)
+    ↓ 참조
+Semantic (--text-default, --border-brand)
+    ↓ @theme inline 매핑
+Tailwind (text-text-default, border-border-brand)
+    ↓ 사용
+Component (Button bg, Badge text)
+```
+
+**Primitive** : 색상의 물리적 값. "이 색은 무슨 색인가?" (예: `--gray-900`, `--brand-500`)
+**Semantic** : 색상의 역할. "이 색은 무엇을 의미하는가?" (예: `--text-default`, `--surface-error`)
+**Tailwind** : `@theme inline`에서 `--color-text-*`, `--color-surface-*`, `--color-border-*`로 매핑되어 유틸리티 클래스로 사용 가능.
+
+코드에서는 항상 시맨틱 토큰을 사용한다. Primitive를 직접 사용하지 않는다.
+
+## 네이밍 규칙: Element-first
+```
+--{element}-{role}              (CSS 변수)
+{prefix}-{element}-{role}       (Tailwind 유틸리티)
+
+--text-default       → text-text-default       ← 텍스트 색상
+--surface-error      → bg-surface-error        ← 배경 색상
+--border-warning     → border-border-warning   ← 테두리 색상
+```
+
+피드백 색상(error/warning/success)도 일반 토큰과 동일한 구조를 따른다. 별도의 `feedback` 네임스페이스를 만들지 않는다.
+
+**이유** : Tailwind의 `text-*`, `bg-*`, `border-*` 유틸리티와 1:1 대응. `text-text-`를 입력하면 error/warning/success를 포함한 모든 텍스트 색상이 한 목록에 나열된다.
+
+## 팔레트 역할
+## Brand
+서비스의 핵심 정체성 컬러. 사용자의 가장 중요한 행동을 유도한다.
+- CTA 버튼, 알림 배지
+- 부정적인 활동에 Primary를 사용하지 않는다 (→ Error 사용)
+
+## Neutral
+서비스의 뼈대. 텍스트, 배경, 구분선 등 대부분의 UI 요소에 사용된다.
+
+## Status
+사용자 행동의 결과나 시스템 상태 변화를 전달한다. 상태와 무관한 UI에는 사용하지 않는다.
+
+## Purple (혜택/긍정적 기회)
+쿠폰, 포인트, 할인 등 **사용자에게 긍정적 기회** 를 시각적으로 강조할 때 사용한다.
+
+> Purple의 의미 확장에 대한 깊은 분석은 Purple 컬러 재정의를 참조한다.
+
+## 시각적 계층
+## Gray 스케일의 구조적 패턴
+Gray 스케일은 **콘텐츠 계층** 과 **서브틀 동반 계층** 이 교차하는 구조다:
+
+| Gray    | 계층 유형   | Tailwind 유틸리티                | CSS 변수                    | 역할              |
+| ------- | ------- | ---------------------------- | ------------------------- | --------------- |
+| 950     | —       | `text-text-strong`           | `--text-strong`           | 최강 (대제목, 금액 총합) |
+| **900** | **콘텐츠** | `text-text-default`          | `--text-default`          | 1차 텍스트          |
+| 800     | 서브틀     | `text-text-default-subtle`   | `--text-default-subtle`   | 900과 함께 쓰는 아이콘  |
+| **700** | **콘텐츠** | `text-text-secondary`        | `--text-secondary`        | 2차 텍스트          |
+| 600     | 서브틀     | `text-text-secondary-subtle` | `--text-secondary-subtle` | 700과 함께 쓰는 아이콘  |
+| **500** | **콘텐츠** | `text-text-tertiary`         | `--text-tertiary`         | 3차 텍스트          |
+| 450     | 고유      | `text-text-muted`            | `--text-muted`            | SAZO 커스텀 (5회)   |
+| 400     | —       | `text-text-disabled`         | `--text-disabled`         | 비활성             |
+| 300     | —       | `text-text-disabled-subtle`  | `--text-disabled-subtle`  | 비활성 아이콘         |
+
+**패턴** : 홀수백(900/700/500)이 콘텐츠의 뼈대, 짝수백(800/600)이 그 옆에 붙는 아이콘/보조 요소. 이 구조가 "텍스트와 아이콘의 조화" 원칙의 기반이다.
+
+### 텍스트와 아이콘의 조화
+아이콘은 동일한 색상의 텍스트보다 시각적으로 더 무겁게 느껴진다. 텍스트와 아이콘이 함께 표시될 때, **바로 아래 짝수백 색상** 을 아이콘에 적용하여 시각적 균형을 맞춘다.
+
+| 텍스트 | 동반 아이콘 | 예시 |
+| --- | --- | --- |
+| `text-text-default` (`--gray-900`) | `text-text-default-subtle` (`--gray-800`) | 주문 목록 제목 + 아이콘 |
+| `text-text-secondary` (`--gray-700`) | `text-text-secondary-subtle` (`--gray-600`) | 모달 설명 + 보조 아이콘 |
+
+## 텍스트 계층 전체
+| Tailwind 유틸리티 | CSS 변수 | Primitive | 역할 | 사용 맥락 |
+|----------------|---------|-----------|------|----------|
+| `text-text-strong` | `--text-strong` | `--gray-950` | 최강 | 페이지 대제목, 금액 총합 |
+| `text-text-default` | `--text-default` | `--gray-900` | 기본 | body 본문, 모달 제목, 상품 가격 |
+| `text-text-default-subtle` | `--text-default-subtle` | `--gray-800` | 링크/아이콘 | GNB 메뉴, 주문 목록 제목 |
+| `text-text-secondary` | `--text-secondary` | `--gray-700` | 보조 | 모달 설명, 가격 항목명, 부제목 |
+| `text-text-secondary-subtle` | `--text-secondary-subtle` | `--gray-600` | 3차 | 탭, FAQ 답변, 빈 리스트 안내 |
+| `text-text-tertiary` | `--text-tertiary` | `--gray-500` | 4차 | 푸터, placeholder |
+| `text-text-muted` | `--text-muted` | `--gray-450` | 미세 | 툴팁 아이콘, 보조 옵션 |
+| `text-text-disabled` | `--text-disabled` | `--gray-400` | 비활성 | 취소선 가격, disabled 버튼 |
+| `text-text-disabled-subtle` | `--text-disabled-subtle` | `--gray-300` | 비활성(미세) | disabled 아이콘 |
+| `text-text-inverse` | `--text-inverse` | `--white` | 반전 | 어두운 배경 위 흰색 텍스트 |
+| `text-text-benefit-strong` | `--text-benefit-strong` | `--purple-700` | 혜택(강) | 쿠폰/포인트 강조 텍스트 |
+| `text-text-benefit` | `--text-benefit` | `--purple-500` | 혜택 | 할인·적립 안내 텍스트 |
+
+## 배경 계층
+| Tailwind 유틸리티          | CSS 변수                | Primitive    | 역할   | 사용 맥락                    |
+| ---------------------- | --------------------- | ------------ | ---- | ------------------------ |
+| `bg-surface-default`   | `--surface-default`   | `--white`    | 기본   | 카드, 모달, 인풋               |
+| `bg-surface-secondary` | `--surface-secondary` | `--gray-50`  | 2차   | 체크아웃 페이지, 정보 패널          |
+| `bg-surface-tertiary`  | `--surface-tertiary`  | `--gray-100` | 3차   | Chip 비선택, 스켈레톤           |
+| `bg-surface-sunken`    | `--surface-sunken`    | `--gray-200` | 가라앉은 | 스켈레톤 블록, Chip hover      |
+| `bg-surface-inverse`   | `--surface-inverse`   | `--gray-900` | 반전   | 다크 섹션, 툴팁 버블             |
+| `bg-surface-disabled`  | `--surface-disabled`  | `--gray-200` | 비활성  | Button/Input disabled bg |
+| `bg-surface-brand`     | `--surface-brand`     | `--brand-0`  | 브랜드  | Badge(brand) bg          |
+| `bg-surface-benefit`   | `--surface-benefit`   | `--purple-50` | 혜택   | 쿠폰/포인트 안내 배경          |
+
+## 테두리 계층
+| Tailwind 유틸리티 | CSS 변수 | Primitive | 역할 | 사용 맥락 |
+|----------------|---------|-----------|------|----------|
+| `border-border-default` | `--border-default` | `--gray-300` | 기본 | 카드, 버튼(outline), 인풋 |
+| `border-border-subtle` | `--border-subtle` | `--gray-200` | 미세 | 옵션 카드, 위시리스트 |
+| `border-border-strong` | `--border-strong` | `--gray-900` | 강한 | 선택된 타일, Input(focus) |
+| `border-border-disabled` | `--border-disabled` | `--gray-400` | 비활성 | 비활성 아바타 업로드 |
+| `border-border-transparent` | `--border-transparent` | `--opacity-black-0` | 투명 | 이미지 미세 border |
+| `border-border-focus` | `--border-focus` | `--brand-500` | 포커스 | 포커스 링 |
+| `border-border-brand` | `--border-brand` | `--brand-500` | 브랜드 | Primary 강조 테두리 |
+| `border-border-benefit` | `--border-benefit` | `--purple-200` | 혜택 | 쿠폰/포인트 안내 테두리 |
+
+## 오버레이 계층
+| Tailwind 유틸리티 | CSS 변수 | Primitive | 역할 | 사용 맥락 |
+|----------------|---------|-----------|------|----------|
+| `bg-overlay-default` | `--overlay-default` | `--opacity-white-500` | 기본 | 모달 배경 오버레이 |
+| `bg-overlay-image` | `--overlay-image` | `--opacity-black-500` | 이미지 | 이미지 위 어두운 오버레이 |
+| `bg-overlay-dot` | `--overlay-dot` | `--opacity-black-300` | 도트 | 캐러셀 도트 오버레이 |
+| (직접 사용) | `--overlay-hover-light` | `--opacity-black-0` | 호버 | 라이트 호버 오버레이 |
+| (직접 사용) | `--overlay-active-light` | `--opacity-black-100` | 액티브 | 라이트 액티브 오버레이 |
+
+## 피드백 계층
+Error, Warning, Success, Info 각각 **컨텍스트에 따라 다른 톤의 색상** 을 사용한다. 흰 바탕 위와 상태 배경 위에서 참조하는 Primitive 레벨이 다르다.
+
+### 흰 바탕 위 (surface-default)
+| 상태 | 요소 | Tailwind 유틸리티 | CSS 변수 | Primitive |
+|------|------|----------------|---------|-----------|
+| Error | 텍스트 | `text-text-error` | `--text-error` | `--error-600` |
+| Error | 아이콘 | `text-icon-error` | `--icon-error` | `--error-500` |
+| Warning | 텍스트 | `text-text-warning` | `--text-warning` | `--warning-600` |
+| Warning | 아이콘 | `text-icon-warning` | `--icon-warning` | `--warning-500` |
+| Success | 텍스트 | `text-text-success` | `--text-success` | `--success-600` |
+| Success | 아이콘 | `text-icon-success` | `--icon-success` | `--success-500` |
+| Info | 텍스트 | `text-text-info` | `--text-info` | `--blue-600` |
+| Info | 아이콘 | `text-icon-info` | `--icon-info` | `--blue-500` |
+
+### 상태 배경 위 (surface-{status}, -50)
+| 상태 | 요소 | Tailwind 유틸리티 | CSS 변수 | Primitive |
+|------|------|----------------|---------|-----------|
+| Error | 배경 | `bg-surface-error` | `--surface-error` | `--error-50` |
+| Error | 텍스트 | `text-text-on-error` | `--text-on-error` | `--error-700` |
+| Error | 아이콘 | `text-icon-on-error` | `--icon-on-error` | `--error-600` |
+| Error | 테두리 | `border-border-error` | `--border-error` | `--error-300` |
+| Warning | 배경 | `bg-surface-warning` | `--surface-warning` | `--warning-50` |
+| Warning | 텍스트 | `text-text-on-warning` | `--text-on-warning` | `--warning-700` |
+| Warning | 아이콘 | `text-icon-on-warning` | `--icon-on-warning` | `--warning-600` |
+| Warning | 테두리 | `border-border-warning` | `--border-warning` | `--warning-200` |
+| Success | 배경 | `bg-surface-success` | `--surface-success` | `--success-50` |
+| Success | 텍스트 | `text-text-on-success` | `--text-on-success` | `--success-700` |
+| Success | 아이콘 | `text-icon-on-success` | `--icon-on-success` | `--success-600` |
+| Success | 테두리 | `border-border-success` | `--border-success` | `--success-200` |
+| Info | 배경 | `bg-surface-info` | `--surface-info` | `--blue-50` |
+| Info | 텍스트 | `text-text-on-info` | `--text-on-info` | `--blue-700` |
+| Info | 아이콘 | `text-icon-on-info` | `--icon-on-info` | `--blue-600` |
+| Info | 테두리 | `border-border-info` | `--border-info` | `--blue-200` |
+
+### Primitive 레벨 규칙
+| 요소  | 흰 바탕 위   | 상태 배경 위      |
+| --- | -------- | ------------ |
+| 텍스트 | **-600** | **-700**     |
+| 아이콘 | **-500** | **-600**     |
+| 배경  | —        | **-50**      |
+| 테두리 | —        | **-200~300** |
+
+## 접근성
+모든 색상 조합은 **WCAG AA 레벨 이상의 명도 대비** 를 충족해야 한다.
+
+## 배경색별 권장 전경색 조합
+| 배경 토큰 | 권장 전경색 | 비고 |
+| --- | --- | --- |
+| `bg-surface-default` (`--white`), `bg-surface-secondary` (`--gray-50`) | `text-text-default`, `text-text-secondary`, `text-text-error` 등 **어두운 계열** | 가장 범용적인 조합 |
+| `--brand-500` 배경 | `text-text-inverse` (`--white`) | 브랜드 CTA 버튼 |
+| `bg-surface-inverse` (`--gray-900`) | `text-text-inverse` (`--white`), `text-text-disabled-subtle` (`--gray-200`) | 다크 섹션, 툴팁 |
+| `bg-surface-success` (`--success-50`) | `text-text-on-success` (`--success-700`), 아이콘 `text-icon-on-success` (`--success-600`) | 성공 피드백 패널 |
+| `bg-surface-warning` (`--warning-50`) | `text-text-on-warning` (`--warning-700`), 아이콘 `text-icon-on-warning` (`--warning-600`) | 경고 피드백 패널 |
+| `bg-surface-error` (`--error-50`) | `text-text-on-error` (`--error-700`), 아이콘 `text-icon-on-error` (`--error-600`) | 오류 피드백 패널 |
+| `bg-surface-info` (`--blue-50`) | `text-text-on-info` (`--blue-700`), 아이콘 `text-icon-on-info` (`--blue-600`) | 정보 피드백 패널 |
+
+## Do / Don't
+**Do**
+- 밝은 배경(`--white`, `--gray-50`)에는 `--gray-700` 이상의 어두운 텍스트를 사용한다.
+- 피드백 배경(`surface-{status}`, -50)에는 반드시 `text-on-{status}` 토큰(-700)을 사용한다. 흰 바탕에서는 기본 `text-{status}` 토큰(-600)을 사용한다.
+- 브랜드 컬러 배경(`--brand-500`)에는 `text-text-inverse` 텍스트만 사용한다.
+
+**Don't**
+- 밝은 배경에 `--gray-500` 이하의 텍스트를 주요 콘텐츠로 사용하지 않는다 (대비 비율 미달).
+- 피드백 배경에 gray 계열 텍스트를 사용하지 않는다 (상태의 의미가 희석됨).
+- 브랜드 컬러 배경에 gray 계열 텍스트를 사용하지 않는다 (가독성 저하).
+- 서로 다른 상태 색상을 배경-전경으로 혼합하지 않는다 (예: error 배경 + success 텍스트).

@@ -1,0 +1,198 @@
+---
+title: 인터랙션 패턴
+description: ''
+tags:
+- design-system
+- guide
+- interaction
+- motion
+---
+
+## 철학
+SAZO의 인터랙션은 **모든 사용자 행동에 즉각적이고 일관된 시각적 응답** 을 제공한다. 핵심 원칙은 세 가지다.
+
+- 모든 인터랙티브 요소에 호버/포커스 피드백이 있어야 한다
+- 색상 전환은 200ms (`--duration-micro`), 레이아웃 전환은 300ms (`--duration-standard`)
+- 선택 상태는 배경 + 텍스트를 동시에 변경하여 명확한 대비를 만든다
+
+## 구조
+## 확인/취소 다이얼로그
+파괴적 작업 실행 전에 사용자 확인을 요청하는 모달 인터랙션이다. 상세 모달 레이아웃은 [모달 조합](/design-system/레시피/모달-조합)를 참조한다.
+
+### 토큰
+| 요소        | Semantic Token                  | Primitive                               |
+| --------- | ------------------------------- | --------------------------------------- |
+| 모달 배경     | `--surface-default`         | `bg-white`                              |
+| 모달 radius | `--radius-2xl`             | `rounded-2xl` (16px)                    |
+| 모달 그림자    | `--shadow-overlay`             | oklch shadow                            |
+| 모달 최대 너비  | --                              | `max-w-[400px]`                         |
+| 본문 패딩     | `--space-component-lg` | `p-6` (24px)                            |
+| 제목        | `text-title-section-sm`         | `text-xl font-semibold`                 |
+| 제목 색상     | `--text-default`            | `text-gray-900`                         |
+| 설명 색상     | `--text-secondary`          | `text-gray-700`                         |
+| 제목-설명 간격  | `--space-between-text-md`       | `gap-4` (16px)                          |
+| 파괴적 버튼    | error-600 (primitive 직접)        | `bg-error-600 text-white`               |
+| 취소 버튼     | --                              | `outline border-gray-300`               |
+| 열기 모션     | `--duration-emphasis`               | 400ms, `cubic-bezier(0.22, 1, 0.36, 1)` |
+| 닫기 모션     | `--duration-emphasis`               | 400ms, `cubic-bezier(1, 0, 0.8, 1)`     |
+
+### 버튼 색상 분류
+| 액션 유형 | 확인 버튼 색상 | 예시 |
+|-----------|--------------|------|
+| 파괴적 | error-600 (primitive 직접, `filled error`) | 삭제, 탈퇴, 주문 취소 |
+| 비파괴적 | brand-500 (primitive 직접, `filled primary`) | 저장, 적용, 확인 |
+| 보조 (취소) | `--border-default` (`outline`) | 취소, 닫기 |
+
+## 선택 인터랙션
+### Chip (필터 태그)
+| 상태 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 비선택 배경 | `--surface-tertiary` | `bg-gray-100` |
+| 비선택 텍스트 | `--text-secondary` | `text-gray-700` |
+| 비선택 hover | `--surface-sunken` | `hover:bg-gray-200` |
+| 선택 배경 | brand-500 (primitive 직접) | `bg-brand-500` |
+| 선택 텍스트 | `--text-inverse` | `text-white` |
+| 선택 hover | brand-600 (primitive 직접) | `hover:bg-brand-600` |
+| radius | `--radius-full` | `rounded-full` |
+| 전환 | `--duration-micro` | `transition-colors` (200ms) |
+
+### TileSelector (타일 선택자)
+| 상태 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 기본 테두리 | `--border-default` | `border border-gray-300` |
+| 기본 그림자 | `--shadow-lowest` | `shadow-xs` |
+| 기본 radius | `--radius-2xl` | `rounded-2xl` (16px) |
+| hover 배경 | `--overlay-hover-light` | `hover:bg-blackOpacity-0` |
+| active 그림자 | `--shadow-medium` | `active:shadow-md` |
+| 선택 테두리 | `--border-strong` | `border-2 border-gray-900` |
+| 전환 | `--duration-micro` | `transition-colors` (200ms) |
+
+### OptionCard
+| 상태 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 기본 배경 | `--surface-default` | `bg-white` |
+| 기본 테두리 | `--border-subtle` | `border-gray-200` |
+| 비활성 배경 | `--surface-tertiary` | `bg-gray-100` |
+| 비활성 텍스트 | `--text-disabled` | `text-gray-400` |
+
+### OptionSelector (드롭다운)
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 그림자 | `--shadow-high` | `shadow-lg` |
+| radius | `--radius-2xl` | `rounded-2xl` (16px) |
+| 비선택 텍스트 | `--text-tertiary` | `text-gray-500` |
+| 선택 불가 텍스트 | `--text-disabled` | `text-gray-400` |
+| 선택 불가 배경 | `--surface-disabled` | `bg-gray-200` |
+| 확장 모션 | `--duration-micro` | `transition-all duration-200 ease-in-out` |
+| 등장 애니메이션 | `--duration-entrance` | `animate-slideIn` (300ms) |
+
+### Tab
+| 상태 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 비선택 텍스트 | `--text-tertiary` | `text-gray-500` |
+| 비선택 hover | `--surface-tertiary` | `hover:bg-gray-100` |
+| 선택 텍스트 | brand-500 (primitive 직접) | `text-brand-500` |
+| 선택 인디케이터 | brand-400 (primitive 직접) | `bg-brand-400` |
+| 인디케이터 이동 | -- | Framer Motion `layoutId` |
+| 전환 | `--duration-micro` | `transition-colors` (200ms) |
+| 탭 패딩 | -- | `px-2 py-3` |
+
+## 호버/액티브 피드백
+### 버튼 호버
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| Primary hover | brand-600 (primitive 직접) | `bg-brand-600` |
+| Default hover | gray-950 (primitive 직접) | `bg-gray-950` |
+| Outline hover | `--surface-secondary` | `bg-gray-50` |
+| 아이콘 버튼 텍스트 hover | brand-400 (primitive 직접) | `hover:text-brand-400` |
+| 아이콘 버튼 배경 hover | -- | `hover:bg-greyOpacity-100` |
+| 아이콘 버튼 배경 active | -- | `active:bg-greyOpacity-200` |
+
+### 카드/패널 호버
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| FAQ 항목 | `--surface-secondary` | `hover:bg-gray-50` |
+| 탭 항목 | `--surface-tertiary` | `hover:bg-gray-100` |
+| Chip (비선택) | `--surface-sunken` | `hover:bg-gray-200` |
+| 포워딩 카드 | -- | `hover:-translate-y-1` |
+| 페이지네이션 hover | gray-800 (primitive 직접) | `hover:bg-gray-800 hover:text-white` |
+
+### 포커스 피드백
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 입력 필드 | `--border-strong` | outline `gray-900` |
+| 검색바 | `--border-focus` | `focus-within:outline-brand-400` |
+| 접근성 포커스 링 | `--shadow-focus-ring` | `0 0 0 2px var(--color-white), 0 0 0 4px #7B7B7B` (포커스 전용 값) |
+
+## 스크롤 행동
+### 모바일 헤더 접기/펼치기
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 배경 | `--surface-default` | `bg-white` |
+| 그림자 | `--shadow-medium` | `shadow-md` |
+| z-index | `--z-header` | `z-[100]` |
+| 하단 radius | `--radius-2xl` | `rounded-b-2xl` (16px) |
+| 접기 duration | `--duration-micro` | 200ms |
+| 이징 | `--ease-standard` | CSS `ease-in-out` |
+| 접힌 상태 | -- | `top: -52px` |
+| 트리거 | -- | 스크롤 방향 감지 (위→펼치기, 아래→접기) |
+
+### 드롭다운 패널
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 그림자 | `--shadow-highest` | `shadow-3xl` |
+| z-index | `--z-dropdown` | `z-[100000]` |
+| 열기 모션 | `--duration-standard` | `transition-all duration-300` |
+| 열기 변환 | -- | `translate-y-0 opacity-100` |
+| 닫기 변환 | -- | `-translate-y-4 opacity-0` |
+
+### FAQ 아코디언
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 아이콘 회전 | `--duration-micro` | `transition-transform duration-200` |
+| 콘텐츠 확장 | `--duration-micro` | `transition-all duration-200` |
+| 열림 아이콘 | -- | `rotate-180` |
+| 닫힘 아이콘 | -- | `rotate-0` |
+
+### 모달 Footer 고정
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 배경 | `--surface-secondary` | `bg-gray-50` |
+| 상단 radius | `--radius-2xl` | `rounded-t-2xl` (16px) |
+| 그림자 | `--shadow-sticky-footer` | `0 6px 20px 0 rgba(0,0,0,0.2)` |
+
+## 더보기 버튼
+홈 등에서 전용 페이지로 이동시키는 역할. 섹션 높이가 높아서 섹션 마지막에서 더보기 버튼에 접근이 어려울 것 같으면 **섹션 하단에도 중복 배치** 한다.
+
+## 모션 속도 가이드
+| 범주 | Duration | 용도 |
+|------|----------|------|
+| `--duration-micro` | 200ms | 호버 색상, 아이콘 회전, 아코디언, 헤더 접기 |
+| `--duration-standard` | 300ms | 드롭다운, 카드 리프트, 모달 배경 전환 |
+| `--duration-emphasis` | 400ms | 모달 열기/닫기 (비대칭 이징) |
+| `--duration-entrance` | 300ms | 콘텐츠 slideIn 등장 |
+
+## 전환 효과 토큰
+| 전환 유형 | Semantic Token | Primitive | 적용 대상 |
+|-----------|---------------|-----------|-----------|
+| 색상 변화 | `--duration-micro` | `transition-colors` (200ms) | 모든 호버 색상 |
+| 아이콘 회전 | `--duration-micro` | `transition-transform duration-200` | FAQ, 푸터 화살표 |
+| 복합 전환 | `--duration-micro` | `transition-all duration-200 ease-in-out` | 드롭다운 확장 |
+| 카드 리프트 | `--duration-standard` | `transition-transform duration-300` | 포워딩 카드 hover |
+| 투명도 전환 | `--duration-micro` | `transition-opacity` | 탭 투명도 |
+
+## Do / Don't
+| Do | Don't |
+|----|-------|
+| 모든 인터랙티브 요소에 호버 피드백 제공 | 클릭 가능한 요소에 호버 피드백 없음 |
+| 색상 전환에 `transition-colors` (200ms) | 즉시 변경 (깜빡임) |
+| Primary 버튼 hover는 한 단계 진하게 | 호버 시 완전히 다른 색상 |
+| 카드 hover는 미세한 배경 변화 (`gray-50`) | 카드에 강한 색상 변화 |
+| 선택 상태는 배경 + 텍스트 동시 변경 | 텍스트 색상만 변경 (접근성 문제) |
+| TileSelector 선택은 `border-2 border-gray-900` | 배경색으로만 선택 구분 |
+| 입력 포커스는 `--border-strong` 명확한 표시 | 포커스 시각적 변화 없음 (접근성 위반) |
+| sticky `top`은 `--header-height` CSS 변수 | `top` 값 하드코딩 |
+| 드롭다운은 route 변경 시 자동 닫기 | route 변경 후 열린 채 방치 |
+| 아코디언에 `transition-all duration-200` | 즉시 열기/닫기 |
+| 파괴적 버튼은 `color="error"` | 비파괴적 작업에 error 색상 |
+| 취소(좌) + 확인(우) 순서 고정 | 좌우 반대 배치 |

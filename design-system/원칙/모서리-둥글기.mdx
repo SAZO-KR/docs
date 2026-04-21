@@ -1,0 +1,30 @@
+---
+title: 모서리 둥글기
+description: ''
+tags:
+- design-system
+- border-radius
+- foundation
+---
+
+## 철학
+SAZO의 Border Radius는 **Tailwind 기본 스케일을 그대로 사용** 하며, `2xl(16px)`을 핵심 값으로 삼는다. 커스텀 값을 최소화하고 표준 스케일 내에서 일관성을 유지한다.
+
+> 토큰 정의: `02 토큰/css/tokens.css`
+
+## 스케일
+| Tailwind 유틸리티 | CSS 변수 | 값 | 용도 |
+|------------------|---------|-----|------|
+| `rounded-none` | `--radius-none` | 0px | 전체 화면 모달(mo-full) |
+| `rounded-xs` | `--radius-xs` | 2px | 최소 둥근 모서리 |
+| `rounded-sm` | `--radius-sm` | 4px | FeaturedAccordion 내부 요소 |
+| `rounded-md` | `--radius-md` | 6px | 로딩 블록, 쿠폰 뱃지, 주문 탭 |
+| `rounded-lg` | `--radius-lg` | 8px | 링크 박스, 옵션 라디오, 주문 상세 카드 |
+| `rounded-xl` | `--radius-xl` | 12px | 아이콘 래퍼, 인풋, 스텝퍼, 이벤트 배너 |
+| **`rounded-2xl`** | **`--radius-2xl`** | **16px** | **핵심. 모달, 타일 선택자, OrderTotal, 스켈레톤, 상품 이미지, 하단 독** |
+| `rounded-3xl` | `--radius-3xl` | 24px | 배너 캐러셀(PC), 포워딩 영상, 리뷰 카드 |
+| `rounded-full` | `--radius-full` | 9999px | 아바타, 아이콘 버튼, 페이지네이션, 검색바, Chip |
+
+## 설계 원칙
+- **`--radius-2xl`(16px)이 핵심** : 모달, 카드, 컨테이너 등 주요 UI 서피스에 가장 일관적으로 적용된다. "SAZO 기본 radius"라고 부를 수 있다.
+- **Tailwind 스케일 준수** : 커스텀 값 대신 Tailwind의 기본 스케일(`rounded-none` ~ `rounded-full`)을 그대로 사용한다. `@theme inline`에서 `--radius-*` 변수를 매핑하여 `rounded-*` 유틸리티로 사용 가능하다.

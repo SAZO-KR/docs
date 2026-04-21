@@ -1,0 +1,170 @@
+---
+title: 리스트 조합
+description: ''
+tags:
+- design-system
+- recipe
+- list
+---
+
+## 철학
+SAZO의 리스트는 **반복되는 정보를 균일한 리듬으로 배열** 한다. 모든 리스트 항목은 `py-4`(16px) 수직 패딩을 공유하며, 좌측 아이콘(24px) + 텍스트 + 우측 네비게이션의 3단 구조를 따른다.
+
+- 항목 간 구분은 `border-b` 또는 `<Divider />`로 시각적 경계를 만든다
+- 그룹 간 구분은 `<Divider>` + `pt-4 pb-8` 패턴을 사용한다
+- 상태 변화(활성/비활성/읽음)는 `font-weight` + `color` 변화로 표현한다
+
+## 구조
+## FAQ 아코디언
+### 토큰
+| 요소 | 닫힌 상태 | 열린 상태 | Semantic Token |
+|------|----------|----------|---------------|
+| 컨테이너 패딩 | `py-4` (16px) | `py-4` (16px) | `py-section-sm` |
+| 호버 배경 | `hover:bg-gray-50` | `hover:bg-gray-50` | `bg-surface-secondary` |
+| 질문 텍스트 | 16px/500 | 16px/600 | `text-label-large` |
+| 질문 색상 | `text-gray-700` | `text-gray-950` | `text-text-secondary` → `text-text-strong` |
+| 아이콘 회전 | 0deg | `rotate-180` | 200ms 전환 |
+| 답변 텍스트 | -- | 16px/400 | `text-body-default` |
+| 답변 색상 | -- | `text-gray-500` | `text-text-tertiary` |
+| 답변 하단 간격 | -- | `mb-4` (16px) | `gap-text-md` |
+| 전환 효과 | -- | `transition-all duration-200` | `--duration-micro` |
+
+### 상태 전환
+```
+닫힘 → 열림 (200ms):
+  font-weight:  500  →  600
+  color:        gray-700      →  gray-950
+  아이콘:       0deg          →  180deg
+  답변:         hidden        →  visible (mb-4)
+```
+
+## 메뉴 리스트
+### Mobile 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 섹션 제목 | `text-title-section-md` 변형 | 22px/500 |
+| 메뉴 항목 패딩 | `--space-screen-edge-mobile` + `py-section-sm` | `px-5 py-4` |
+| 아이콘 색상 | `text-text-default-subtle` | `text-gray-800` (24px) |
+| 메뉴 텍스트 | `text-label-large` | 16px/500 |
+| 배지 숫자 | Primitive (컴포넌트 레벨): `brand-500` | `text-brand-500` 14px/700 |
+| 화살표 | `text-text-tertiary` | `text-gray-500` (24px) |
+| 구분선 | `border-border-default` | `Divider color="gray-300" px-5 pb-8 pt-4` |
+
+### PC 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 컨테이너 최소 너비 | -- | `min-w-[192px]` |
+| 그룹 간격 | `mb-section-md` | `gap-8` (32px) |
+| 섹션 제목 | `text-title-subsection-lg` | 18px/600 |
+| 섹션 제목 색상 | `text-text-default-subtle` | `text-gray-800` |
+| 메뉴 텍스트 (기본) | `text-text-tertiary` | 16px/400 `text-gray-500` |
+| 메뉴 텍스트 (활성) | `text-text-default` | 16px/600 `text-gray-900` |
+
+### PC vs Mobile 핵심 차이
+| 항목 | PC | Mobile |
+|------|-----|--------|
+| 비활성 항목 색상 | `text-gray-500` | 항상 동일 스타일 |
+| 활성 항목 표시 | 600 `text-gray-900` | 구분 없음 |
+| 우측 요소 | 없음 | 화살표 `LuChevronRight` |
+| 수평 패딩 | 없음 | `px-5` (20px) |
+
+## 주소 목록
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 이름 | `text-title-subsection-sm` | 600 `text-gray-900` |
+| 배지 (기본 배송지) | Badge 컴포넌트 | `color="primary" size="sm" rounding="rounded"` |
+| 이름-배지 간격 | `gap-text-sm` | `gap-2` (8px) |
+| 수령인/전화 | `text-label-default` | 14px/500 `text-gray-900` |
+| 주소/메모 | `text-caption-default` | 14px/400 `text-gray-700` |
+| Delimiter | -- | `variant="slash" size="sm"` |
+
+## 알림 목록
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 섹션 제목 | `text-title-subsection-lg` | 18px/600 |
+| 섹션 패딩 | `--space-screen-edge-mobile` | `px-5 pt-6` |
+| 알림 항목 패딩 | `gap-component-md` | `p-4` (16px) |
+| 알림 항목 간격 | `--space-between-options-sm` | `flex gap-2` |
+| 하단 구분선 | -- | `border-b-[1px]` |
+| 읽지 않은 도트 | Primitive (컴포넌트 레벨): `brand-500` | `bg-brand-500 rounded-full h-2 w-2` |
+| 알림 제목 | -- | 14px/600 |
+| 시간 | `text-text-tertiary` | 14px/500 `text-gray-500` |
+| 알림 내용 | `text-text-default` | 16px/400 `text-gray-900` |
+| 상품 이미지 | -- | 48 x 48px, `rounded-lg`, `border-blackopacity-0` |
+
+### 상태별 색상
+| 상태 | 제목 | 시간 | 내용 | 이미지 |
+|------|------|------|------|--------|
+| 미읽음 | 상속 + dot | `text-text-tertiary` | `text-text-default` | 100% |
+| 읽음 + 클릭됨 | `text-text-disabled` | `text-text-disabled` | `text-text-disabled` | `opacity-50` |
+
+## 비교
+## 항목 간 구분 방식
+| 리스트 유형 | 구분 방식 |
+|------------|----------|
+| FAQ | 없음 (`py-4` 간격으로 시각 구분) |
+| 메뉴 (Mobile) | `<Divider color="gray-300">` (그룹 간) |
+| 메뉴 (PC) | `<Divider>` (그룹 간) |
+| 주소 목록 | 외부에서 처리 (카드 단위) |
+| 알림 목록 | `border-b-[1px]` (항목 간) |
+
+## 아이콘 패턴
+| 위치 | 색상 토큰 | Primitive |
+|------|----------|-----------|
+| 메뉴 좌측 아이콘 | `text-text-default-subtle` | `text-gray-800` |
+| 메뉴 우측 화살표 | `text-text-tertiary` | `text-gray-500` |
+| FAQ 아코디언 화살표 | -- | 상속 (기본) |
+| 알림 아이콘 (미읽음) | `text-text-default-subtle` | `text-gray-800` 계열 |
+| 알림 아이콘 (읽음) | `text-text-disabled` | `text-gray-400` |
+
+## Do / Don't
+| Do | Don't |
+|----|-------|
+| 모든 리스트 항목에 `py-4` (16px) 수직 패딩 | 항목마다 다른 수직 패딩 |
+| 그룹 간 구분에 `<Divider>` + `pt-4 pb-8` | 간격만으로 그룹 구분 |
+| 좌측 아이콘은 24px + `text-text-default-subtle` | 아이콘마다 다른 색상 |
+| 활성 메뉴는 600 + `text-text-default` (PC) | 배경색으로만 활성 표시 |
+| 아코디언 전환은 `transition-all duration-200` | 즉시 열기/닫기 |
+| 읽음 상태는 `text-text-disabled` + 이미지 `opacity-50` | 읽음/미읽음 시각적 구분 없음 |
+
+## 새 리스트 설계 시 체크리스트
+<Steps>
+  <Step title="수직 패딩">
+    `py-4` (16px) 기본
+  </Step>
+  <Step title="항목 간 구분">
+    `border-b gray-200` 또는 `<Divider />`
+  </Step>
+  <Step title="그룹 간 구분">
+    `<Divider />` + `pt-4 pb-8`
+  </Step>
+  <Step title="좌측 아이콘">
+    24px, `text-text-default-subtle`
+  </Step>
+  <Step title="우측 네비게이션">
+    `LuChevronRight` 24px + `text-text-tertiary`
+  </Step>
+  <Step title="제목 텍스트">
+    `text-label-large` + `text-text-default`
+  </Step>
+  <Step title="메타 텍스트">
+    `text-body-small` + `text-text-secondary`
+  </Step>
+  <Step title="호버">
+    `hover:bg-gray-50`
+  </Step>
+  <Step title="활성 상태">
+    600 + `text-text-default`
+  </Step>
+  <Step title="읽음/비활성">
+    `text-text-disabled` + 이미지 `opacity-50`
+  </Step>
+  <Step title="아코디언">
+    `transition-all duration-200` + 아이콘 `rotate-180`
+  </Step>
+  <Step title="모바일 수평 패딩">
+    `px-5` (20px)
+  </Step>
+</Steps>

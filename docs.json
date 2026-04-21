@@ -66,6 +66,82 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Design System",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "design-system/화면-맵"
+            ]
+          },
+          {
+            "group": "Foundations",
+            "pages": [
+              "design-system/원칙/간격",
+              "design-system/원칙/그라디언트",
+              "design-system/원칙/그림자",
+              "design-system/원칙/디자인-원칙",
+              "design-system/원칙/모서리-둥글기",
+              "design-system/원칙/모션",
+              "design-system/원칙/색상",
+              "design-system/원칙/아이코노그래피",
+              "design-system/원칙/타이포그래피"
+            ]
+          },
+          {
+            "group": "Guidelines",
+            "pages": [
+              "design-system/가이드/간격-리듬",
+              "design-system/가이드/디자인-암묵지",
+              "design-system/가이드/버튼-위계",
+              "design-system/가이드/인터랙션-패턴",
+              "design-system/가이드/텍스트-계층",
+              "design-system/가이드/피드백-상태"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "design-system/컴포넌트/badge",
+              "design-system/컴포넌트/button",
+              "design-system/컴포넌트/checkbox",
+              "design-system/컴포넌트/chip",
+              "design-system/컴포넌트/divider",
+              "design-system/컴포넌트/dropdown",
+              "design-system/컴포넌트/featured-icon",
+              "design-system/컴포넌트/info-panel",
+              "design-system/컴포넌트/input",
+              "design-system/컴포넌트/item-card",
+              "design-system/컴포넌트/radio",
+              "design-system/컴포넌트/tile-button",
+              "design-system/컴포넌트/tile-selector",
+              "design-system/컴포넌트/toggle",
+              "design-system/컴포넌트/컴포넌트-원칙"
+            ]
+          },
+          {
+            "group": "Patterns",
+            "pages": [
+              "design-system/레시피/리스트-조합",
+              "design-system/레시피/모달-조합",
+              "design-system/레시피/섹션-조합",
+              "design-system/레시피/카드-조합",
+              "design-system/레시피/폼-조합"
+            ]
+          },
+          {
+            "group": "Content",
+            "pages": [
+              "design-system/콘텐츠/UI-패턴",
+              "design-system/콘텐츠/린터-스펙",
+              "design-system/콘텐츠/문법-및-스타일",
+              "design-system/콘텐츠/보이스-및-톤",
+              "design-system/콘텐츠/접근성"
+            ]
+          }
+        ]
       }
     ],
     "global": {
@@ -94,15 +170,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {

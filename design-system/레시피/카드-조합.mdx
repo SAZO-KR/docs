@@ -1,0 +1,262 @@
+---
+title: 카드 조합
+description: ''
+tags:
+- design-system
+- recipe
+- card
+---
+
+## 철학
+SAZO의 카드는 **정보 밀도와 스캔 가능성의 균형** 을 추구한다. 모든 카드는 동일한 색상 계층(gray-900 → gray-700 → gray-600 → gray-500 → gray-400)을 따르며, 이미지-텍스트 간격과 모서리 반경을 통일하여 어떤 맥락에서든 일관된 시각적 경험을 제공한다.
+
+- 카드 내부의 텍스트 계층은 최대 4단계를 넘지 않는다
+- 이미지 크기와 카드 중요도는 비례한다 (48px 알림 → 68px 주문 → 92px 장바구니 → full-width 상품)
+- 가격은 항상 `text-text-default` + `600` 이상으로 강조한다
+
+## 구조
+## 카드 유형 선택 기준
+| 목적 | 카드 유형 | 이미지 크기 |
+|------|----------|-----------|
+| 상품 탐색/비교 | 상품 카드 (ItemCard) | full-width (Grid) / 92~152px (List) |
+| 장바구니 내 상품 확인 | 장바구니 카드 (CartItem) | PC 92px / Mobile 80px |
+| 주문 이력 조회 | 주문 상품 카드 (OrderHistoryProduct) | 68px |
+| 결제 확인 | 주문 상세 카드 (OrderDetailCard) | 68px |
+| 쿠폰 선택 | 쿠폰 카드 (CouponCard) | 없음 (텍스트 전용) |
+| 배송지 관리 | 주소 카드 (AddressList) | 없음 (텍스트 전용) |
+
+## 상품 카드
+### Grid View 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 이미지 radius | `rounded-2xl` | `rounded-2xl` (16px) |
+| 이미지 비율 | -- | `aspect-square` (1:1) |
+| 이미지 배경 (로딩) | `bg-surface-sunken` | `bg-gray-200` |
+| 이미지 미세 테두리 | `border-border-transparent` | `border-blackOpacity-0` |
+| 북마크 (비활성) | `--overlay-active-light` | `fill-blackOpacity-100` |
+| 북마크 (활성) | Primitive (컴포넌트 레벨): `brand-500` | `fill-brand-500 text-brand-500` |
+| 품절 오버레이 | `bg-overlay-image` | `bg-blackOpacity-500` |
+| 품절 텍스트 | `text-text-inverse` | `text-white` |
+| 상품명 | `text-body-default` | 16px / 400 |
+| 상품명 색상 | `text-text-default` | `text-gray-900` |
+| 가격 | `text-label-large` | 16px / 500 |
+| 가격 색상 | `text-text-default` | `text-gray-900` |
+| 할인 가격 | `text-text-benefit` | `text-purple-500` |
+| 이미지-텍스트 간격 | `gap-text-sm` | `pt-2` (8px) |
+| 텍스트 줄 간격 | `gap-text-xs` | `gap-1` (4px) |
+
+### 그리드 레이아웃 토큰
+| 요소 | Semantic Token | PC Primitive | Mobile Primitive |
+|------|---------------|-------------|-----------------|
+| 열 간격 | `gap-card-grid-*` (column) | `gap-x-6` (24px) | `gap-x-3` (12px) |
+| 행 간격 | `gap-card-grid-*` (row) | `gap-y-12` (48px) | `gap-y-8` (32px) |
+| 리스트 카드 간격 | `gap-card-list` | `gap-2` (8px) | `gap-2` (8px) |
+
+### 시각적 구조도
+```
+Grid View                              List View
++---------------------------+          +--------+  gap-5  +------------------+
+|  [Badge]        (좌상단)  |          | [image |  (20px) | 상품명            |
+|                           |          |  120px |         | 브랜드 (gray-600) |
+|      product image        |          |  1:1]  |         | ¥가격 (500)       |
+|           (1:1)           |          | rounded|         | [배지] (조건부)   |
+|                           |          | -2xl   |         +------------------+
+|              [Bookmark]   |          +--------+
++---------------------------+
+    pt-2 (8px)
+| 상품명 (gray-900)         |
+| 브랜드 (gray-600)         |
+| ¥가격 (500, gray-900)     |
+```
+
+## 장바구니 카드
+### 토큰
+| 요소 | Semantic Token | PC Primitive | Mobile Primitive |
+|------|---------------|-------------|-----------------|
+| 컨테이너 패딩 | `py-section-sm` | `py-6` (24px) | `px-4 py-6` |
+| 하단 구분선 | `border-border-subtle` | `border-b gray-200` | `<Divider />` |
+| 이미지 크기 | -- | 92 x 92px | 80 x 80px |
+| 이미지 radius | -- | `rounded-xl` (12px) | `rounded-xl` (12px) |
+| 이미지 테두리 | `border-border-transparent` | `border-blackopacity-0` | `border-blackopacity-0` |
+| 제목 | `text-label-large` / `text-label-default` | 16px / 500 | 14px / 500 |
+| 제목 색상 | `text-text-default` | `text-gray-900` | (상속) |
+| 부제목 | `text-body-default` / `text-body-small` | 16px / 400 | 14px / 400 |
+| 부제목 색상 | `text-text-secondary` | `text-gray-700` | `text-gray-700` |
+| 가격 | `text-title-subsection-lg` | 18px / 600 | 18px / 600 |
+| 가격 색상 | `text-text-default` | `text-gray-900` | (상속) |
+| 요청사항 아이콘 색상 | `text-text-tertiary` | `text-gray-500` (20px) | `text-gray-500` (20px) |
+
+### 시각적 구조도
+```
+PC                                          Mobile
+┌─────────────────────────────────┐         ┌────────────────────────────┐
+│ ☐   [92x92]  [badge]     [X]   │         │ ☐  [80x80]  [badge]  [X]  │
+│ lg    img    제목 (16px,500)    │         │ md   img   제목 (14px,500) │
+│              부제 (16px,700)     │         │            부제 (14px,700) │
+│              요청사항 (14px,700) │         │            요청사항 (14px) │
+│              ¥가격 (18px,600)   │         │            ¥가격 (18px,600)│
+│                      [- 1 +]   │         │                   [- 1 +] │
+├── border-b gray-200 ───────────┤         ├── Divider ────────────────┤
+```
+
+## 주문 상태 카드
+### 카드 컨테이너 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 카드 배경 | `bg-surface-default` | `bg-white` |
+| 카드 테두리 | `border-border-default` | `border border-gray-300` |
+| 카드 radius | `rounded-2xl` | `rounded-2xl` (16px) |
+| 카드 내부 패딩 | `gap-component-md` | `p-4` (16px) |
+| 카드 간 간격 | `--space-between-options-md` | `gap-4` (16px) |
+
+### 상품 행 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 상품 이미지 크기 | -- | 68 x 68px |
+| 이미지 radius | `rounded-lg` | `rounded-lg` (8px) |
+| 이미지 미세 테두리 | `border-border-transparent` | `border-blackOpacity-0` |
+| 상품명 | `text-body-small` | 14px |
+| 상품명 색상 | `text-text-default` | `text-gray-900` |
+| 옵션 라벨 색상 | `text-text-tertiary` | `text-gray-500` |
+| 가격 | `text-label-default` | 14px / 500 |
+| 취소 상태 아이콘 | `text-text-disabled-subtle` | `text-gray-300` |
+| 취소 상태 텍스트 | `text-text-disabled` | `text-gray-400` |
+
+### 경고 패널 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 경고 배경 | `bg-surface-warning` | `bg-warning-50` |
+| 경고 테두리 | `border-border-warning` | `border-warning-200` |
+| 경고 텍스트 | `text-text-on-warning` | `text-warning-700` |
+
+## 주문 상세 카드
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 컨테이너 테두리 | `border-border-subtle` | `border border-gray-200 rounded-lg` |
+| 컨테이너 패딩 | `gap-component-md` | `p-4` (16px) |
+| 이미지-정보 간격 | `gap-text-md` | `gap-4` (16px) |
+| 이미지 | -- | 68 x 68px, `rounded-xl` (12px) |
+| 제목 | `text-label-default` | 14px / 500 |
+| 제목 색상 | `text-text-default` | `text-gray-900` |
+| 옵션 색상 | `text-text-secondary` | `text-gray-700` |
+| 가격 | `text-label-default` | 14px / 500 |
+| 옵션 배경 (확장 시) | `bg-surface-secondary` | `bg-gray-50 rounded-2xl p-3` |
+
+## 쿠폰 카드
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| TileSelector 테두리 (기본) | `border-border-default` | `border-gray-300` |
+| TileSelector 테두리 (선택) | `border-border-strong` | `border-2 border-gray-900` |
+| TileSelector 패딩 | `gap-component-md` | `px-4 py-6` |
+| 쿠폰명 | `text-title-section-lg` | 24px / 600 |
+| 쿠폰명 색상 | `text-text-default` | `text-gray-900` |
+| 배지 (회색) 배경 | `bg-surface-default` + `border-border-default` | `bg-white border border-gray-300` |
+| 배지 (회색) 텍스트 | `text-text-secondary` | `text-gray-700` |
+| 배지 (보라) 배경 | `bg-surface-benefit` | `bg-purple-50` |
+| 배지 (보라) 텍스트 | `text-text-benefit-strong` | `text-purple-700` |
+| 만료일 | `text-body-xs` | 12px / 400 |
+| 만료일 색상 | `text-text-secondary` | `text-gray-700` |
+| 조건/주의 색상 | Primitive (컴포넌트 레벨): `brand-500` | `text-brand-500` |
+
+### 텍스트 계층
+```
+쿠폰명    ████████████  24px  600  gray-900  -- 1차
+설명      ████████      16px  500  gray-900  -- 2차
+만료일     █████         12px  400  gray-700  -- 3차
+조건       █████         12px  400  primary   -- 4차
+```
+
+## 주소 카드
+### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 이름 | `text-title-subsection-sm` | 600 |
+| 이름 색상 | `text-text-default` | `text-gray-900` |
+| 배지 (기본 배송지) | Badge 컴포넌트 | `color="primary" size="sm" rounding="rounded"` |
+| 이름-배지 간격 | `gap-text-sm` | `gap-2` (8px) |
+| 이름 하단 간격 | `gap-text-sm` | `mb-2` (8px) |
+| 수령인/전화 | `text-label-default` | 14px / 500 |
+| 수령인/전화 색상 | `text-text-default` | `text-gray-900` |
+| 주소/메모 | `text-caption-default` | 14px / 400 |
+| 주소/메모 색상 | `text-text-secondary` | `text-gray-700` |
+
+## 카드 형태 변환 규칙
+## 패딩-라운드 매칭
+카드 내부 패딩과 모서리 라운드를 **동일 값** 으로 매칭한다: 16px 패딩 → 16px 라운드, 24px 패딩 → 24px 라운드.
+
+## PC 카드 → MO 전체 너비 전환
+PC에서 카드로 감싸진 콘텐츠가 모바일에서 전체 너비로 전환될 때: 모바일 표준 좌우 패딩(20px) 적용 + **라운드 제거** .
+
+## 카드 공통 이미지 비교
+| 카드 유형 | 이미지 크기 | Radius | 테두리 |
+|----------|-----------|--------|--------|
+| 장바구니 (PC) | 92 x 92 | `rounded-xl` (12px) | `border-blackopacity-0` |
+| 장바구니 (Mobile) | 80 x 80 | `rounded-xl` (12px) | `border-blackopacity-0` |
+| 주문 상품 / 주문 상세 | 68 x 68 | `rounded-xl` (12px) | `border-blackOpacity-0` |
+| 알림 | 48 x 48 | `rounded-lg` (8px) | `border-blackopacity-0` |
+| 상품 카드 (Grid) | full-width | `rounded-2xl` (16px) | `border-blackOpacity-0` |
+| 상품 카드 (List) | 92~152px | `rounded-xl` (12px) | -- |
+
+## 카드 공통 텍스트 계층
+```
+ 계층        색상 토큰               역할
+────────────────────────────────────────────
+ 1차 제목    color.text.default     상품명, 쿠폰명, 이름
+ 2차 부제    color.text.secondary   옵션, 부제목, 상세 주소
+ 3차 메타    color.text.tertiary    요청사항 내용, 옵션 상세, 수량, 날짜, 부연 설명
+ 비활성      color.text.disabled    취소된 상품, 읽은 알림
+```
+
+## 가격 표시 패턴
+| 카드 유형 | 크기 | Weight | 위치 |
+|----------|------|--------|------|
+| 장바구니 | 18px | 600 | 하단 좌측, Stepper와 수평 |
+| 주문 상품 | 16px | 600 | 인라인, 수량과 도트 구분 |
+| 주문 상세 | 14px | 500 | 인라인, 수량과 Delimiter 구분 |
+
+## Do / Don't
+| Do | Don't |
+|----|-------|
+| DTO 변환에 `itemCardParser.fromProductAllResponseDto()` 사용 | 수동으로 카드 모델 생성 |
+| 이미지에 `border-blackOpacity-0` 미세 테두리 적용 | 이미지 테두리 없이 배경과 구분 불가 상태로 방치 |
+| 카드 내 상품명은 `500`, 가격은 `600` | 상품명에 `600` 사용 (Title 계층과 혼동) |
+| 취소/비활성 상품은 `text-text-disabled` + 이미지 `opacity-50` | 취소 상품을 정상 상품과 동일하게 표시 |
+| 이미지 크기는 48/68/80/92 기존 스케일에서 선택 | 임의의 이미지 크기 사용 |
+| 카드 간 구분은 `<Divider />` 또는 `border-b gray-200` | 간격만으로 카드 경계 구분 |
+| 주문 카드에서 상태 아이콘은 `KnownIcon` 사용 | 텍스트만으로 상태 표시 |
+
+## 새 카드 설계 시 체크리스트
+<Steps>
+  <Step title="이미지">
+    크기를 48/68/80/92 중 선택. `rounded-xl` + `border-blackopacity-0` 적용
+  </Step>
+  <Step title="제목">
+    `text-text-default` + `500` 이상. 줄 제한(`line-clamp-2`) 필수
+  </Step>
+  <Step title="부제목">
+    `text-text-secondary` + `400`. 필요 시 `line-clamp-1`
+  </Step>
+  <Step title="가격">
+    `text-text-default` + `600`. 카드 중요도에 따라 14px ~ 18px
+  </Step>
+  <Step title="메타 정보">
+    `text-text-tertiary` + `400` + 14px 이하
+  </Step>
+  <Step title="구분선">
+    `<Divider />` 또는 `border-b gray-200`
+  </Step>
+  <Step title="컨테이너">
+    최소 `py-4` (16px) 패딩. 테두리가 필요하면 `border gray-200 rounded-lg`
+  </Step>
+  <Step title="이미지-텍스트 간격">
+    `gap-3` (12px) 또는 `gap-4` (16px)
+  </Step>
+  <Step title="배지">
+    컴포넌트 내장 Badge 사용. `xs`/`sm` 크기, `rounded` 모서리
+  </Step>
+  <Step title="취소/비활성">
+    텍스트 `text-text-disabled`, 이미지 `opacity-50`
+  </Step>
+</Steps>

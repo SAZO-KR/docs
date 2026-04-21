@@ -1,0 +1,72 @@
+---
+title: featured-icon
+description: ''
+tags:
+- design-system
+- component
+- foundation
+---
+
+## 언제 사용하는가
+아이콘을 시각적으로 **강조하여 표시** 하기 위한 컨테이너 컴포넌트. InfoPanel의 `lead` 슬롯이나 독립적인 상태 표시 아이콘으로 사용된다.
+
+## 대안 분기표
+| 상황 | FeaturedIcon 대신 사용할 요소 | 이유 |
+|------|--------------------------|------|
+| 클릭 가능한 아이콘 | IconButton | FeaturedIcon은 표시 전용이며 클릭 이벤트를 처리하지 않음 |
+| 인라인 텍스트 옆 작은 아이콘 | 아이콘 직접 삽입 | FeaturedIcon은 독립적인 강조 표시 목적, 인라인 용도가 아님 |
+| 상태 배지 (텍스트 포함) | Badge | 텍스트가 포함된 상태 레이블은 Badge |
+
+## 선택 가이드
+## 색상 선택
+FeaturedIcon의 색상은 **연관 컴포넌트의 의미** 와 일치시킨다.
+
+| Color | 의미 | 사용 맥락 | 배경 토큰 |
+|-------|------|-----------|----------|
+| `white` | 중립, 정보 | 일반 안내, 중립적 맥락 | `--surface-default` |
+| `brand` | 브랜드 강조 | 핵심 기능 안내, 브랜드 관련 | `--surface-brand` |
+| `error` | 오류/위험 | 에러 메시지, 위험 안내 | `--surface-error` |
+| `success` | 성공/완료 | 성공 확인, 완료 안내 | `--surface-success` |
+| `warning` | 경고/주의 | 주의사항, 유의 안내 | `--surface-warning` |
+
+**InfoPanel과 함께 사용 시** : InfoPanel의 color와 동일한 의미 계열로 맞춘다.
+
+| InfoPanel color | FeaturedIcon color |
+|----------------|-------------------|
+| `default` | `white` |
+| `error` | `error` |
+| `warning` | `warning` |
+| `success` | `success` |
+| `blueDark` | `white` 또는 `brand` |
+| `purple` | `brand` |
+
+> `[DECISION NEEDED]` InfoPanel의 `blueDark`와 `purple` color에 대응하는 FeaturedIcon color가 명확하지 않다. blueDark에는 blue 계열 FeaturedIcon이 필요하나 현재 미지원. purple에는 purple FeaturedIcon이 필요하나 현재 미지원. 가장 가까운 대안으로 `white` 또는 `brand`를 사용한다.
+
+## 크기 선택
+| Size | 크기 | 사용 맥락 |
+|------|------|-----------|
+| `sm` | 40px | InfoPanel `sm` 내부, 밀집 영역. 사실상 미사용 |
+| `md` | 48px | **표준 크기** . InfoPanel `md` 내부, 독립적 상태 표시 |
+
+- **48px가 표준** . 40px(sm)은 거의 사용하지 않는다.
+- sm: `rounded-xl` (12px) 모서리
+- md: `rounded-2xl` (16px) 모서리
+- 모든 크기에서 `shadow-medium` 적용
+- 상태 표현 시 FeaturedIcon에 **컬러 배경색** 을 사용한다.
+
+## 배치 규칙
+| 배치 패턴 | 설명 | 비고 |
+|----------|------|------|
+| InfoPanel lead 슬롯 | InfoPanel 좌측에 배치 | 가장 일반적인 사용 패턴 |
+| 독립적 상태 아이콘 | 섹션 제목 옆 또는 상태 표시 영역 | `shadow-medium`으로 시각적 강조 |
+| 피쳐드 헤딩 단독 화면 | 화면 수직 중앙 정렬. MO: h-screen에서 GNB+바텀독/바텀 버튼 컨테이너 제외 영역. PC: GNB 제외 영역 (패딩/마진으로 최소 여백 존중) | 상태 안내 전용 화면 |
+| EmptyState | PC: **lg 타입** 피쳐드 헤딩 + 하단 후속 액션 버튼. MO: **md 타입** | 빈 목록 안내 영역 중앙 |
+
+## Do / Don't
+| Do | Don't | 이유 |
+|----|-------|------|
+| InfoPanel의 `lead` 슬롯에 배치하여 메시지 유형 시각적 보강 | 버튼 대용으로 사용 | 클릭 가능한 아이콘은 IconButton |
+| `color`를 InfoPanel의 `color`와 동일한 의미 계열로 맞추기 | color를 장식 목적으로 임의 선택 | 의미 일관성이 깨지면 혼란 |
+| 아이콘 라이브러리의 아이콘을 children으로 전달 | 텍스트를 children에 넣기 | 아이콘 전용 컨테이너 |
+| `disabled`는 연관 기능이 비활성화되었을 때만 사용 | 장식용으로 disabled 상태 사용 | disabled는 기능 상태를 전달 |
+| `white` 색상은 어두운 배경 위에서 사용 | `white` 색상을 밝은 배경에 단독 사용 | 시각적 구분이 어려움 (`shadow-medium`으로 부분 보완되지만 한계 있음) |
