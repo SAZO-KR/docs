@@ -24,47 +24,60 @@ tags:
 | 짧은 인라인 상태 레이블 | Badge | 1~3단어 메타 정보는 Badge |
 
 <Note>
-  **TileButton vs TileSelector** : TileButton은 **액션 트리거** (클릭 → 이동/실행), TileSelector는 **상태 선택** (selected/deselected). 클릭 후 무엇이 일어나는지로 판단한다.
+
+**TileButton vs TileSelector** : TileButton은 **액션 트리거** (클릭 → 이동/실행), TileSelector는 **상태 선택** (selected/deselected). 클릭 후 무엇이 일어나는지로 판단한다.
+
 </Note>
 
 ## 선택 가이드
+
 <Tabs>
-  <Tab title="색상 선택">
-    색상은 정보의 **성격(semantic)** 을 전달한다. 장식용으로 사용하지 않는다.
 
-    | Color | 의미 | 사용 맥락 | 토큰 |
-    |-------|------|-----------|------|
-    | (default) | 중립 | 일반 네비게이션, 정보 카드 | `bg-surface-default` (`--surface-default`) |
-    | `brand` | 브랜드 강조 CTA | 주요 액션, 핵심 상태 | rose-50 배경 (아래 주석 참조) |
-    | `error` | 오류/위험 | 주의 필요 액션, 결제 오류 안내 | `bg-surface-error` (`--surface-error`) |
-    | `warning` | 경고/주의 | 기한 임박, 재고 부족 | `bg-surface-warning` (`--surface-warning`) |
-    | `success` | 성공/완료 | 배송 완료, 처리 성공 | `bg-surface-success` (`--surface-success`) |
-    | `purple` | 프로모션/혜택 | 쿠폰, 할인, 이벤트 | `bg-surface-benefit` (`--surface-benefit`) |
-    | `gray` | 보조 정보 | 부가 설정, 보조 네비게이션 | `bg-surface-secondary` (`--surface-secondary`) |
+<Tab title="색상 선택">
 
-    <Note>
-      **NOTE (brand = rose 팔레트)** : `brand` color는 현재 brand-500이 아닌 **rose 팔레트** (rose-50/500/600/700)를 사용한다. 이는 구현상의 특이점이며, 향후 brand 팔레트로 마이그레이션이 예정되어 있다.
-    </Note>
+색상은 정보의 **성격(semantic)** 을 전달한다. 장식용으로 사용하지 않는다.
 
-  </Tab>
-  <Tab title="크기 선택">
-    | Size | Padding | 사용 맥락 |
-    |------|---------|-----------|
-    | `xs` | 0.75rem 0.5rem 0.75rem 0.75rem | 밀집 리스트 아이템 |
-    | `sm` | 1rem | 기본 타일 아이템 |
-    | `md` | 1.5rem 1rem 1.5rem 1.5rem | 강조 타일 (default) |
-    | `lg` | 1.5rem 1rem 1.5rem 1.5rem | 대형 타일 카드 |
+| Color | 의미 | 사용 맥락 | 토큰 |
+|-------|------|-----------|------|
+| (default) | 중립 | 일반 네비게이션, 정보 카드 | `bg-surface-default` (`--surface-default`) |
+| `brand` | 브랜드 강조 CTA | 주요 액션, 핵심 상태 | rose-50 배경 (아래 주석 참조) |
+| `error` | 오류/위험 | 주의 필요 액션, 결제 오류 안내 | `bg-surface-error` (`--surface-error`) |
+| `warning` | 경고/주의 | 기한 임박, 재고 부족 | `bg-surface-warning` (`--surface-warning`) |
+| `success` | 성공/완료 | 배송 완료, 처리 성공 | `bg-surface-success` (`--surface-success`) |
+| `purple` | 프로모션/혜택 | 쿠폰, 할인, 이벤트 | `bg-surface-benefit` (`--surface-benefit`) |
+| `gray` | 보조 정보 | 부가 설정, 보조 네비게이션 | `bg-surface-secondary` (`--surface-secondary`) |
 
-  </Tab>
-  <Tab title="슬롯 구성">
-    | 슬롯 | 배치할 요소 | 사용 맥락 |
-    |------|-----------|-----------|
-    | `lead` | 상태 아이콘 (FeaturedIcon 등) | 시각적 인지 보강 |
-    | `children` | 상태 텍스트 (1~2줄) | 핵심 정보 전달 |
-    | `tail` | ChevronRight 아이콘 | 네비게이션 가능함을 암시. **Chevron 아이콘이 핵심 어포던스** — "클릭하면 뭔가 진행된다, 특히 이동할 것 같다"는 행동 유도성을 만들어냄 |
+<Note>
 
-  </Tab>
+**NOTE (brand = rose 팔레트)** : `brand` color는 현재 brand-500이 아닌 **rose 팔레트** (rose-50/500/600/700)를 사용한다. 이는 구현상의 특이점이며, 향후 brand 팔레트로 마이그레이션이 예정되어 있다.
+
+</Note>
+
+</Tab>
+
+<Tab title="크기 선택">
+
+| Size | Padding | 사용 맥락 |
+|------|---------|-----------|
+| `xs` | 0.75rem 0.5rem 0.75rem 0.75rem | 밀집 리스트 아이템 |
+| `sm` | 1rem | 기본 타일 아이템 |
+| `md` | 1.5rem 1rem 1.5rem 1.5rem | 강조 타일 (default) |
+| `lg` | 1.5rem 1rem 1.5rem 1.5rem | 대형 타일 카드 |
+
+</Tab>
+
+<Tab title="슬롯 구성">
+
+| 슬롯 | 배치할 요소 | 사용 맥락 |
+|------|-----------|-----------|
+| `lead` | 상태 아이콘 (FeaturedIcon 등) | 시각적 인지 보강 |
+| `children` | 상태 텍스트 (1~2줄) | 핵심 정보 전달 |
+| `tail` | ChevronRight 아이콘 | 네비게이션 가능함을 암시. **Chevron 아이콘이 핵심 어포던스** — "클릭하면 뭔가 진행된다, 특히 이동할 것 같다"는 행동 유도성을 만들어냄 |
+
+</Tab>
+
 </Tabs>
+
 ## 배치 규칙
 | 배치 패턴 | 설명 | 간격 |
 |----------|------|------|

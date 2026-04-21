@@ -28,49 +28,67 @@ SAZO의 구매 여정은 사용자가 통제할 수 없는 외부 요인(해외 
 - 모션: 상태 변화 시 트랜지션으로 "무슨 일이 일어났는지"를 시각적으로 설명한다 → [모션](/design-system/원칙/모션)
 
 ## 본질만 남긴 간결함
+
 <AccordionGroup>
-  <Accordion title="Focused">
-    한 번에 하나의 과업에만 집중시키고 모든 시각적, 기능적 방해 요소를 제거한다.
 
-    - 간격: 섹션 간 여백으로 콘텐츠 블록의 경계를 명확히 한다 → [간격](/design-system/원칙/간격)
-    - 텍스트 계층: 정보의 우선순위를 시각적 무게로 즉시 전달한다 → [텍스트 계층](/design-system/가이드/텍스트-계층)
+<Accordion title="Focused">
 
-  </Accordion>
-  <Accordion title="Effortless">
-    사용자의 입력을 최소화하고 모든 반복적인 작업을 자동화한다.
+한 번에 하나의 과업에만 집중시키고 모든 시각적, 기능적 방해 요소를 제거한다.
 
-    - 모션: 비대칭 이징(ease-out 중심)으로 결과를 즉각 보여주고, 과정은 자연스럽게 사라지게 한다 → [모션](/design-system/원칙/모션)
-    - 간격 리듬: 반복되는 리스트/카드에 일관된 리듬을 적용하여 스캐닝 부담을 줄인다 → [간격 리듬](/design-system/가이드/간격-리듬)
+- 간격: 섹션 간 여백으로 콘텐츠 블록의 경계를 명확히 한다 → [간격](/design-system/원칙/간격)
+- 텍스트 계층: 정보의 우선순위를 시각적 무게로 즉시 전달한다 → [텍스트 계층](/design-system/가이드/텍스트-계층)
 
-  </Accordion>
-  <Accordion title="Consistent">
-    어떤 맥락에서도 동일한 행동이 동일한 결과를 낳도록 보장한다. 사용자가 학습 없이도 자신감 있게 서비스를 사용할 수 있게 한다.
+</Accordion>
 
-    - 색상: 시맨틱 토큰을 통해 같은 역할에는 항상 같은 색이 적용된다 → [색상](/design-system/원칙/색상)
-    - 버튼 위계: Primary/Secondary/Tertiary 위계가 모든 화면에서 동일하게 적용된다 → [버튼 위계](/design-system/가이드/버튼-위계)
+<Accordion title="Effortless">
 
-  </Accordion>
+사용자의 입력을 최소화하고 모든 반복적인 작업을 자동화한다.
+
+- 모션: 비대칭 이징(ease-out 중심)으로 결과를 즉각 보여주고, 과정은 자연스럽게 사라지게 한다 → [모션](/design-system/원칙/모션)
+- 간격 리듬: 반복되는 리스트/카드에 일관된 리듬을 적용하여 스캐닝 부담을 줄인다 → [간격 리듬](/design-system/가이드/간격-리듬)
+
+</Accordion>
+
+<Accordion title="Consistent">
+
+어떤 맥락에서도 동일한 행동이 동일한 결과를 낳도록 보장한다. 사용자가 학습 없이도 자신감 있게 서비스를 사용할 수 있게 한다.
+
+- 색상: 시맨틱 토큰을 통해 같은 역할에는 항상 같은 색이 적용된다 → [색상](/design-system/원칙/색상)
+- 버튼 위계: Primary/Secondary/Tertiary 위계가 모든 화면에서 동일하게 적용된다 → [버튼 위계](/design-system/가이드/버튼-위계)
+
+</Accordion>
+
 </AccordionGroup>
+
 ## 체계적 확장
+
 <AccordionGroup>
-  <Accordion title="Foundational">
-    색상, 타이포그래피, 간격 등 가장 기초적인 원칙을 명확히 정의하고 모든 컴포넌트의 근간으로 삼는다.
 
-    - 토큰 아키텍처: Primitive → Semantic → Component 3계층 구조 → [색상](/design-system/원칙/색상#토큰-아키텍처)
-    - 엘리베이션: 의미 기반 단어(lowest ~ overlay)로 깊이를 체계화한다 → 05 엘리베이션 시스템
+<Accordion title="Foundational">
 
-  </Accordion>
-  <Accordion title="Unified">
-    디자이너와 개발자가 공통된 언어(디자인 토큰)로 소통하여 오해를 줄이고 효율성을 극대화한다.
+색상, 타이포그래피, 간격 등 가장 기초적인 원칙을 명확히 정의하고 모든 컴포넌트의 근간으로 삼는다.
 
-    - 네이밍: Element-first 패턴(`color.text.default`)으로 Tailwind 유틸리티와 1:1 대응 → [색상](/design-system/원칙/색상#네이밍-규칙:-Element-first)
-    - 그라디언트/보더 라디우스도 동일한 시맨틱 토큰 체계를 따른다 → [그라디언트](/design-system/원칙/그라디언트), [모서리 둥글기](/design-system/원칙/모서리-둥글기)
+- 토큰 아키텍처: Primitive → Semantic → Component 3계층 구조 → [색상](/design-system/원칙/색상#토큰-아키텍처)
+- 엘리베이션: 의미 기반 단어(lowest ~ overlay)로 깊이를 체계화한다 → 05 엘리베이션 시스템
 
-  </Accordion>
-  <Accordion title="Flexible">
-    특정 데이터에 종속되지 않은 추상적 컴포넌트를 설계하여, 다양한 컨텍스트에 재사용하고 미래의 요구사항에 맞춰 확장할 수 있도록 한다.
+</Accordion>
 
-    - 컴포넌트 원칙: 아토믹 아키텍처 기반의 조합 가능한 설계 → [컴포넌트 원칙](/design-system/컴포넌트/컴포넌트-원칙), 아토믹 아키텍처
-    - 레시피: 컴포넌트 조합 패턴을 문서화하여 새로운 화면을 빠르게 구성한다 → [카드 조합](/design-system/레시피/카드-조합), [리스트 조합](/design-system/레시피/리스트-조합)
-  </Accordion>
+<Accordion title="Unified">
+
+디자이너와 개발자가 공통된 언어(디자인 토큰)로 소통하여 오해를 줄이고 효율성을 극대화한다.
+
+- 네이밍: Element-first 패턴(`color.text.default`)으로 Tailwind 유틸리티와 1:1 대응 → [색상](/design-system/원칙/색상#네이밍-규칙:-Element-first)
+- 그라디언트/보더 라디우스도 동일한 시맨틱 토큰 체계를 따른다 → [그라디언트](/design-system/원칙/그라디언트), [모서리 둥글기](/design-system/원칙/모서리-둥글기)
+
+</Accordion>
+
+<Accordion title="Flexible">
+
+특정 데이터에 종속되지 않은 추상적 컴포넌트를 설계하여, 다양한 컨텍스트에 재사용하고 미래의 요구사항에 맞춰 확장할 수 있도록 한다.
+
+- 컴포넌트 원칙: 아토믹 아키텍처 기반의 조합 가능한 설계 → [컴포넌트 원칙](/design-system/컴포넌트/컴포넌트-원칙), 아토믹 아키텍처
+- 레시피: 컴포넌트 조합 패턴을 문서화하여 새로운 화면을 빠르게 구성한다 → [카드 조합](/design-system/레시피/카드-조합), [리스트 조합](/design-system/레시피/리스트-조합)
+
+</Accordion>
+
 </AccordionGroup>

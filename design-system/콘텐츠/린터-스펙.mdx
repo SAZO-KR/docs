@@ -81,571 +81,597 @@ UX Writing 가이드를 아무리 잘 만들어도 **사람이 매번 읽고 판
 ```
 
 ## 구현 Phase
+
 <AccordionGroup>
-  <Accordion title="Phase 1: 린터 (레이어 1 구현, 2~3주)">
-    CLI 도구 또는 API로 구현한다. 입력: 텍스트 → 출력: 위반 목록 + 심각도. 가이드에 이미 "권장/비권장"이 명확하니까 규칙 추출이 바로 가능하다. **이 단계에서 팀이 실제로 쓰는지 검증하는 것이 핵심이다.**
 
-    #### 기본 도구: 형태소 분석기
-    LLM과 형태소 분석기는 전혀 다른 것이다:
-    - **LLM** : 확률적으로 "다음 토큰"을 생성하는 거대 모델 (수십~수천억 파라미터)
-    - **형태소 분석기** : 문장을 문법 단위로 쪼개는 규칙+사전 기반 도구 (수 MB)
+<Accordion title="Phase 1: 린터 (레이어 1 구현, 2~3주)">
 
-    한국어 형태소 분석기 후보:
+CLI 도구 또는 API로 구현한다. 입력: 텍스트 → 출력: 위반 목록 + 심각도. 가이드에 이미 "권장/비권장"이 명확하니까 규칙 추출이 바로 가능하다. **이 단계에서 팀이 실제로 쓰는지 검증하는 것이 핵심이다.**
 
-    | 도구 | 특징 |
-    |---|---|
-    | Mecab-ko | 가장 빠름, C++ 기반, 사전 확장 가능 |
-    | Komoran | 자바 기반, 오타에 강함 |
-    | Kiwi | 최신, 속도/정확도 균형, Python 네이티브 |
+#### 기본 도구: 형태소 분석기
+LLM과 형태소 분석기는 전혀 다른 것이다:
+- **LLM** : 확률적으로 "다음 토큰"을 생성하는 거대 모델 (수십~수천억 파라미터)
+- **형태소 분석기** : 문장을 문법 단위로 쪼개는 규칙+사전 기반 도구 (수 MB)
 
-    Kiwi 사용 예시:
+한국어 형태소 분석기 후보:
 
-    ```python
-    from kiwipiepy import Kiwi
-    kiwi = Kiwi()
-    tokens = kiwi.tokenize("통관 절차가 완료되었습니다")
+| 도구 | 특징 |
+|---|---|
+| Mecab-ko | 가장 빠름, C++ 기반, 사전 확장 가능 |
+| Komoran | 자바 기반, 오타에 강함 |
+| Kiwi | 최신, 속도/정확도 균형, Python 네이티브 |
 
-    # 통관/NNG  절차/NNG  가/JKS  완료/NNG  되/XSV  었/EP  습니다/EF
-    ```
+Kiwi 사용 예시:
 
-    각 토큰에 **품사 태그** 가 붙는다. NNG는 일반명사, XSV는 동사 파생 접미사, EF는 종결어미. 이 정보만으로 레이어 1의 거의 모든 것을 할 수 있다.
+```python
+from kiwipiepy import Kiwi
+kiwi = Kiwi()
+tokens = kiwi.tokenize("통관 절차가 완료되었습니다")
 
-    #### A. 정규표현식 (NLP 불필요)
-    패턴 매칭만으로 검출 가능한 규칙들이다. 가장 구현이 간단하고 실행 속도가 빠르다. 일부 규칙은 형태소 분석기조차 필요 없다.
+# 통관/NNG  절차/NNG  가/JKS  완료/NNG  되/XSV  었/EP  습니다/EF
+```
 
-    ```python
-    rules_regex = [
-        # 날짜 구분자
-        {"id": "date-slash",
-         "pattern": r"\d{4}/\d{1,2}/\d{1,2}",
-         "message": "날짜 구분자는 마침표(.)를 사용하세요",
-         "ref": "날짜 및 시간"},
+각 토큰에 **품사 태그** 가 붙는다. NNG는 일반명사, XSV는 동사 파생 접미사, EF는 종결어미. 이 정보만으로 레이어 1의 거의 모든 것을 할 수 있다.
 
-        # 24시간제
-        {"id": "time-24h",
-         "pattern": r"(?<!\d)(1[3-9]|2[0-3]):[0-5]\d",
-         "message": "24시간제 대신 오전/오후를 사용하세요",
-         "ref": "날짜 및 시간"},
+#### A. 정규표현식 (NLP 불필요)
+패턴 매칭만으로 검출 가능한 규칙들이다. 가장 구현이 간단하고 실행 속도가 빠르다. 일부 규칙은 형태소 분석기조차 필요 없다.
 
-        # 시간 공백 누락 (오전8시, 오후8:45)
-        {"id": "time-no-space",
-         "pattern": r"(오전|오후)\d",
-         "message": "오전/오후 뒤에 공백을 넣으세요",
-         "ref": "날짜 및 시간"},
+```python
+rules_regex = [
+    # 날짜 구분자
+    {"id": "date-slash",
+     "pattern": r"\d{4}/\d{1,2}/\d{1,2}",
+     "message": "날짜 구분자는 마침표(.)를 사용하세요",
+     "ref": "날짜 및 시간"},
 
-        # 통화 기호
-        {"id": "currency-symbol",
-         "pattern": r"[¥₩]\s?\d",
-         "message": "통화 기호 대신 '엔', '원'을 사용하세요",
-         "ref": "통화"},
+    # 24시간제
+    {"id": "time-24h",
+     "pattern": r"(?<!\d)(1[3-9]|2[0-3]):[0-5]\d",
+     "message": "24시간제 대신 오전/오후를 사용하세요",
+     "ref": "날짜 및 시간"},
 
-        # 통화 코드
-        {"id": "currency-code",
-         "pattern": r"\b(KRW|JPY)\b",
-         "message": "통화 코드 대신 '엔', '원'을 사용하세요",
-         "ref": "통화"},
+    # 시간 공백 누락 (오전8시, 오후8:45)
+    {"id": "time-no-space",
+     "pattern": r"(오전|오후)\d",
+     "message": "오전/오후 뒤에 공백을 넣으세요",
+     "ref": "날짜 및 시간"},
 
-        # 느낌표 중복
-        {"id": "exclamation-double",
-         "pattern": r"!{2,}",
-         "message": "느낌표는 1개까지만 사용합니다",
-         "ref": "느낌표"},
+    # 통화 기호
+    {"id": "currency-symbol",
+     "pattern": r"[¥₩]\s?\d",
+     "message": "통화 기호 대신 '엔', '원'을 사용하세요",
+     "ref": "통화"},
 
-        # 앰퍼샌드 (브랜드명 제외는 allowlist로 처리)
-        {"id": "ampersand",
-         "pattern": r"(?<!Tiffany\s)&(?!\sCo)",
-         "message": "'그리고' 또는 '및'을 사용하세요",
-         "ref": "앰퍼샌드"},
+    # 통화 코드
+    {"id": "currency-code",
+     "pattern": r"\b(KRW|JPY)\b",
+     "message": "통화 코드 대신 '엔', '원'을 사용하세요",
+     "ref": "통화"},
 
-        # 이모지
-        {"id": "emoji",
-         "pattern": r"[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF"
-                    r"\U0001F680-\U0001F6FF\U0001F900-\U0001F9FF]",
-         "message": "이모지를 사용하지 마세요",
-         "ref": "이모지"},
+    # 느낌표 중복
+    {"id": "exclamation-double",
+     "pattern": r"!{2,}",
+     "message": "느낌표는 1개까지만 사용합니다",
+     "ref": "느낌표"},
 
-        # 숫자+단위 사이 공백 (5,000 엔 → 5,000엔)
-        {"id": "number-unit-space",
-         "pattern": r"\d\s+(엔|원|개|장|건|회)",
-         "message": "숫자와 단위는 붙여 씁니다",
-         "ref": "숫자 표기"},
+    # 앰퍼샌드 (브랜드명 제외는 allowlist로 처리)
+    {"id": "ampersand",
+     "pattern": r"(?<!Tiffany\s)&(?!\sCo)",
+     "message": "'그리고' 또는 '및'을 사용하세요",
+     "ref": "앰퍼샌드"},
 
-        # 4자리 이상 숫자에 쉼표 없음
-        {"id": "number-no-comma",
-         "pattern": r"(?<!\d)(\d{4,})(?![\d\-./년월일시분초:])",
-         "message": "네 자리 이상 숫자에는 세 자리마다 쉼표를 넣으세요",
-         "ref": "숫자 표기"},
+    # 이모지
+    {"id": "emoji",
+     "pattern": r"[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF"
+                r"\U0001F680-\U0001F6FF\U0001F900-\U0001F9FF]",
+     "message": "이모지를 사용하지 마세요",
+     "ref": "이모지"},
 
-        # 한글-영문 사이 공백 누락 (사줘App → 사줘 App)
-        {"id": "hangul-latin-space",
-         "pattern": r"[가-힣][A-Za-z]|[A-Za-z][가-힣]",
-         "exclude": r"[A-Za-z](을|를|이|가|은|는|에|의|와|과|로|도|만)",
-         "message": "한글과 영문 사이에 공백을 넣으세요 (조사 제외)",
-         "ref": "외래어 표기"},
+    # 숫자+단위 사이 공백 (5,000 엔 → 5,000엔)
+    {"id": "number-unit-space",
+     "pattern": r"\d\s+(엔|원|개|장|건|회)",
+     "message": "숫자와 단위는 붙여 씁니다",
+     "ref": "숫자 표기"},
 
-        # 일본어 문자 노출
-        {"id": "japanese-chars",
-         "pattern": r"[\u3040-\u309F\u30A0-\u30FF]",
-         "message": "일본어 문자를 직접 노출하지 마세요",
-         "ref": "일본어 용어"},
+    # 4자리 이상 숫자에 쉼표 없음
+    {"id": "number-no-comma",
+     "pattern": r"(?<!\d)(\d{4,})(?![\d\-./년월일시분초:])",
+     "message": "네 자리 이상 숫자에는 세 자리마다 쉼표를 넣으세요",
+     "ref": "숫자 표기"},
 
-        # 이중 부정
-        {"id": "double-negative",
-         "pattern": r"(않|없|못)\w{0,6}(않|없|못)",
-         "message": "이중 부정 대신 긍정형으로 바꿔 쓰세요",
-         "ref": "직접적인 문장 쓰기"},
-    ]
-    ```
+    # 한글-영문 사이 공백 누락 (사줘App → 사줘 App)
+    {"id": "hangul-latin-space",
+     "pattern": r"[가-힣][A-Za-z]|[A-Za-z][가-힣]",
+     "exclude": r"[A-Za-z](을|를|이|가|은|는|에|의|와|과|로|도|만)",
+     "message": "한글과 영문 사이에 공백을 넣으세요 (조사 제외)",
+     "ref": "외래어 표기"},
 
-    `japanese-chars` 주의사항: CJK 통합 한자 범위(`\u4E00-\u9FFF`)를 포함하면 한자까지 잡힌다. 히라가나(`\u3040-\u309F`)와 가타카나(`\u30A0-\u30FF`)만 감지하거나, 한자 용어를 allowlist에 등록하는 식으로 보정해야 한다.
+    # 일본어 문자 노출
+    {"id": "japanese-chars",
+     "pattern": r"[\u3040-\u309F\u30A0-\u30FF]",
+     "message": "일본어 문자를 직접 노출하지 마세요",
+     "ref": "일본어 용어"},
 
-    #### B. 사전 룩업 (매칭 테이블)
-    가이드에 이미 "이것 대신 저것을 써라"가 테이블로 정리되어 있다. 그대로 사전화하면 된다. 문자열 `in` 연산이므로 해시맵이면 O(1).
+    # 이중 부정
+    {"id": "double-negative",
+     "pattern": r"(않|없|못)\w{0,6}(않|없|못)",
+     "message": "이중 부정 대신 긍정형으로 바꿔 쓰세요",
+     "ref": "직접적인 문장 쓰기"},
+]
+```
 
-    ```python
+`japanese-chars` 주의사항: CJK 통합 한자 범위(`\u4E00-\u9FFF`)를 포함하면 한자까지 잡힌다. 히라가나(`\u3040-\u309F`)와 가타카나(`\u30A0-\u30FF`)만 감지하거나, 한자 용어를 allowlist에 등록하는 식으로 보정해야 한다.
 
-    # 외래어 → 한국어 대체어
-    term_replacements = {
-        "카트": "장바구니",
-        "위시리스트": "찜하기 / 찜한 상품",
-        "에러": "오류",
-        "Favorite": "찜하기",
-        "Cart": "장바구니",
-        "Error": "오류",
-    }
+#### B. 사전 룩업 (매칭 테이블)
+가이드에 이미 "이것 대신 저것을 써라"가 테이블로 정리되어 있다. 그대로 사전화하면 된다. 문자열 `in` 연산이므로 해시맵이면 O(1).
 
-    # 전문 용어 → 사용자 대면 표현
-    jargon_replacements = {
-        "캐시 초기화": "저장된 데이터 삭제",
-        "세션 만료": "로그인 시간 초과",
-        "토큰": "인증 정보",
-        "동기화": "정보 업데이트",
-    }
+```python
 
-    # 포용적 표현
-    inclusive_replacements = {
-        "회원님": "이용자 / 고객",
-        "남녀 모두": "모든 고객",
-        "배송기사": "배송 담당자",
-        "판매사원": "판매원",
-    }
+# 외래어 → 한국어 대체어
+term_replacements = {
+    "카트": "장바구니",
+    "위시리스트": "찜하기 / 찜한 상품",
+    "에러": "오류",
+    "Favorite": "찜하기",
+    "Cart": "장바구니",
+    "Error": "오류",
+}
 
-    def check_terms(text, dictionary, rule_ref):
-        findings = []
-        for banned, suggested in dictionary.items():
-            if banned in text:
+# 전문 용어 → 사용자 대면 표현
+jargon_replacements = {
+    "캐시 초기화": "저장된 데이터 삭제",
+    "세션 만료": "로그인 시간 초과",
+    "토큰": "인증 정보",
+    "동기화": "정보 업데이트",
+}
+
+# 포용적 표현
+inclusive_replacements = {
+    "회원님": "이용자 / 고객",
+    "남녀 모두": "모든 고객",
+    "배송기사": "배송 담당자",
+    "판매사원": "판매원",
+}
+
+def check_terms(text, dictionary, rule_ref):
+    findings = []
+    for banned, suggested in dictionary.items():
+        if banned in text:
+            findings.append({
+                "term": banned,
+                "suggestion": suggested,
+                "ref": rule_ref
+            })
+    return findings
+```
+
+#### C. 형태소 분석기 활용
+띄어쓰기, 종결 어미, 수동태, 외래어 비율 — 형태소 분석기의 품사 태그를 활용해야 하는 규칙들이다. 여전히 LLM은 아니다.
+
+**보조 용언 띄어쓰기**
+
+가이드에서 가장 규칙이 명확한 부분이다. "보조 용언은 띄어 쓴다"가 원칙이고, 보조 용언 목록이 한정되어 있다. 형태소 분석기가 `VV`(동사), `VX`(보조용언)를 태깅해주기 때문에 가능하다.
+
+`"입력해주세요"` → `입력/NNG + 하/XSV + 아/EC + 주/VX + 세요/EF` → VX 앞에 공백 없음 → 위반.
+
+```python
+auxiliary_verbs = ["주다", "보다", "드리다", "있다", "없다", "하다"]
+
+def check_auxiliary_spacing(tokens):
+    """연속된 두 용언이 공백 없이 붙어 있는지 체크"""
+    findings = []
+    for i in range(len(tokens) - 1):
+        curr = tokens[i]
+        next_t = tokens[i + 1]
+        # 본용언(VV/VA) 바로 뒤에 보조용언(VX)이 오는데
+        # 원문에서 공백이 없었다면 → 위반
+        if curr.tag in ("VV", "VA") and next_t.tag == "VX":
+            if no_space_between(curr, next_t):  # 원문 위치 기반 판단
                 findings.append({
-                    "term": banned,
-                    "suggestion": suggested,
-                    "ref": rule_ref
+                    "position": curr.start,
+                    "found": f"{curr.form}{next_t.form}",
+                    "suggestion": f"{curr.form} {next_t.form}",
+                    "message": "보조 용언은 띄어 쓴다"
                 })
-        return findings
-    ```
-
-    #### C. 형태소 분석기 활용
-    띄어쓰기, 종결 어미, 수동태, 외래어 비율 — 형태소 분석기의 품사 태그를 활용해야 하는 규칙들이다. 여전히 LLM은 아니다.
-
-    **보조 용언 띄어쓰기**
-
-    가이드에서 가장 규칙이 명확한 부분이다. "보조 용언은 띄어 쓴다"가 원칙이고, 보조 용언 목록이 한정되어 있다. 형태소 분석기가 `VV`(동사), `VX`(보조용언)를 태깅해주기 때문에 가능하다.
-
-    `"입력해주세요"` → `입력/NNG + 하/XSV + 아/EC + 주/VX + 세요/EF` → VX 앞에 공백 없음 → 위반.
-
-    ```python
-    auxiliary_verbs = ["주다", "보다", "드리다", "있다", "없다", "하다"]
-
-    def check_auxiliary_spacing(tokens):
-        """연속된 두 용언이 공백 없이 붙어 있는지 체크"""
-        findings = []
-        for i in range(len(tokens) - 1):
-            curr = tokens[i]
-            next_t = tokens[i + 1]
-            # 본용언(VV/VA) 바로 뒤에 보조용언(VX)이 오는데
-            # 원문에서 공백이 없었다면 → 위반
-            if curr.tag in ("VV", "VA") and next_t.tag == "VX":
-                if no_space_between(curr, next_t):  # 원문 위치 기반 판단
-                    findings.append({
-                        "position": curr.start,
-                        "found": f"{curr.form}{next_t.form}",
-                        "suggestion": f"{curr.form} {next_t.form}",
-                        "message": "보조 용언은 띄어 쓴다"
-                    })
-        return findings
-    ```
-
-    **종결 어미**
-
-    가이드에 허용/금지 어미가 명확하다. 종결어미는 형태소 분석기가 `EF` 태그로 정확히 찍어준다.
-
-    ```python
-    banned_endings = {
-        "하십시오": "지나치게 권위적",
-        "해요": "격식체 통일 원칙에 어긋남",
-        "어요": "격식체 통일 원칙에 어긋남",
-        "에요": "격식체 통일 원칙에 어긋남",
-        "함": "비격식적 (반말 명사형)",
-        "됨": "비격식적 (반말 명사형)",
-    }
-
-    def check_ending(tokens):
-        last_token = tokens[-1]  # 문장 마지막 토큰
-        if last_token.tag == "EF":  # 종결어미
-            for banned, reason in banned_endings.items():
-                if last_token.form == banned:
-                    return {"found": banned, "reason": reason}
-        return None
-    ```
-
-    **수동태 (번역투)**
-
-    한국어 피동 표현은 패턴이 정해져 있다:
-
-    ```python
-    passive_suffixes = {"이", "히", "리", "기"}     # 피동 접미사
-    passive_verbs = {"되다", "받다", "당하다"}        # 피동 동사
-
-    def check_passive(tokens):
-        for i, t in enumerate(tokens):
-            # "~에 의해 ~되다" 패턴 (번역투)
-            if t.form == "의해" or (t.tag == "XSV" and t.form == "되"):
-                # "완료되다"는 허용, "~에 의해 처리되다"는 경고
-                # 앞에 "에 의해"가 있으면 번역투 의심
-                if i >= 2 and tokens[i-1].form == "의해":
-                    return {"message": "번역투 수동태입니다. 능동태로 바꿔 쓰세요"}
-        return None
-    ```
-
-    핵심: "결제가 완료되었습니다"까지 전부 잡으면 false positive가 너무 많다. 가이드도 이걸 전면 금지하지 않고 "~에 의해" 번역투만 문제 삼고 있으므로, **패턴의 범위를 가이드의 비권장 범위와 일치** 시켜야 한다.
-
-    **외래어/전문용어 비율**
-
-    형태소 분석기가 외국어를 `SL` 태그로 구분해준다:
-
-    ```python
-    for token in kiwi.tokenize("3D Secure 인증이 필요합니다"):
-        print(token.form, token.tag)
-
-    # 3/SN  D/SL  Secure/SL  인증/NNG  이/JKS  필요/NNG  합니다/EF
-    # SL = 외국어, SN = 숫자
-    ```
-
-    ```python
-    def foreign_ratio(tokens):
-        content_tokens = [t for t in tokens if t.tag.startswith(("N", "V", "SL"))]
-        foreign = [t for t in content_tokens if t.tag == "SL"]
-        return len(foreign) / len(content_tokens) if content_tokens else 0
-    ```
-
-    전문용어는 사줘 도메인 용어 사전을 별도로 만들어서 매칭한다. 가이드의 [두문자어](/design-system/콘텐츠/문법-및-스타일#두문자어)와 [외래어 표기](/design-system/콘텐츠/문법-및-스타일#외래어-표기) 섹션에 이미 용어 기준이 있으니, 그걸 사전화하면 된다.
-
-    #### D. 휴리스틱 (임계값 기반)
-    **문장 길이**
-
-    가이드에 이미 숫자가 있다: "권장 15~60자, 최대 120자".
-
-    ```python
-    def check_verbosity(text):
-        findings = []
-        sentences = split_sentences(text)
-        for s in sentences:
-            length = len(s)
-            if length > 120:
-                findings.append({
-                    "severity": "error",
-                    "message": f"문장이 {length}자입니다. 120자를 초과하면 분리하세요"
-                })
-            elif length > 60:
-                findings.append({
-                    "severity": "warning",
-                    "message": f"문장이 {length}자입니다. 60자 이하를 권장합니다"
-                })
-        return findings
-    ```
-
-    **어휘 난이도**
-
-    국립국어원이 공개한 현대국어 사용빈도 조사 데이터를 활용한다. 약 7만 어휘에 빈도 등급이 매겨져 있고, 한국어 학습용 어휘 목록은 등급(A/B/C)까지 분류되어 있다.
-
-    ```python
-
-    # 빈도 사전 (실제로는 CSV/DB에서 로드)
-    freq_dict = {
-        "결제": {"rank": 3200, "grade": "B"},
-        "통관": {"rank": 28000, "grade": "C"},
-        "주문": {"rank": 1800, "grade": "A"},
-    }
-
-    def word_difficulty(token):
-        entry = freq_dict.get(token.form)
-        if entry is None:
-            return "unknown"  # 사전에 없으면 높은 난이도로 간주
-        if entry["rank"] < 5000:
-            return "easy"
-        if entry["rank"] < 15000:
-            return "medium"
-        return "hard"
-    ```
-
-    이것은 사전 검색이다. O(1) 해시맵 룩업이라 수만 문장을 초 단위로 처리한다. "통관"이 28,000위라서 hard로 나오면 → "세관 검사"(세관: 8,000위 + 검사: 2,100위)를 대안으로 제시할 수 있는 것도 같은 사전에서 나온다.
-
-    **문장 복잡도**
-
-    의존 구문 분석(dependency parsing)으로 종속절 깊이를 측정한다. 이것도 소형 모델(수십 MB)이지 LLM이 아니다.
-
-    ```
-    단순: "결제가 완료되었습니다."
-          결제가 ──→ 완료되었습니다   (깊이 1)
-
-    복잡: "고객님이 선택하신 상품의 결제가 정상적으로 완료되었습니다."
-          고객님이 ─→ 선택하신 ─→ 상품의 ─→ 결제가 ─→ 완료되었습니다
-          (깊이 4, 수식어 체인)
-    ```
-
-    측정 가능한 지표:
-
-    | 지표 | 계산 방법 | 비용 |
-    |---|---|---|
-    | 문장 길이 | 어절 수 카운트 | 거의 0 |
-    | 종속절 깊이 | 의존 트리 최대 깊이 | 구문 분석 1회 |
-    | 주어-서술어 거리 | 의존 트리에서 간선 길이 | 동일 |
-    | 삽입절 수 | 관형절/부사절 카운트 | 동일 |
-
-    #### 가이드 → 린터 규칙 매핑
-    22개 규칙 중 약 17개가 LLM 없이 가능하다. 가이드를 잘 만들어놨기 때문에 가능한 것이다 — "권장/비권장"이 구체적인 패턴으로 명시되어 있으니까.
-
-    | 가이드 섹션               | 체크 방식             | 난이도 |
-    | -------------------- | ----------------- | --- |
-    | 날짜 구분자, 24시간제, 시간 공백 | 정규표현식             | ★☆☆ |
-    | 통화 기호/코드             | 정규표현식             | ★☆☆ |
-    | 느낌표 중복               | 정규표현식             | ★☆☆ |
-    | 앰퍼샌드                 | 정규표현식 + allowlist | ★☆☆ |
-    | 이모지                  | 정규표현식             | ★☆☆ |
-    | 숫자+단위 공백, 쉼표         | 정규표현식             | ★☆☆ |
-    | 한글-영문 공백             | 정규표현식 + 조사 예외     | ★★☆ |
-    | 일본어 문자 노출            | 정규표현식             | ★☆☆ |
-    | 이중 부정                | 정규표현식             | ★☆☆ |
-    | 외래어 대체어              | 사전 룩업             | ★☆☆ |
-    | 전문 용어 대체             | 사전 룩업             | ★☆☆ |
-    | 포용적 표현               | 사전 룩업             | ★☆☆ |
-    | 띄어쓰기 (보조 용언)         | 형태소 분석            | ★★☆ |
-    | 종결 어미                | 형태소 분석            | ★★☆ |
-    | 수동태 (번역투)            | 형태소 분석            | ★★☆ |
-    | 문장 길이                | 글자 수 카운트          | ★☆☆ |
-    | 관점 일관성               | **LLM 필요**        | ★★★ |
-    | 맥락별 느낌표 허용           | **LLM 필요**        | ★★★ |
-    | 장황함 (질적)             | **LLM 필요**        | ★★★ |
-
-  </Accordion>
-  <Accordion title="Phase 2: 시각화 (Phase 1 검증 후)">
-    <Note>
-      진입 조건: Phase 1의 린터가 안정적으로 동작하고, 팀이 실제로 사용하며, false positive 비율이 허용 범위 이내로 튜닝된 상태.
-    </Note>
-
-    텍스트를 입력하면 어떤 부분이 어려운지 시각적으로 보여주는 도구다.
-
-    - **히트맵 오버레이** : 레이어 1 점수 기반으로 텍스트 위에 색상 렌더링. 어휘 난이도가 높은 단어는 붉게, 문장 구조가 복잡한 부분은 진하게 표시.
-    - **웹 UI** : 텍스트 붙여넣기 → 결과 즉시 표시. 라이터/디자이너가 작성 중에 바로 확인할 수 있는 인터페이스.
-    - **Figma 플러그인** : 디자인 시안 위의 텍스트 레이어를 추출해서 린터를 돌리고, 결과를 시안 위에 오버레이로 표시. 디자인 리뷰 시 "이 화면의 텍스트 난이도"를 한눈에 파악 가능.
-
-    이 단계의 핵심 가치는 **"보이게 만드는 것"** 이다. CLI 린터는 개발자만 쓰지만, 시각화 도구는 디자이너, PM, 마케터도 쓸 수 있다. 가이드 준수가 특정 직군의 책임이 아니라 팀 전체의 관심사가 된다.
-
-  </Accordion>
-  <Accordion title="Phase 3: LLM 레이어 (Phase 2 검증 후)">
-    <Note>
-      진입 조건: Phase 2의 시각화가 검증되고, 레이어 1만으로 커버되지 않는 케이스가 충분히 수집된 상태. "이런 건 왜 안 잡아주지?"라는 피드백이 쌓여야 LLM 도입이 정당화된다.
-    </Note>
-
-    규칙으로 잡히지 않는 맥락적 문제를 LLM으로 보완한다. **파인튜닝하지 않는다.** 기존 LLM에 프롬프트로 판단을 요청하는 LLM-as-Judge 방식을 쓴다.
-
-    레이어 1으로 안 되는 것들:
-
-    | 규칙 | 왜 규칙 기반으로 안 되는가 |
-    |---|---|
-    | 관점 일관성 (1인칭/2인칭 혼용) | "한 화면" 단위를 린터가 모른다. 입력이 화면 단위가 아니면 판단 불가 |
-    | 느낌표 맥락 판단 | "이게 프로모션인가 오류 메시지인가"는 UI 맥락 의존 |
-    | "해보세요" 예외 | 격려 문맥인지 일반 문맥인지 의미 판단 필요 |
-    | 장황함의 질적 판단 | 글자 수는 재지만 "불필요한 수식"은 의미 판단 |
-    | 직접적인 문장 | "주체가 명확한가"는 구문만으로 부족, 의미 레벨 판단 필요 |
-
-    프롬프트 설계 방향:
-
-    ```
-    당신은 SAZO(사줘)의 UX Writing 전문 리뷰어입니다.
-    다음 텍스트를 검토하고, 아래 기준에 해당하는 문제가 있으면 지적하세요:
-
-    1. 한 화면 내에서 1인칭("내")과 2인칭("고객님")이 혼용되고 있는가?
-    2. 오류/경고 맥락에서 느낌표가 사용되었는가?
-    3. 불필요한 수식이나 반복으로 핵심 메시지가 희석되는가?
-    4. 행위의 주체가 불분명한 피동 표현이 있는가?
-
-    텍스트: {input_text}
-    UI 맥락: {context}  (예: 에러 모달, 프로모션 배너, 결제 확인)
-    ```
-
-    LLM 레이어의 결과는 레이어 1과 다르게 **제안(suggestion)** 으로 표시한다. 레이어 1은 "위반(violation)"이지만, LLM 판단은 확률적이므로 "검토해 보세요(review)" 수준으로 구분해야 신뢰를 유지할 수 있다.
-
-  </Accordion>
-  <Accordion title="Phase 4: 워크플로우 통합">
-    <Note>
-      진입 조건: Phase 3까지 통합된 린터가 실제 UX 카피에 대해 충분한 정확도를 보이는 상태.
-    </Note>
-
-    - **PR 자동 리뷰** : UX 카피 변경이 포함된 PR에 자동으로 린트 결과를 코멘트. 변경된 텍스트만 검사하고, 위반 항목을 인라인 코멘트로 달아준다.
-    - **Figma → 린터 → 디자인 리뷰** : Figma 시안의 텍스트를 추출 → 린터 실행 → 결과를 디자인 리뷰 문서에 점수로 첨부.
-    - **인지 부하 예산** : 디자인 시스템 토큰처럼 화면별 "인지 부하 예산"을 설정. 예: "결제 화면의 인지 부하 점수는 30 이하여야 한다". 예산을 초과하면 CI가 경고.
-
-  </Accordion>
-  <Accordion title="스코핑: 사용자 대면 텍스트만 린트하기">
-    린터의 실용성을 결정하는 핵심이다. 스코핑 못 하면 false positive가 쏟아져서 아무도 안 쓴다. 주석, 참고 문서, 로그 메시지가 아닌 **실제 유저에게 보이는 텍스트만** 추출해서 검사해야 한다. 코드베이스 구조에 따라 접근이 달라진다.
-
-  </Accordion>
-  <Accordion title="i18n JSON만 린트">
-    가장 깔끔한 방식이다. 이미 번역 키-값 구조를 쓰고 있다면 린터 대상이 자동으로 결정된다.
-
-    ```json
-    // ko.json — 이 파일만 린트 대상
-    {
-      "checkout.complete": "결제가 완료되었습니다",
-      "shipping.estimate": "배송은 3~5일 소요됩니다",
-      "error.payment": "결제 처리 중 오류가 발생했습니다"
-    }
-    ```
-
-    ```bash
-    sazo-lint --target "src/locales/ko/** /*.json"
-    ```
-
-    JSON 값(value)만 추출해서 검사한다. 키는 건드리지 않는다. 파일 glob 패턴 하나로 스코핑이 끝나기 때문에 구현이 가장 단순하다.
-
-  </Accordion>
-  <Accordion title="TSX 인라인 텍스트 — AST 파싱">
-    i18n 없이 TSX에 텍스트가 직접 들어가 있으면, 코드와 사용자 텍스트를 AST(구문 트리) 레벨에서 분리해야 한다. 한 파일 안에서도 린트 대상과 비대상이 섞여 있다:
-
-    ```tsx
-    export function OrderComplete() {
-      // ❌ 린트 비대상: 주석
-      // 결제 완료 후 리다이렉트 처리
-      
-      const API_URL = "/api/orders";  // ❌ 비대상: 변수값
-      
-      console.log("payment completed"); // ❌ 비대상: 로그
-      
-      return (
-        <div>
-          <h1>결제가 완료되었습니다</h1>     {/* ✅ 대상: JSX 텍스트 노드 */}
-          <p>배송은 3~5일 소요됩니다</p>     {/* ✅ 대상 */}
-          <Button label="장바구니에 담기" />  {/* ✅ 대상: 특정 prop의 문자열 */}
-          <input 
-            placeholder="검색어를 입력해 주세요"  // ✅ 대상
-            name="search"                        // ❌ 비대상: 기술 속성
-            data-testid="search-input"           // ❌ 비대상
-          />
-          <img alt="상품 이미지" />              {/* ✅ 대상: 접근성 텍스트 */}
-        </div>
-      );
-    }
-    ```
-
-    이걸 구분하는 건 TypeScript/Babel AST 파서로 가능하다:
-
-    ```
-    TSX 소스
-      │
-      ├─ TypeScript Parser (ts-morph 또는 @babel/parser)
-      │
-      ▼
-    AST 노드 순회
-      │
-      ├─ JSXText 노드 ──────────────→ ✅ 추출
-      ├─ JSXAttribute 중
-      │   ├─ label, title, placeholder,
-      │   │  alt, aria-label ────────→ ✅ 추출
-      │   └─ name, className, href,
-      │      data-*, key, ref ───────→ ❌ 스킵
-      ├─ StringLiteral 중
-      │   ├─ console.* 인자 ─────────→ ❌ 스킵
-      │   ├─ import 경로 ────────────→ ❌ 스킵
-      │   └─ 변수 할당값 ────────────→ ❌ 스킵
-      ├─ TemplateLiteral (백틱)
-      │   └─ JSX 내부일 때만 ────────→ ✅ 추출
-      └─ Comment ────────────────────→ ❌ 스킵
-    ```
-
-    ESLint 플러그인으로 구현하면 기존 린트 파이프라인에 바로 붙는다:
-
-    ```js
-    // eslint-plugin-sazo-writing/rules/no-currency-symbol.js
-    module.exports = {
-      create(context) {
-        return {
-          // JSX 텍스트 노드
-          JSXText(node) {
-            check(node.value, node, context);
-          },
-          // 특정 prop의 문자열 값
-          JSXAttribute(node) {
-            const uiProps = ["label", "title", "placeholder", 
-                             "alt", "aria-label", "description"];
-            if (uiProps.includes(node.name.name) && 
-                node.value?.type === "Literal") {
-              check(node.value.value, node, context);
-            }
-          }
-        };
-        
-        function check(text, node, context) {
-          if (/[¥₩]\s?\d/.test(text)) {
-            context.report({
-              node,
-              message: "통화 기호 대신 '엔', '원'을 사용하세요"
-            });
-          }
+    return findings
+```
+
+**종결 어미**
+
+가이드에 허용/금지 어미가 명확하다. 종결어미는 형태소 분석기가 `EF` 태그로 정확히 찍어준다.
+
+```python
+banned_endings = {
+    "하십시오": "지나치게 권위적",
+    "해요": "격식체 통일 원칙에 어긋남",
+    "어요": "격식체 통일 원칙에 어긋남",
+    "에요": "격식체 통일 원칙에 어긋남",
+    "함": "비격식적 (반말 명사형)",
+    "됨": "비격식적 (반말 명사형)",
+}
+
+def check_ending(tokens):
+    last_token = tokens[-1]  # 문장 마지막 토큰
+    if last_token.tag == "EF":  # 종결어미
+        for banned, reason in banned_endings.items():
+            if last_token.form == banned:
+                return {"found": banned, "reason": reason}
+    return None
+```
+
+**수동태 (번역투)**
+
+한국어 피동 표현은 패턴이 정해져 있다:
+
+```python
+passive_suffixes = {"이", "히", "리", "기"}     # 피동 접미사
+passive_verbs = {"되다", "받다", "당하다"}        # 피동 동사
+
+def check_passive(tokens):
+    for i, t in enumerate(tokens):
+        # "~에 의해 ~되다" 패턴 (번역투)
+        if t.form == "의해" or (t.tag == "XSV" and t.form == "되"):
+            # "완료되다"는 허용, "~에 의해 처리되다"는 경고
+            # 앞에 "에 의해"가 있으면 번역투 의심
+            if i >= 2 and tokens[i-1].form == "의해":
+                return {"message": "번역투 수동태입니다. 능동태로 바꿔 쓰세요"}
+    return None
+```
+
+핵심: "결제가 완료되었습니다"까지 전부 잡으면 false positive가 너무 많다. 가이드도 이걸 전면 금지하지 않고 "~에 의해" 번역투만 문제 삼고 있으므로, **패턴의 범위를 가이드의 비권장 범위와 일치** 시켜야 한다.
+
+**외래어/전문용어 비율**
+
+형태소 분석기가 외국어를 `SL` 태그로 구분해준다:
+
+```python
+for token in kiwi.tokenize("3D Secure 인증이 필요합니다"):
+    print(token.form, token.tag)
+
+# 3/SN  D/SL  Secure/SL  인증/NNG  이/JKS  필요/NNG  합니다/EF
+# SL = 외국어, SN = 숫자
+```
+
+```python
+def foreign_ratio(tokens):
+    content_tokens = [t for t in tokens if t.tag.startswith(("N", "V", "SL"))]
+    foreign = [t for t in content_tokens if t.tag == "SL"]
+    return len(foreign) / len(content_tokens) if content_tokens else 0
+```
+
+전문용어는 사줘 도메인 용어 사전을 별도로 만들어서 매칭한다. 가이드의 [두문자어](/design-system/콘텐츠/문법-및-스타일#두문자어)와 [외래어 표기](/design-system/콘텐츠/문법-및-스타일#외래어-표기) 섹션에 이미 용어 기준이 있으니, 그걸 사전화하면 된다.
+
+#### D. 휴리스틱 (임계값 기반)
+**문장 길이**
+
+가이드에 이미 숫자가 있다: "권장 15~60자, 최대 120자".
+
+```python
+def check_verbosity(text):
+    findings = []
+    sentences = split_sentences(text)
+    for s in sentences:
+        length = len(s)
+        if length > 120:
+            findings.append({
+                "severity": "error",
+                "message": f"문장이 {length}자입니다. 120자를 초과하면 분리하세요"
+            })
+        elif length > 60:
+            findings.append({
+                "severity": "warning",
+                "message": f"문장이 {length}자입니다. 60자 이하를 권장합니다"
+            })
+    return findings
+```
+
+**어휘 난이도**
+
+국립국어원이 공개한 현대국어 사용빈도 조사 데이터를 활용한다. 약 7만 어휘에 빈도 등급이 매겨져 있고, 한국어 학습용 어휘 목록은 등급(A/B/C)까지 분류되어 있다.
+
+```python
+
+# 빈도 사전 (실제로는 CSV/DB에서 로드)
+freq_dict = {
+    "결제": {"rank": 3200, "grade": "B"},
+    "통관": {"rank": 28000, "grade": "C"},
+    "주문": {"rank": 1800, "grade": "A"},
+}
+
+def word_difficulty(token):
+    entry = freq_dict.get(token.form)
+    if entry is None:
+        return "unknown"  # 사전에 없으면 높은 난이도로 간주
+    if entry["rank"] < 5000:
+        return "easy"
+    if entry["rank"] < 15000:
+        return "medium"
+    return "hard"
+```
+
+이것은 사전 검색이다. O(1) 해시맵 룩업이라 수만 문장을 초 단위로 처리한다. "통관"이 28,000위라서 hard로 나오면 → "세관 검사"(세관: 8,000위 + 검사: 2,100위)를 대안으로 제시할 수 있는 것도 같은 사전에서 나온다.
+
+**문장 복잡도**
+
+의존 구문 분석(dependency parsing)으로 종속절 깊이를 측정한다. 이것도 소형 모델(수십 MB)이지 LLM이 아니다.
+
+```
+단순: "결제가 완료되었습니다."
+      결제가 ──→ 완료되었습니다   (깊이 1)
+
+복잡: "고객님이 선택하신 상품의 결제가 정상적으로 완료되었습니다."
+      고객님이 ─→ 선택하신 ─→ 상품의 ─→ 결제가 ─→ 완료되었습니다
+      (깊이 4, 수식어 체인)
+```
+
+측정 가능한 지표:
+
+| 지표 | 계산 방법 | 비용 |
+|---|---|---|
+| 문장 길이 | 어절 수 카운트 | 거의 0 |
+| 종속절 깊이 | 의존 트리 최대 깊이 | 구문 분석 1회 |
+| 주어-서술어 거리 | 의존 트리에서 간선 길이 | 동일 |
+| 삽입절 수 | 관형절/부사절 카운트 | 동일 |
+
+#### 가이드 → 린터 규칙 매핑
+22개 규칙 중 약 17개가 LLM 없이 가능하다. 가이드를 잘 만들어놨기 때문에 가능한 것이다 — "권장/비권장"이 구체적인 패턴으로 명시되어 있으니까.
+
+| 가이드 섹션               | 체크 방식             | 난이도 |
+| -------------------- | ----------------- | --- |
+| 날짜 구분자, 24시간제, 시간 공백 | 정규표현식             | ★☆☆ |
+| 통화 기호/코드             | 정규표현식             | ★☆☆ |
+| 느낌표 중복               | 정규표현식             | ★☆☆ |
+| 앰퍼샌드                 | 정규표현식 + allowlist | ★☆☆ |
+| 이모지                  | 정규표현식             | ★☆☆ |
+| 숫자+단위 공백, 쉼표         | 정규표현식             | ★☆☆ |
+| 한글-영문 공백             | 정규표현식 + 조사 예외     | ★★☆ |
+| 일본어 문자 노출            | 정규표현식             | ★☆☆ |
+| 이중 부정                | 정규표현식             | ★☆☆ |
+| 외래어 대체어              | 사전 룩업             | ★☆☆ |
+| 전문 용어 대체             | 사전 룩업             | ★☆☆ |
+| 포용적 표현               | 사전 룩업             | ★☆☆ |
+| 띄어쓰기 (보조 용언)         | 형태소 분석            | ★★☆ |
+| 종결 어미                | 형태소 분석            | ★★☆ |
+| 수동태 (번역투)            | 형태소 분석            | ★★☆ |
+| 문장 길이                | 글자 수 카운트          | ★☆☆ |
+| 관점 일관성               | **LLM 필요**        | ★★★ |
+| 맥락별 느낌표 허용           | **LLM 필요**        | ★★★ |
+| 장황함 (질적)             | **LLM 필요**        | ★★★ |
+
+</Accordion>
+
+<Accordion title="Phase 2: 시각화 (Phase 1 검증 후)">
+
+<Note>
+
+진입 조건: Phase 1의 린터가 안정적으로 동작하고, 팀이 실제로 사용하며, false positive 비율이 허용 범위 이내로 튜닝된 상태.
+
+</Note>
+
+텍스트를 입력하면 어떤 부분이 어려운지 시각적으로 보여주는 도구다.
+
+- **히트맵 오버레이** : 레이어 1 점수 기반으로 텍스트 위에 색상 렌더링. 어휘 난이도가 높은 단어는 붉게, 문장 구조가 복잡한 부분은 진하게 표시.
+- **웹 UI** : 텍스트 붙여넣기 → 결과 즉시 표시. 라이터/디자이너가 작성 중에 바로 확인할 수 있는 인터페이스.
+- **Figma 플러그인** : 디자인 시안 위의 텍스트 레이어를 추출해서 린터를 돌리고, 결과를 시안 위에 오버레이로 표시. 디자인 리뷰 시 "이 화면의 텍스트 난이도"를 한눈에 파악 가능.
+
+이 단계의 핵심 가치는 **"보이게 만드는 것"** 이다. CLI 린터는 개발자만 쓰지만, 시각화 도구는 디자이너, PM, 마케터도 쓸 수 있다. 가이드 준수가 특정 직군의 책임이 아니라 팀 전체의 관심사가 된다.
+
+</Accordion>
+
+<Accordion title="Phase 3: LLM 레이어 (Phase 2 검증 후)">
+
+<Note>
+
+진입 조건: Phase 2의 시각화가 검증되고, 레이어 1만으로 커버되지 않는 케이스가 충분히 수집된 상태. "이런 건 왜 안 잡아주지?"라는 피드백이 쌓여야 LLM 도입이 정당화된다.
+
+</Note>
+
+규칙으로 잡히지 않는 맥락적 문제를 LLM으로 보완한다. **파인튜닝하지 않는다.** 기존 LLM에 프롬프트로 판단을 요청하는 LLM-as-Judge 방식을 쓴다.
+
+레이어 1으로 안 되는 것들:
+
+| 규칙 | 왜 규칙 기반으로 안 되는가 |
+|---|---|
+| 관점 일관성 (1인칭/2인칭 혼용) | "한 화면" 단위를 린터가 모른다. 입력이 화면 단위가 아니면 판단 불가 |
+| 느낌표 맥락 판단 | "이게 프로모션인가 오류 메시지인가"는 UI 맥락 의존 |
+| "해보세요" 예외 | 격려 문맥인지 일반 문맥인지 의미 판단 필요 |
+| 장황함의 질적 판단 | 글자 수는 재지만 "불필요한 수식"은 의미 판단 |
+| 직접적인 문장 | "주체가 명확한가"는 구문만으로 부족, 의미 레벨 판단 필요 |
+
+프롬프트 설계 방향:
+
+```
+당신은 SAZO(사줘)의 UX Writing 전문 리뷰어입니다.
+다음 텍스트를 검토하고, 아래 기준에 해당하는 문제가 있으면 지적하세요:
+
+1. 한 화면 내에서 1인칭("내")과 2인칭("고객님")이 혼용되고 있는가?
+2. 오류/경고 맥락에서 느낌표가 사용되었는가?
+3. 불필요한 수식이나 반복으로 핵심 메시지가 희석되는가?
+4. 행위의 주체가 불분명한 피동 표현이 있는가?
+
+텍스트: {input_text}
+UI 맥락: {context}  (예: 에러 모달, 프로모션 배너, 결제 확인)
+```
+
+LLM 레이어의 결과는 레이어 1과 다르게 **제안(suggestion)** 으로 표시한다. 레이어 1은 "위반(violation)"이지만, LLM 판단은 확률적이므로 "검토해 보세요(review)" 수준으로 구분해야 신뢰를 유지할 수 있다.
+
+</Accordion>
+
+<Accordion title="Phase 4: 워크플로우 통합">
+
+<Note>
+
+진입 조건: Phase 3까지 통합된 린터가 실제 UX 카피에 대해 충분한 정확도를 보이는 상태.
+
+</Note>
+
+- **PR 자동 리뷰** : UX 카피 변경이 포함된 PR에 자동으로 린트 결과를 코멘트. 변경된 텍스트만 검사하고, 위반 항목을 인라인 코멘트로 달아준다.
+- **Figma → 린터 → 디자인 리뷰** : Figma 시안의 텍스트를 추출 → 린터 실행 → 결과를 디자인 리뷰 문서에 점수로 첨부.
+- **인지 부하 예산** : 디자인 시스템 토큰처럼 화면별 "인지 부하 예산"을 설정. 예: "결제 화면의 인지 부하 점수는 30 이하여야 한다". 예산을 초과하면 CI가 경고.
+
+</Accordion>
+
+<Accordion title="스코핑: 사용자 대면 텍스트만 린트하기">
+
+린터의 실용성을 결정하는 핵심이다. 스코핑 못 하면 false positive가 쏟아져서 아무도 안 쓴다. 주석, 참고 문서, 로그 메시지가 아닌 **실제 유저에게 보이는 텍스트만** 추출해서 검사해야 한다. 코드베이스 구조에 따라 접근이 달라진다.
+
+</Accordion>
+
+<Accordion title="i18n JSON만 린트">
+
+가장 깔끔한 방식이다. 이미 번역 키-값 구조를 쓰고 있다면 린터 대상이 자동으로 결정된다.
+
+```json
+// ko.json — 이 파일만 린트 대상
+{
+  "checkout.complete": "결제가 완료되었습니다",
+  "shipping.estimate": "배송은 3~5일 소요됩니다",
+  "error.payment": "결제 처리 중 오류가 발생했습니다"
+}
+```
+
+```bash
+sazo-lint --target "src/locales/ko/** /*.json"
+```
+
+JSON 값(value)만 추출해서 검사한다. 키는 건드리지 않는다. 파일 glob 패턴 하나로 스코핑이 끝나기 때문에 구현이 가장 단순하다.
+
+</Accordion>
+
+<Accordion title="TSX 인라인 텍스트 — AST 파싱">
+
+i18n 없이 TSX에 텍스트가 직접 들어가 있으면, 코드와 사용자 텍스트를 AST(구문 트리) 레벨에서 분리해야 한다. 한 파일 안에서도 린트 대상과 비대상이 섞여 있다:
+
+```tsx
+export function OrderComplete() {
+  // ❌ 린트 비대상: 주석
+  // 결제 완료 후 리다이렉트 처리
+  
+  const API_URL = "/api/orders";  // ❌ 비대상: 변수값
+  
+  console.log("payment completed"); // ❌ 비대상: 로그
+  
+  return (
+    <div>
+      <h1>결제가 완료되었습니다</h1>     {/* ✅ 대상: JSX 텍스트 노드 */}
+      <p>배송은 3~5일 소요됩니다</p>     {/* ✅ 대상 */}
+      <Button label="장바구니에 담기" />  {/* ✅ 대상: 특정 prop의 문자열 */}
+      <input 
+        placeholder="검색어를 입력해 주세요"  // ✅ 대상
+        name="search"                        // ❌ 비대상: 기술 속성
+        data-testid="search-input"           // ❌ 비대상
+      />
+      <img alt="상품 이미지" />              {/* ✅ 대상: 접근성 텍스트 */}
+    </div>
+  );
+}
+```
+
+이걸 구분하는 건 TypeScript/Babel AST 파서로 가능하다:
+
+```
+TSX 소스
+  │
+  ├─ TypeScript Parser (ts-morph 또는 @babel/parser)
+  │
+  ▼
+AST 노드 순회
+  │
+  ├─ JSXText 노드 ──────────────→ ✅ 추출
+  ├─ JSXAttribute 중
+  │   ├─ label, title, placeholder,
+  │   │  alt, aria-label ────────→ ✅ 추출
+  │   └─ name, className, href,
+  │      data-*, key, ref ───────→ ❌ 스킵
+  ├─ StringLiteral 중
+  │   ├─ console.* 인자 ─────────→ ❌ 스킵
+  │   ├─ import 경로 ────────────→ ❌ 스킵
+  │   └─ 변수 할당값 ────────────→ ❌ 스킵
+  ├─ TemplateLiteral (백틱)
+  │   └─ JSX 내부일 때만 ────────→ ✅ 추출
+  └─ Comment ────────────────────→ ❌ 스킵
+```
+
+ESLint 플러그인으로 구현하면 기존 린트 파이프라인에 바로 붙는다:
+
+```js
+// eslint-plugin-sazo-writing/rules/no-currency-symbol.js
+module.exports = {
+  create(context) {
+    return {
+      // JSX 텍스트 노드
+      JSXText(node) {
+        check(node.value, node, context);
+      },
+      // 특정 prop의 문자열 값
+      JSXAttribute(node) {
+        const uiProps = ["label", "title", "placeholder", 
+                         "alt", "aria-label", "description"];
+        if (uiProps.includes(node.name.name) && 
+            node.value?.type === "Literal") {
+          check(node.value.value, node, context);
         }
       }
     };
-    ```
+    
+    function check(text, node, context) {
+      if (/[¥₩]\s?\d/.test(text)) {
+        context.report({
+          node,
+          message: "통화 기호 대신 '엔', '원'을 사용하세요"
+        });
+      }
+    }
+  }
+};
+```
 
-  </Accordion>
-  <Accordion title="혼합 모드">
-    대부분의 프로젝트는 i18n으로 완전히 분리되어 있지 않다. 일부는 JSON에, 일부는 TSX에 인라인으로 있다. 설정 파일로 모드를 나눠서 동시 지원한다:
+</Accordion>
 
-    ```yaml
+<Accordion title="혼합 모드">
 
-    # .sazo-lintrc.yaml
-    targets:
-      - pattern: "src/locales/** /*.json"
-        mode: i18n-json
-        
-      - pattern: "src/components/** /*.tsx"
-        mode: tsx-ast
-        extract:
-          - jsx_text
-          - props: [label, title, placeholder, alt, aria-label, description]
-      - pattern: "src/pages/** /*.tsx"
-        mode: tsx-ast
+대부분의 프로젝트는 i18n으로 완전히 분리되어 있지 않다. 일부는 JSON에, 일부는 TSX에 인라인으로 있다. 설정 파일로 모드를 나눠서 동시 지원한다:
 
-    exclude:
-      - "** /*.test.tsx"
-      - "** /*.stories.tsx"
-      - "** /docs/** "
-      - "** /README.md"
-    ```
+```yaml
 
-  </Accordion>
-  <Accordion title="스코핑 방식 비교">
-    | | i18n JSON만 | TSX AST 파싱 | 혼합 |
-    |---|---|---|---|
-    | 구현 난이도 | ★☆☆ | ★★★ | ★★★ |
-    | 정확도 | 매우 높음 | 높음 (prop allowlist 튜닝 필요) | 높음 |
-    | 전제 조건 | i18n 분리가 되어 있어야 함 | 없음 | 없음 |
-    | false positive | 거의 없음 | 초기 튜닝 필요 | 초기 튜닝 필요 |
-    | 커버리지 | i18n에 없는 인라인 텍스트 놓침 | 전부 커버 | 전부 커버 |
+# .sazo-lintrc.yaml
+targets:
+  - pattern: "src/locales/** /*.json"
+    mode: i18n-json
+    
+  - pattern: "src/components/** /*.tsx"
+    mode: tsx-ast
+    extract:
+      - jsx_text
+      - props: [label, title, placeholder, alt, aria-label, description]
+  - pattern: "src/pages/** /*.tsx"
+    mode: tsx-ast
 
-    현실적 권장 순서:
-    1. 지금 코드베이스에서 **사용자 대면 텍스트가 어디에 있는지** 먼저 파악
-    2. i18n JSON이 있으면 거기부터 시작 (1주면 됨)
-    3. TSX 인라인이 많으면 ESLint 플러그인으로 확장
-    4. 둘 다 있으면 설정 파일로 모드를 나눠서 동시 지원
+exclude:
+  - "** /*.test.tsx"
+  - "** /*.stories.tsx"
+  - "** /docs/** "
+  - "** /README.md"
+```
 
-  </Accordion>
+</Accordion>
+
+<Accordion title="스코핑 방식 비교">
+
+| | i18n JSON만 | TSX AST 파싱 | 혼합 |
+|---|---|---|---|
+| 구현 난이도 | ★☆☆ | ★★★ | ★★★ |
+| 정확도 | 매우 높음 | 높음 (prop allowlist 튜닝 필요) | 높음 |
+| 전제 조건 | i18n 분리가 되어 있어야 함 | 없음 | 없음 |
+| false positive | 거의 없음 | 초기 튜닝 필요 | 초기 튜닝 필요 |
+| 커버리지 | i18n에 없는 인라인 텍스트 놓침 | 전부 커버 | 전부 커버 |
+
+현실적 권장 순서:
+1. 지금 코드베이스에서 **사용자 대면 텍스트가 어디에 있는지** 먼저 파악
+2. i18n JSON이 있으면 거기부터 시작 (1주면 됨)
+3. TSX 인라인이 많으면 ESLint 플러그인으로 확장
+4. 둘 다 있으면 설정 파일로 모드를 나눠서 동시 지원
+
+</Accordion>
+
 </AccordionGroup>

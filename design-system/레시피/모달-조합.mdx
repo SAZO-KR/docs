@@ -15,148 +15,176 @@ SAZO의 모달은 **최소한의 방해로 필요한 결정을 이끌어낸다**
 - 열기/닫기 모션은 비대칭 이징으로 자연스럽게
 
 ## 기본 원칙
+
 <AccordionGroup>
-  <Accordion title="아나토미 상세">
-    | 유형 | 상단 패딩 | 좌우 | 하단 (버튼 컨테이너 제외) |
-    |------|----------|------|----------------------|
-    | 바텀시트 | 48px | -- | 24px |
-    | 중앙팝업 (MO) | 48px | 16px | 24px |
-    | 중앙팝업 (PC) | 48px | 48px | 24px |
 
-    PC 중앙팝업: 콘텐츠 높이만큼 최대 높이를 적용한다. 내부 요소 높이가 동적인 경우 고정 높이를 별도 지정할 수 있음 (예: 배송조회 모달 800px). *-- 동적 높이 처리는 미결 사항.*
+<Accordion title="아나토미 상세">
 
-  </Accordion>
-  <Accordion title="타이틀 생략 규칙">
-    모달 타이틀(상단 헤더의 제목 텍스트)은 기본적으로 사용한다. 아래 3가지 조건이 **모두** 충족될 때만 생략 가능:
-    1. 모달 내부에 피쳐드 헤딩 등 **모달 전체에 대응하는 타이틀 역할** 요소가 있을 때 (부분 섹션 타이틀은 해당 안 됨)
-    2. **유저가 의도적으로 연 모달** 일 것 -- 의도치 않은 타이밍에 뜨는 모달이면 생략하면 안 됨
-    3. 모달 외부에서 모달의 **성격을 충분히 파악하고 들어올 수 있는 장치** (특히 텍스트)가 있었을 것
+| 유형 | 상단 패딩 | 좌우 | 하단 (버튼 컨테이너 제외) |
+|------|----------|------|----------------------|
+| 바텀시트 | 48px | -- | 24px |
+| 중앙팝업 (MO) | 48px | 16px | 24px |
+| 중앙팝업 (PC) | 48px | 48px | 24px |
 
-  </Accordion>
-  <Accordion title="트랜지션">
-    콘텐츠에 스크롤이 생기면 바텀 버튼 컨테이너의 **deco(그림자+상단 radius) on** , 스크롤이 사라지면 **off** .
+PC 중앙팝업: 콘텐츠 높이만큼 최대 높이를 적용한다. 내부 요소 높이가 동적인 경우 고정 높이를 별도 지정할 수 있음 (예: 배송조회 모달 800px). *-- 동적 높이 처리는 미결 사항.*
 
-  </Accordion>
+</Accordion>
+
+<Accordion title="타이틀 생략 규칙">
+
+모달 타이틀(상단 헤더의 제목 텍스트)은 기본적으로 사용한다. 아래 3가지 조건이 **모두** 충족될 때만 생략 가능:
+1. 모달 내부에 피쳐드 헤딩 등 **모달 전체에 대응하는 타이틀 역할** 요소가 있을 때 (부분 섹션 타이틀은 해당 안 됨)
+2. **유저가 의도적으로 연 모달** 일 것 -- 의도치 않은 타이밍에 뜨는 모달이면 생략하면 안 됨
+3. 모달 외부에서 모달의 **성격을 충분히 파악하고 들어올 수 있는 장치** (특히 텍스트)가 있었을 것
+
+</Accordion>
+
+<Accordion title="트랜지션">
+
+콘텐츠에 스크롤이 생기면 바텀 버튼 컨테이너의 **deco(그림자+상단 radius) on** , 스크롤이 사라지면 **off** .
+
+</Accordion>
+
 </AccordionGroup>
+
 ## 구조
+
 <AccordionGroup>
-  <Accordion title="공통 프레임">
-    #### 토큰
-    | 요소 | Semantic Token | Primitive |
-    |------|---------------|-----------|
-    | Box 배경 | `bg-surface-default` | `white` |
-    | Box radius | `rounded-2xl` | `rounded-2xl` (16px) |
-    | Box 그림자 | `shadow-overlay` | oklch shadow |
-    | 배경 딤 | `bg-overlay-default` | oklch(0% 0 0/ 0.4) |
-    | z-index | `--z-modal` | 999 |
-    | Content 패딩 | -- | `px-5 pt-5 pb-6` (20/20/24px) |
-    | Header 패딩 | -- | `p-4` (16px) |
-    | Header 배경 | `bg-surface-default` | `bg-white` |
-    | Header 하단선 | `border-border-subtle` | `border-b` |
-    | Footer 패딩 | -- | `px-5 py-4` (20/16px) |
-    | Footer 배경 | `bg-surface-secondary` | `bg-gray-50` |
-    | Footer 그림자 | `shadow-sticky-footer` | `0 6px 20px rgba(0,0,0,0.2)` |
-    | Footer radius | `rounded-2xl` | `rounded-t-2xl` (상단만) |
-    | 닫기 아이콘 | -- | `LuX` 24px, black, strokeWidth 1.5 |
 
-    #### 열기/닫기 모션
-    | 요소 | Semantic Token | Primitive |
-    |------|---------------|-----------|
-    | 열기 duration | `--duration-modal-open-{sm/md/lg}` | 300ms / 400ms / 500ms |
-    | 열기 이징 | `--ease-enter` | `var(--ease-out)` |
-    | 열기 키프레임 | `modal-{type}-open` | 타입별 transform (모션 문서 참조) |
-    | 닫기 duration | `--duration-modal-close-{sm/md/lg}` | 200ms / 300ms / 400ms |
-    | 닫기 이징 | `--ease-exit` | `var(--ease-in)` |
-    | 닫기 키프레임 | `modal-{type}-close` | 타입별 transform (모션 문서 참조) |
-    | 배경 전환 | `--duration-modal-overlay` | 150ms |
+<Accordion title="공통 프레임">
 
-  </Accordion>
-  <Accordion title="확인/삭제 모달">
-    #### 토큰
-    | 요소 | Semantic Token | Primitive |
-    |------|---------------|-----------|
-    | 모달 너비 | -- | `max-w-[400px]` |
-    | Body 패딩 | `gap-component-lg` | `p-6` (24px) |
-    | Body gap | -- | `gap-4` (16px) |
-    | 제목 | `text-title-section-sm` | `text-xl font-semibold` (20px) |
-    | 제목 색상 | `text-text-default` | `text-gray-900` |
-    | 설명 | `text-body-default` | `text-base font-normal` |
-    | 설명 색상 | `text-text-secondary` | `text-gray-700` |
-    | 파괴적 버튼 | Primitive (컴포넌트 레벨): `error-600` | `bg-error-600 text-white` |
-    | 취소 버튼 | -- | `outline border-gray-300` |
-    | 버튼 레이아웃 | `DoubleButtonContainer` | gap-md (8px), secondary(좌) + primary(우) |
+#### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| Box 배경 | `bg-surface-default` | `white` |
+| Box radius | `rounded-2xl` | `rounded-2xl` (16px) |
+| Box 그림자 | `shadow-overlay` | oklch shadow |
+| 배경 딤 | `bg-overlay-default` | oklch(0% 0 0/ 0.4) |
+| z-index | `--z-modal` | 999 |
+| Content 패딩 | -- | `px-5 pt-5 pb-6` (20/20/24px) |
+| Header 패딩 | -- | `p-4` (16px) |
+| Header 배경 | `bg-surface-default` | `bg-white` |
+| Header 하단선 | `border-border-subtle` | `border-b` |
+| Footer 패딩 | -- | `px-5 py-4` (20/16px) |
+| Footer 배경 | `bg-surface-secondary` | `bg-gray-50` |
+| Footer 그림자 | `shadow-sticky-footer` | `0 6px 20px rgba(0,0,0,0.2)` |
+| Footer radius | `rounded-2xl` | `rounded-t-2xl` (상단만) |
+| 닫기 아이콘 | -- | `LuX` 24px, black, strokeWidth 1.5 |
 
-    #### 파괴적 vs 비파괴적 버튼
-    | 액션 유형 | 확인 버튼 | 색상 토큰 |
-    |-----------|----------|----------|
-    | 파괴적 (삭제, 탈퇴) | `variant="filled" color="error"` | Primitive (컴포넌트 레벨): `error-600` |
-    | 비파괴적 (저장, 확인) | `variant="filled" color="primary"` | Primitive (컴포넌트 레벨): `brand-500` |
-    | 보조 (취소) | `variant="outline"` | `border-border-default` |
+#### 열기/닫기 모션
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 열기 duration | `--duration-modal-open-{sm/md/lg}` | 300ms / 400ms / 500ms |
+| 열기 이징 | `--ease-enter` | `var(--ease-out)` |
+| 열기 키프레임 | `modal-{type}-open` | 타입별 transform (모션 문서 참조) |
+| 닫기 duration | `--duration-modal-close-{sm/md/lg}` | 200ms / 300ms / 400ms |
+| 닫기 이징 | `--ease-exit` | `var(--ease-in)` |
+| 닫기 키프레임 | `modal-{type}-close` | 타입별 transform (모션 문서 참조) |
+| 배경 전환 | `--duration-modal-overlay` | 150ms |
 
-  </Accordion>
-  <Accordion title="정보 입력 모달 (폼 포함)">
-    #### 토큰
-    | 요소 | Primitive | 비고 |
-    |------|-----------|------|
-    | 모달 너비 | `max-w-[400px]` | 기본값 |
-    | 폼 필드 간격 (기본) | `gap-7` (28px) | InfoPresentor 기반 |
-    | 폼 필드 간격 (스텝) | `gap-4` (16px) | AddressUpdateModal |
-    | FeaturedHeading | `size="md"`, `!mb-8` (32px) | 스텝 모달 전용 |
-    | Header | `hasCloseButton` | 닫기 버튼만 |
-    | Footer | 없음 (버튼이 폼 내부) | 기본 폼 모달 |
-    | 커스텀 Footer | `rounded-t-2xl border-t bg-gray-50 p-4` | 스텝 모달 |
+</Accordion>
 
-  </Accordion>
-  <Accordion title="안내/정보 모달">
-    #### 토큰
-    | 요소 | Semantic Token | Primitive |
-    |------|---------------|-----------|
-    | 모달 너비 (PC) | -- | `max-w-[480px]` |
-    | 모바일 모드 | -- | `isMobileFull` (전체 화면) |
-    | 아이콘 래퍼 | `FeaturedIcon` | `size="md", color="white"` |
-    | 제목 | `text-text-strong` | `text-2xl font-semibold text-gray-950` |
-    | 설명 | `text-text-default` | `text-base text-gray-900` |
-    | 안내 박스 | `bg-surface-secondary` | `rounded-xl bg-gray-50 p-3 mb-6` |
-    | 안내 텍스트 | `text-text-tertiary` | `text-xs text-gray-500` |
-    | 아이템 카드 | `border-border-default` | `rounded-xl border border-gray-300 p-4` |
-    | 닫기 버튼 | -- | `filled, size="lg", w-full` |
+<Accordion title="확인/삭제 모달">
 
-  </Accordion>
-  <Accordion title="목록 선택 모달">
-    #### 토큰
-    | 요소 | Semantic Token | Primitive |
-    |------|---------------|-----------|
-    | Header | -- | 제목 텍스트 + 닫기 버튼 |
-    | Content 상단 패딩 | -- | `!pt-0` (목록과 Header 밀착) |
-    | 항목 간 구분 | -- | `Divider margin="24"` |
-    | 추가 버튼 배경 | `bg-surface-secondary` | `bg-gray-50 rounded-xl py-3` |
-    | 추가 아이콘 | `text-text-tertiary` | `LuPlus 24px text-gray-500` |
-    | 추가 텍스트 | `text-text-secondary` | `text-base font-medium text-gray-700` |
+#### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 모달 너비 | -- | `max-w-[400px]` |
+| Body 패딩 | `gap-component-lg` | `p-6` (24px) |
+| Body gap | -- | `gap-4` (16px) |
+| 제목 | `text-title-section-sm` | `text-xl font-semibold` (20px) |
+| 제목 색상 | `text-text-default` | `text-gray-900` |
+| 설명 | `text-body-default` | `text-base font-normal` |
+| 설명 색상 | `text-text-secondary` | `text-gray-700` |
+| 파괴적 버튼 | Primitive (컴포넌트 레벨): `error-600` | `bg-error-600 text-white` |
+| 취소 버튼 | -- | `outline border-gray-300` |
+| 버튼 레이아웃 | `DoubleButtonContainer` | gap-md (8px), secondary(좌) + primary(우) |
 
-  </Accordion>
-  <Accordion title="PC/Mobile 분기 규칙">
-    | 모달 유형 | pcWidth | isMobileFull |
-    |----------|---------|--------------|
-    | 확인/삭제 | `"400"` | `false` |
-    | 기본 폼 | `"400"` | `false` |
-    | 안내/정보 | 커스텀 480px | `true` |
-    | 목록 선택 | `"400"` | `false` |
+#### 파괴적 vs 비파괴적 버튼
+| 액션 유형 | 확인 버튼 | 색상 토큰 |
+|-----------|----------|----------|
+| 파괴적 (삭제, 탈퇴) | `variant="filled" color="error"` | Primitive (컴포넌트 레벨): `error-600` |
+| 비파괴적 (저장, 확인) | `variant="filled" color="primary"` | Primitive (컴포넌트 레벨): `brand-500` |
+| 보조 (취소) | `variant="outline"` | `border-border-default` |
 
-  </Accordion>
-  <Accordion title="ButtonContainer 선택 기준">
-    <Note>
-      **신규 케이스는 `<Row gap="md">` + `<Button>` 조합을 우선 적용** 한다. 아래 4종은 기존 코드 호환용이며, 유즈케이스 전용 `XxxButtonContainer`를 **새로 만들지 않는다** . 어휘·마이그레이션 맵: 레이아웃 프리미티브 어휘.
-    </Note>
+</Accordion>
 
-    | 상황 | Container | 레이아웃 |
-    |------|-----------|----------|
-    | CTA 1개 | `SingleButtonContainer` | `[Button (full)]` |
-    | 확인 / 취소 | `DoubleButtonContainer` | `[Secondary] [Primary]` |
-    | 가격 + CTA | `PriceButtonContainer` | `[¥가격] [구매하기]` |
-    | 취소 링크 + CTA | `CancelButtonContainer` | `취소(Link) [Primary]` |
+<Accordion title="정보 입력 모달 (폼 포함)">
 
-  </Accordion>
+#### 토큰
+| 요소 | Primitive | 비고 |
+|------|-----------|------|
+| 모달 너비 | `max-w-[400px]` | 기본값 |
+| 폼 필드 간격 (기본) | `gap-7` (28px) | InfoPresentor 기반 |
+| 폼 필드 간격 (스텝) | `gap-4` (16px) | AddressUpdateModal |
+| FeaturedHeading | `size="md"`, `!mb-8` (32px) | 스텝 모달 전용 |
+| Header | `hasCloseButton` | 닫기 버튼만 |
+| Footer | 없음 (버튼이 폼 내부) | 기본 폼 모달 |
+| 커스텀 Footer | `rounded-t-2xl border-t bg-gray-50 p-4` | 스텝 모달 |
+
+</Accordion>
+
+<Accordion title="안내/정보 모달">
+
+#### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| 모달 너비 (PC) | -- | `max-w-[480px]` |
+| 모바일 모드 | -- | `isMobileFull` (전체 화면) |
+| 아이콘 래퍼 | `FeaturedIcon` | `size="md", color="white"` |
+| 제목 | `text-text-strong` | `text-2xl font-semibold text-gray-950` |
+| 설명 | `text-text-default` | `text-base text-gray-900` |
+| 안내 박스 | `bg-surface-secondary` | `rounded-xl bg-gray-50 p-3 mb-6` |
+| 안내 텍스트 | `text-text-tertiary` | `text-xs text-gray-500` |
+| 아이템 카드 | `border-border-default` | `rounded-xl border border-gray-300 p-4` |
+| 닫기 버튼 | -- | `filled, size="lg", w-full` |
+
+</Accordion>
+
+<Accordion title="목록 선택 모달">
+
+#### 토큰
+| 요소 | Semantic Token | Primitive |
+|------|---------------|-----------|
+| Header | -- | 제목 텍스트 + 닫기 버튼 |
+| Content 상단 패딩 | -- | `!pt-0` (목록과 Header 밀착) |
+| 항목 간 구분 | -- | `Divider margin="24"` |
+| 추가 버튼 배경 | `bg-surface-secondary` | `bg-gray-50 rounded-xl py-3` |
+| 추가 아이콘 | `text-text-tertiary` | `LuPlus 24px text-gray-500` |
+| 추가 텍스트 | `text-text-secondary` | `text-base font-medium text-gray-700` |
+
+</Accordion>
+
+<Accordion title="PC/Mobile 분기 규칙">
+
+| 모달 유형 | pcWidth | isMobileFull |
+|----------|---------|--------------|
+| 확인/삭제 | `"400"` | `false` |
+| 기본 폼 | `"400"` | `false` |
+| 안내/정보 | 커스텀 480px | `true` |
+| 목록 선택 | `"400"` | `false` |
+
+</Accordion>
+
+<Accordion title="ButtonContainer 선택 기준">
+
+<Note>
+
+**신규 케이스는 `<Row gap="md">` + `<Button>` 조합을 우선 적용** 한다. 아래 4종은 기존 코드 호환용이며, 유즈케이스 전용 `XxxButtonContainer`를 **새로 만들지 않는다** . 어휘·마이그레이션 맵: 레이아웃 프리미티브 어휘.
+
+</Note>
+
+| 상황 | Container | 레이아웃 |
+|------|-----------|----------|
+| CTA 1개 | `SingleButtonContainer` | `[Button (full)]` |
+| 확인 / 취소 | `DoubleButtonContainer` | `[Secondary] [Primary]` |
+| 가격 + CTA | `PriceButtonContainer` | `[¥가격] [구매하기]` |
+| 취소 링크 + CTA | `CancelButtonContainer` | `취소(Link) [Primary]` |
+
+</Accordion>
+
 </AccordionGroup>
+
 ## Do / Don't
 | Do | Don't |
 |----|-------|
@@ -169,20 +197,37 @@ SAZO의 모달은 **최소한의 방해로 필요한 결정을 이끌어낸다**
 | 열기/닫기는 비대칭 이징 | 동일한 이징 사용 |
 
 ## 모달 설계 체크리스트
+
 <Steps>
-  <Step title="유형 결정">
-    확인? 폼? 안내? 목록?
-  </Step>
-  <Step title="너비 결정">
-    1~3줄 텍스트 → `400px`, 입력 3~5개 → `576px`, 카드 포함 → 커스텀
-  </Step>
-  <Step title="Header">
-    간단 확인 → 없음, 폼 → 닫기 버튼만, 목록 → 제목 + 닫기
-  </Step>
-  <Step title="Footer">
-    확인만 → Single, 확인/취소 → Double, 폼 내부 버튼 → 없음
-  </Step>
-  <Step title="본문 토큰">
-    제목 `text-xl semibold gray-900`, 설명 `text-base normal gray-700`
-  </Step>
+
+<Step title="유형 결정">
+
+확인? 폼? 안내? 목록?
+
+</Step>
+
+<Step title="너비 결정">
+
+1~3줄 텍스트 → `400px`, 입력 3~5개 → `576px`, 카드 포함 → 커스텀
+
+</Step>
+
+<Step title="Header">
+
+간단 확인 → 없음, 폼 → 닫기 버튼만, 목록 → 제목 + 닫기
+
+</Step>
+
+<Step title="Footer">
+
+확인만 → Single, 확인/취소 → Double, 폼 내부 버튼 → 없음
+
+</Step>
+
+<Step title="본문 토큰">
+
+제목 `text-xl semibold gray-900`, 설명 `text-base normal gray-700`
+
+</Step>
+
 </Steps>

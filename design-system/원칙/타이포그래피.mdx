@@ -16,7 +16,9 @@ SAZO의 타이포그래피는 **명확한 정보 전달** 과 **예측 가능한
 - **체계성** : px 값이 아닌 역할 기반 토큰 이름으로 관리한다.
 
 <Note>
-  구체적인 px 값과 토큰 매핑은 `02 토큰/typography/primitive.tokens.json`, `02 토큰/typography/semantic.tokens.json`, `02 토큰/css/tokens.css`를 참조한다. 이 문서에서는 토큰 이름만 기술한다.
+
+구체적인 px 값과 토큰 매핑은 `02 토큰/typography/primitive.tokens.json`, `02 토큰/typography/semantic.tokens.json`, `02 토큰/css/tokens.css`를 참조한다. 이 문서에서는 토큰 이름만 기술한다.
+
 </Note>
 
 ## 토큰 아키텍처
@@ -54,94 +56,109 @@ text-title-section-lg           ← Tailwind 유틸리티 (3속성 복합)
 Color 시스템의 `--text-{role}` / `--surface-{role}` 패턴과 병렬 구조를 이룬다.
 
 ## 역할 기반 카테고리
+
 <AccordionGroup>
-  <Accordion title="Display">
-    시선 집중과 강한 인상. 랜딩 페이지 히어로 영역의 마케팅 메시지 전용.
 
-    | Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
-    |---|---|---|---|---|
-    | `text-display-hero` | `--type-display-hero` | 60px | bold (700) | 히어로 메인 카피 |
-    | `text-display-hero-sub` | `--type-display-hero-sub` | 48px | bold (700) | 히어로 서브 카피 |
+<Accordion title="Display">
 
-    Display는 유일하게 bold(700) weight를 사용하는 카테고리다. 일반 UI에서 bold를 사용하지 않는다.
+시선 집중과 강한 인상. 랜딩 페이지 히어로 영역의 마케팅 메시지 전용.
 
-  </Accordion>
-  <Accordion title="Title">
-    계층적 제목 체계. screen > section > subsection 순으로 위계가 내려간다.
+| Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
+|---|---|---|---|---|
+| `text-display-hero` | `--type-display-hero` | 60px | bold (700) | 히어로 메인 카피 |
+| `text-display-hero-sub` | `--type-display-hero-sub` | 48px | bold (700) | 히어로 서브 카피 |
 
-    #### Screen Title
-    | Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
-    |---|---|---|---|---|
-    | `text-title-screen` | `--type-title-screen` | 36px | semibold (600) | 페이지 최상위 제목, SectionTitle 2xl |
-    | `text-title-screen-sub` | `--type-title-screen-sub` | 30px | bold (700) | 페이지 제목 서브 변형 (환불 정책 등) |
+Display는 유일하게 bold(700) weight를 사용하는 카테고리다. 일반 UI에서 bold를 사용하지 않는다.
 
-    #### Section Title
-    | Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
-    |---|---|---|---|---|
-    | `text-title-section-xl` | `--type-title-section-xl` | 30px | semibold (600) | 대형 섹션, SectionTitle xl |
-    | `text-title-section-lg` | `--type-title-section-lg` | 24px | semibold (600) | 중-대형 섹션, 모달 제목 |
-    | `text-title-section-md` | `--type-title-section-md` | 22px | semibold (600) | 기본 섹션, SectionTitle md(기본값) |
-    | `text-title-section-sm` | `--type-title-section-sm` | 20px | semibold (600) | 소형 섹션, 모바일 SectionTitle |
+</Accordion>
 
-    #### Subsection Title
-    | Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
-    |---|---|---|---|---|
-    | `text-title-subsection-lg` | `--type-title-subsection-lg` | 18px | semibold (600) | 하위 섹션, SectionTitle xs |
-    | `text-title-subsection-sm` | `--type-title-subsection-sm` | 16px | semibold (600) | 소형 하위 제목, 확인 다이얼로그 제목 |
+<Accordion title="Title">
 
-    Section/Subsection 제목은 모두 semibold(600)로 통일된다. 이 일관성이 "제목 = semibold"라는 예측 가능한 패턴을 만든다.
+계층적 제목 체계. screen > section > subsection 순으로 위계가 내려간다.
 
-  </Accordion>
-  <Accordion title="Body">
-    컨텐츠 본문, 설명 텍스트. 가독성을 최우선으로 한다.
+#### Screen Title
+| Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
+|---|---|---|---|---|
+| `text-title-screen` | `--type-title-screen` | 36px | semibold (600) | 페이지 최상위 제목, SectionTitle 2xl |
+| `text-title-screen-sub` | `--type-title-screen-sub` | 30px | bold (700) | 페이지 제목 서브 변형 (환불 정책 등) |
 
-    | Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
-    |---|---|---|---|---|
-    | `text-body-large` | `--type-body-large` | 18px | normal (400) | 대형 본문, FeaturedHeading description |
-    | `text-body-default` | `--type-body-default` | 16px | normal (400) | 기본 본문, 가이드, 모달 설명 |
-    | `text-body-small` | `--type-body-small` | 14px | normal (400) | 소형 본문, 모달 안내, 환불 안내 |
-    | `text-body-xs` | `--type-body-xs` | 12px | normal (400) | 극소 본문, 사업자 정보 |
+#### Section Title
+| Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
+|---|---|---|---|---|
+| `text-title-section-xl` | `--type-title-section-xl` | 30px | semibold (600) | 대형 섹션, SectionTitle xl |
+| `text-title-section-lg` | `--type-title-section-lg` | 24px | semibold (600) | 중-대형 섹션, 모달 제목 |
+| `text-title-section-md` | `--type-title-section-md` | 22px | semibold (600) | 기본 섹션, SectionTitle md(기본값) |
+| `text-title-section-sm` | `--type-title-section-sm` | 20px | semibold (600) | 소형 섹션, 모바일 SectionTitle |
 
-    Body는 모두 normal(400) weight다. "본문 = normal"이라는 패턴.
+#### Subsection Title
+| Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
+|---|---|---|---|---|
+| `text-title-subsection-lg` | `--type-title-subsection-lg` | 18px | semibold (600) | 하위 섹션, SectionTitle xs |
+| `text-title-subsection-sm` | `--type-title-subsection-sm` | 16px | semibold (600) | 소형 하위 제목, 확인 다이얼로그 제목 |
 
-  </Accordion>
-  <Accordion title="Label">
-    버튼, 탭, 링크 등 상호작용 요소의 텍스트.
+Section/Subsection 제목은 모두 semibold(600)로 통일된다. 이 일관성이 "제목 = semibold"라는 예측 가능한 패턴을 만든다.
 
-    | Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
-    |---|---|---|---|---|
-    | `text-label-large` | `--type-label-large` | 16px | medium (500) | 버튼 라벨, FAQ 항목, EmptyState 제목 |
-    | `text-label-default` | `--type-label-default` | 14px | medium (500) | 탭 라벨, 검색 카운트, 주소록 이름 |
-    | `text-label-small` | `--type-label-small` | 12px | semibold (600) | 배지 카운트, 캐러셀 인덱스, 트렌드 순위 |
+</Accordion>
 
-    Label은 medium(500)이 기본이다. 단, `label.small`은 극소 사이즈에서 가독성 확보를 위해 semibold(600)를 사용한다.
+<Accordion title="Body">
 
-  </Accordion>
-  <Accordion title="Caption">
-    보조 정보, 메타 텍스트, 법적 고지.
+컨텐츠 본문, 설명 텍스트. 가독성을 최우선으로 한다.
 
-    | Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
-    |---|---|---|---|---|
-    | `text-caption-default` | `--type-caption-default` | 14px | normal (400) | EmptyState 설명, 주소록 상세, 옵션 설명 |
-    | `text-caption-small` | `--type-caption-small` | 12px | medium (500) | 푸터 주소, 정책 링크, 사업자 정보 라벨 |
+| Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
+|---|---|---|---|---|
+| `text-body-large` | `--type-body-large` | 18px | normal (400) | 대형 본문, FeaturedHeading description |
+| `text-body-default` | `--type-body-default` | 16px | normal (400) | 기본 본문, 가이드, 모달 설명 |
+| `text-body-small` | `--type-body-small` | 14px | normal (400) | 소형 본문, 모달 안내, 환불 안내 |
+| `text-body-xs` | `--type-body-xs` | 12px | normal (400) | 극소 본문, 사업자 정보 |
 
-    Caption은 Body와 같은 normal(400) 기반이나, `caption.small`은 극소 사이즈에서 인지성 확보를 위해 medium(500)으로 올린다.
+Body는 모두 normal(400) weight다. "본문 = normal"이라는 패턴.
 
-  </Accordion>
-  <Accordion title="Weight 매핑 패턴">
-    4가지 weight가 각각 명확한 시맨틱 역할을 갖는다.
+</Accordion>
 
-    | Weight | 시맨틱 역할 | 사용 빈도 | 대표 카테고리 |
-    |--------|-----------|----------|------------|
-    | bold (700) | Display, 최상위 페이지 제목 | 낮음 | Display, screen-sub |
-    | semibold (600) | 제목, 강조 라벨, Badge | 높음 | Title, Badge, label.small |
-    | medium (500) | 상호작용 라벨, 캡션 강조 | 높음 | Label, caption.small |
-    | normal (400) | 본문, 설명, 캡션 | 높음 | Body, Caption |
+<Accordion title="Label">
 
-    **패턴 요약** : weight가 올라갈수록 텍스트의 "행동 유도력"이 강해진다. normal은 읽기, medium은 누르기/선택, semibold는 구조 인지, bold는 시선 집중.
+버튼, 탭, 링크 등 상호작용 요소의 텍스트.
 
-  </Accordion>
+| Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
+|---|---|---|---|---|
+| `text-label-large` | `--type-label-large` | 16px | medium (500) | 버튼 라벨, FAQ 항목, EmptyState 제목 |
+| `text-label-default` | `--type-label-default` | 14px | medium (500) | 탭 라벨, 검색 카운트, 주소록 이름 |
+| `text-label-small` | `--type-label-small` | 12px | semibold (600) | 배지 카운트, 캐러셀 인덱스, 트렌드 순위 |
+
+Label은 medium(500)이 기본이다. 단, `label.small`은 극소 사이즈에서 가독성 확보를 위해 semibold(600)를 사용한다.
+
+</Accordion>
+
+<Accordion title="Caption">
+
+보조 정보, 메타 텍스트, 법적 고지.
+
+| Tailwind 유틸리티 | CSS 변수 | Size | Weight | 사용 맥락 |
+|---|---|---|---|---|
+| `text-caption-default` | `--type-caption-default` | 14px | normal (400) | EmptyState 설명, 주소록 상세, 옵션 설명 |
+| `text-caption-small` | `--type-caption-small` | 12px | medium (500) | 푸터 주소, 정책 링크, 사업자 정보 라벨 |
+
+Caption은 Body와 같은 normal(400) 기반이나, `caption.small`은 극소 사이즈에서 인지성 확보를 위해 medium(500)으로 올린다.
+
+</Accordion>
+
+<Accordion title="Weight 매핑 패턴">
+
+4가지 weight가 각각 명확한 시맨틱 역할을 갖는다.
+
+| Weight | 시맨틱 역할 | 사용 빈도 | 대표 카테고리 |
+|--------|-----------|----------|------------|
+| bold (700) | Display, 최상위 페이지 제목 | 낮음 | Display, screen-sub |
+| semibold (600) | 제목, 강조 라벨, Badge | 높음 | Title, Badge, label.small |
+| medium (500) | 상호작용 라벨, 캡션 강조 | 높음 | Label, caption.small |
+| normal (400) | 본문, 설명, 캡션 | 높음 | Body, Caption |
+
+**패턴 요약** : weight가 올라갈수록 텍스트의 "행동 유도력"이 강해진다. normal은 읽기, medium은 누르기/선택, semibold는 구조 인지, bold는 시선 집중.
+
+</Accordion>
+
 </AccordionGroup>
+
 ## 컴포넌트 토큰 매핑
 ### SectionTitle
 | size prop  | Tailwind 유틸리티              | Size |
