@@ -119,20 +119,23 @@ a span[data-as=p],
     padding-bottom: 8px !important;
 }
 
-/* 개별 탭 — 비활성 (Chip default) */
+/* 개별 탭 — 비활성 (SAZO Chip sm) */
 [role="tablist"] > * {
+    all: unset !important;
+    display: inline-flex !important;
+    align-items: center !important;
     border-radius: 9999px !important;
-    padding: 6px 16px !important;
+    padding: 3px 12px !important;
     border: 1px solid #D0D5DD !important;
-    border-bottom: 1px solid #D0D5DD !important;
     background: white !important;
     color: #344054 !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
     font-weight: 500 !important;
-    margin-bottom: 0 !important;
-    line-height: 1.5 !important;
+    line-height: 1.4 !important;
     transition: all 0.15s ease !important;
     cursor: pointer !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
 }
 
 /* 활성 탭 — 반전 (Chip selected) */
