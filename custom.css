@@ -165,11 +165,26 @@ a span[data-as=p],
     color: #101828 !important;
 }
 
-/* ── 미리보기 열 너비 제한 ────────────────────────────────────
-   Mintlify 기본 .\[\&_td\]\:min-w-\[150px\] override           */
+/* ── 테이블 셀 너비 ────────────────────────────────────
+   Mintlify 기본 .\[\&_td\]\:min-w-\[150px\] override.
+   모범 사례: 헤더(th)만 nowrap → 브라우저가 컬럼 최소 너비 자동 계산,
+   본문(td)은 자유롭게 wrap.                                      */
+.prose table td,
+.prose table th,
+table td,
+table th {
+    min-width: auto !important;
+}
+
+/* 헤더 행은 한 줄 유지 (줄바꿈 안 일어날 최소 너비 확보) */
+.prose table th,
+table th {
+    white-space: nowrap !important;
+}
+
+/* 미리보기 열 (컬러 div 포함 td)은 좁은 고정 너비 */
 .prose table td:has(div[style]),
 table td:has(div[style]) {
-    min-width: auto !important;
     width: 50px !important;
     max-width: 60px !important;
     padding: 6px 8px !important;
