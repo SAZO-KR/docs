@@ -26,14 +26,15 @@ SAZO의 타이포그래피는 **명확한 정보 전달** 과 **예측 가능한
 </Note>
 
 ## 토큰 아키텍처
-```
-Primitive CSS 변수   --font-size-16, --fw-semibold
-    ↓ 참조
-Semantic CSS 변수    --type-body-default-size, --type-title-section-lg-size
-    ↓ Tailwind @utility
-유틸리티 클래스       text-body-default, text-title-section-lg
-    ↓ 사용
-Component           SectionTitle size="lg", FeaturedHeading md
+```mermaid
+flowchart TB
+    P["<b>Primitive CSS 변수</b><br/>--font-size-16<br/>--fw-semibold"]
+    S["<b>Semantic CSS 변수</b><br/>--type-body-default-size<br/>--type-title-section-lg-size"]
+    U["<b>유틸리티 클래스</b><br/>text-body-default<br/>text-title-section-lg"]
+    C["<b>Component</b><br/>SectionTitle size='lg'<br/>FeaturedHeading md"]
+    P -->|참조| S
+    S -->|Tailwind @utility| U
+    U -->|사용| C
 ```
 
 **Primitive** : 타이포그래피의 물리적 값. `--font-size-{N}` + `--line-height-{N}` + `--fw-{weight}`.

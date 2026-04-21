@@ -1,17 +1,26 @@
 <style>{`
-  /* Design System pages — heading rhythm + primary accent */
-  h2 {
+  /* Design System 페이지 전용 — 기본 Mintlify prose 스타일 override
+     높은 specificity를 위해 ancestor chain 사용 */
+  html body h2,
+  html body article h2,
+  html body main h2,
+  html body .prose h2 {
     margin-top: 5em !important;
     margin-bottom: 0.6em !important;
     color: #EB4666 !important;
+    padding-top: 0.2em !important;
   }
-  h3 {
+  html body h3,
+  html body article h3,
+  html body main h3,
+  html body .prose h3 {
     margin-top: 3em !important;
     margin-bottom: 0.5em !important;
   }
-  /* 섹션 시작(페이지 최상단) h2는 과도한 상단 마진 제거 */
-  article > *:first-child + h2,
-  main > *:first-child + h2 {
+  /* 페이지 최상단 직후 H2는 과한 공간 방지 */
+  html body article > *:first-child + h2,
+  html body main > *:first-child + h2,
+  html body .prose > *:first-child + h2 {
     margin-top: 2em !important;
   }
 `}</style>

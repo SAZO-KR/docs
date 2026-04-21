@@ -25,14 +25,15 @@ SAZO의 간격 시스템은 핵심 디자인 원칙인 **'정직한 안내자'**
 </Note>
 
 ## 토큰 아키텍처
-```
-Primitive (--space-1: 4px, --space-12: 48px ...)
-    ↓ 참조
-Semantic (--space-between-sections-xl, --space-screen-edge-pc)
-    ↓ @theme inline 매핑
-Tailwind (mb-section-xl, gap-component-md, px-screen-edge ...)
-    ↓ 사용
-Component (Spacer, Card Grid, Modal)
+```mermaid
+flowchart TB
+    P["<b>Primitive</b><br/>--space-1: 4px<br/>--space-12: 48px"]
+    S["<b>Semantic</b><br/>--space-between-sections-xl<br/>--space-screen-edge-pc"]
+    U["<b>Tailwind</b><br/>mb-section-xl<br/>gap-component-md<br/>px-screen-edge"]
+    C["<b>Component</b><br/>Spacer, Card Grid, Modal"]
+    P -->|참조| S
+    S -->|@theme inline 매핑| U
+    U -->|사용| C
 ```
 
 Color와 달리 spacing은 **primitive = px 값 자체** 다. hex 코드처럼 추상적이지 않으므로 별도의 primitive 레이어를 두지 않고, 시맨틱 토큰이 px 값을 직접 참조한다.
