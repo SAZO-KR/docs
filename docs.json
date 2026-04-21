@@ -172,7 +172,14 @@
       },
       {
         "tab": "변경 로그",
-        "href": "/changelog"
+        "groups": [
+          {
+            "group": "변경 로그",
+            "pages": [
+              "changelog"
+            ]
+          }
+        ]
       }
     ]
   },
