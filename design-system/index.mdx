@@ -5,9 +5,29 @@ tags:
 - design-system
 ---
 
-import HeadingSpacing from '/snippets/heading-spacing.mdx';
-
-<HeadingSpacing />
+<style>{`
+.prose h2,
+.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h2,
+main h2 {
+  margin-top: 5em !important;
+  margin-bottom: 0.6em !important;
+  color: #EB4666 !important;
+}
+.prose h3,
+.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h3,
+main h3 {
+  margin-top: 3em !important;
+  margin-bottom: 0.5em !important;
+}
+/* 페이지 최상단 직후 H2는 과한 공간 방지 */
+.prose > *:first-child + h2,
+article > *:first-child + h2,
+main > *:first-child + h2 {
+  margin-top: 2em !important;
+}
+`}</style>
 
 이 문서는 SAZO.shop의 디지털 제품을 만드는 모든 사람을 위한 가이드입니다.
 

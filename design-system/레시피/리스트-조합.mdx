@@ -7,9 +7,29 @@ tags:
 - list
 ---
 
-import HeadingSpacing from '/snippets/heading-spacing.mdx';
-
-<HeadingSpacing />
+<style>{`
+.prose h2,
+.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h2,
+main h2 {
+  margin-top: 5em !important;
+  margin-bottom: 0.6em !important;
+  color: #EB4666 !important;
+}
+.prose h3,
+.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h3,
+main h3 {
+  margin-top: 3em !important;
+  margin-bottom: 0.5em !important;
+}
+/* 페이지 최상단 직후 H2는 과한 공간 방지 */
+.prose > *:first-child + h2,
+article > *:first-child + h2,
+main > *:first-child + h2 {
+  margin-top: 2em !important;
+}
+`}</style>
 
 ## 철학
 SAZO의 리스트는 **반복되는 정보를 균일한 리듬으로 배열** 한다. 모든 리스트 항목은 `py-4`(16px) 수직 패딩을 공유하며, 좌측 아이콘(24px) + 텍스트 + 우측 네비게이션의 3단 구조를 따른다.

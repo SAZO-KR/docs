@@ -6,9 +6,29 @@ tags:
 - ux-writing
 ---
 
-import HeadingSpacing from '/snippets/heading-spacing.mdx';
-
-<HeadingSpacing />
+<style>{`
+.prose h2,
+.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h2,
+main h2 {
+  margin-top: 5em !important;
+  margin-bottom: 0.6em !important;
+  color: #EB4666 !important;
+}
+.prose h3,
+.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h3,
+main h3 {
+  margin-top: 3em !important;
+  margin-bottom: 0.5em !important;
+}
+/* 페이지 최상단 직후 H2는 과한 공간 방지 */
+.prose > *:first-child + h2,
+article > *:first-child + h2,
+main > *:first-child + h2 {
+  margin-top: 2em !important;
+}
+`}</style>
 
 저희는 특정 사항을 작성하는 저희만의 방식을 가지고 있으며, 여기서 그 내용을 다룹니다. 이는 사줘의 모든 터치포인트에서 일관성을 유지하고, 크로스보더 이커머스라는 복잡한 맥락에서도 사용자가 혼란 없이 정보를 이해할 수 있도록 돕습니다.
 

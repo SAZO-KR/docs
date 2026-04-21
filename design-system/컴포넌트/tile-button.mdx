@@ -7,9 +7,29 @@ tags:
 - foundation
 ---
 
-import HeadingSpacing from '/snippets/heading-spacing.mdx';
-
-<HeadingSpacing />
+<style>{`
+.prose h2,
+.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h2,
+main h2 {
+  margin-top: 5em !important;
+  margin-bottom: 0.6em !important;
+  color: #EB4666 !important;
+}
+.prose h3,
+.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h3,
+main h3 {
+  margin-top: 3em !important;
+  margin-bottom: 0.5em !important;
+}
+/* 페이지 최상단 직후 H2는 과한 공간 방지 */
+.prose > *:first-child + h2,
+article > *:first-child + h2,
+main > *:first-child + h2 {
+  margin-top: 2em !important;
+}
+`}</style>
 
 ## 언제 사용하는가
 카드 형태의 넓은 터치 영역으로 **색상 코딩된 피드백 정보와 함께 사용자의 주의를 유도** 하는 액션 버튼. 주문 상태, 배송 추적 등 상태 정보 카드로 주로 활용된다.

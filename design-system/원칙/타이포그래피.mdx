@@ -7,9 +7,29 @@ tags:
 - foundation
 ---
 
-import HeadingSpacing from '/snippets/heading-spacing.mdx';
-
-<HeadingSpacing />
+<style>{`
+.prose h2,
+.prose :where(h2):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h2,
+main h2 {
+  margin-top: 5em !important;
+  margin-bottom: 0.6em !important;
+  color: #EB4666 !important;
+}
+.prose h3,
+.prose :where(h3):not(:where([class~="not-prose"],[class~="not-prose"] *)),
+article h3,
+main h3 {
+  margin-top: 3em !important;
+  margin-bottom: 0.5em !important;
+}
+/* 페이지 최상단 직후 H2는 과한 공간 방지 */
+.prose > *:first-child + h2,
+article > *:first-child + h2,
+main > *:first-child + h2 {
+  margin-top: 2em !important;
+}
+`}</style>
 
 ## 철학
 SAZO의 타이포그래피는 **명확한 정보 전달** 과 **예측 가능한 시각적 계층** 을 만드는 것을 목표로 한다.
@@ -26,16 +46,20 @@ SAZO의 타이포그래피는 **명확한 정보 전달** 과 **예측 가능한
 </Note>
 
 ## 토큰 아키텍처
-```mermaid
-flowchart TB
-    P["<b>Primitive CSS 변수</b><br/>--font-size-16<br/>--fw-semibold"]
-    S["<b>Semantic CSS 변수</b><br/>--type-body-default-size<br/>--type-title-section-lg-size"]
-    U["<b>유틸리티 클래스</b><br/>text-body-default<br/>text-title-section-lg"]
-    C["<b>Component</b><br/>SectionTitle size='lg'<br/>FeaturedHeading md"]
-    P -->|참조| S
-    S -->|Tailwind @utility| U
-    U -->|사용| C
-```
+<Steps>
+  <Step title="Primitive CSS 변수">
+    `--font-size-16`, `--fw-semibold` — 타이포그래피의 물리적 값
+  </Step>
+  <Step title="Semantic CSS 변수 (Primitive 참조)">
+    `--type-body-default-size`, `--type-title-section-lg-size` — 역할 기반 토큰
+  </Step>
+  <Step title="유틸리티 클래스 (Tailwind @utility)">
+    `text-body-default`, `text-title-section-lg` — size + line-height + weight 동시 적용
+  </Step>
+  <Step title="Component (유틸리티 사용)">
+    `SectionTitle size="lg"`, `FeaturedHeading md`
+  </Step>
+</Steps>
 
 **Primitive** : 타이포그래피의 물리적 값. `--font-size-{N}` + `--line-height-{N}` + `--fw-{weight}`.
 **Semantic** : 타이포그래피의 역할. `--type-{role}-size/line-height/weight` 3속성 세트.
