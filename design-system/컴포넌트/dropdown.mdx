@@ -7,6 +7,10 @@ tags:
 - foundation
 ---
 
+import HeadingSpacing from '/snippets/heading-spacing.mdx';
+
+<HeadingSpacing />
+
 옵션 목록을 펼침/접힘으로 표시하는 복합 선택 컴포넌트. Title / Content / Slot 서브 컴포넌트로 구성된 compound 패턴을 따른다.
 
 <Note>
@@ -21,12 +25,28 @@ tags:
 - Slot에 이미지 + 텍스트 복합 콘텐츠를 넣어 풍부한 옵션을 표시할 때.
 
 ## Do / Don't
-| Do | Don't | 이유 |
-|----|-------|------|
-| `isOpen`과 `onOpenChange`로 상태를 제어하여 예측 가능한 동작 보장 | 옵션이 **2~3개** 뿐인 경우 사용 | Radio 또는 Chip이 적합 |
-| Title에 placeholder 텍스트를 넣어 미선택 상태 명시 | 중첩된 Dropdown 사용 | UX 복잡도 급증 |
-| Slot에 이미지 + 텍스트를 조합하여 풍부한 옵션 표시 | Slot의 `disabled`를 과도하게 사용 | 선택 가능 옵션이 너무 적으면 혼란 |
-| Content의 maxHeight(360px) 초과 예상 시 검색 기능 함께 고려 | 검색 없이 긴 목록만 스크롤로 제공 | 원하는 옵션 찾기 어려움 |
+
+<Check>
+
+**Do**
+
+- `isOpen`과 `onOpenChange`로 상태를 제어하여 예측 가능한 동작 보장 — *Radio 또는 Chip이 적합*
+- Title에 placeholder 텍스트를 넣어 미선택 상태 명시 — *UX 복잡도 급증*
+- Slot에 이미지 + 텍스트를 조합하여 풍부한 옵션 표시 — *선택 가능 옵션이 너무 적으면 혼란*
+- Content의 maxHeight(360px) 초과 예상 시 검색 기능 함께 고려 — *원하는 옵션 찾기 어려움*
+
+</Check>
+
+<Warning>
+
+**Don't**
+
+- 옵션이 **2~3개** 뿐인 경우 사용
+- 중첩된 Dropdown 사용
+- Slot의 `disabled`를 과도하게 사용
+- 검색 없이 긴 목록만 스크롤로 제공
+
+</Warning>
 
 ## 패턴: Compound Component
 Dropdown은 `Dropdown.Title`, `Dropdown.Content`, `Dropdown.Slot`을 조합하는 compound pattern이다.

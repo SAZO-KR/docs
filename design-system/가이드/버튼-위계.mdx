@@ -7,6 +7,10 @@ tags:
 - button
 ---
 
+import HeadingSpacing from '/snippets/heading-spacing.mdx';
+
+<HeadingSpacing />
+
 ## 철학
 ### 왜 브랜드 컬러를 아끼는가
 브랜드 컬러(`brand-500`)는 사용자의 무의식 속에 서비스의 감정적 이미지를 형성한다. "삭제하시겠습니까?" 같은 부정적 맥락에 반복 노출되면 브랜드 자체에 부정적 연상을 학습하므로, 긍정적 기회에만 브랜드 컬러를 사용하고 일반 확인에는 Gray-800, 파괴적 액션에는 Error 컬러를 사용한다. Purple 컬러 재정의에서 다룬 색상 의미론의 연장선이며, Airbnb의 접근을 참조하되 역직구 커머스 맥락에 맞게 조정했다.
@@ -17,6 +21,8 @@ primary에서 brand로의 전환 참조.
 
 ## 의사결정 트리
 색상 선택이 필요할 때 아래 트리를 순서대로 따른다.
+
+<Frame>
 
 ```
 이 액션은 무엇인가?
@@ -35,6 +41,8 @@ primary에서 brand로의 전환 참조.
     ├── "취소", "돌아가기" → Cancel (Link)
     └── 그 외 보조 → Outline (white+border)
 ```
+
+</Frame>
 
 ## 버튼 구성
 ### 6가지 색상 변형
@@ -141,15 +149,34 @@ Destructive와 Benefit은 특수 맥락에서만 등장한다.
 </Tabs>
 
 ## Do / Don't
-| Do | Don't |
-|----|-------|
-| 브랜드 컬러는 긍정적 CTA에만 | 일반 확인에 브랜드 컬러 사용 |
-| 한 화면에 Brand 버튼은 1개 | 여러 Brand 버튼으로 주의 분산 |
-| gray-800이 3개 이상 반복되면 Light로 전환 | gray-800 5개를 나란히 배치 |
-| 파괴적 액션에 Destructive 색상 | "삭제"에 Brand 컬러 (부정적 학습) |
-| 취소/돌아가기는 항상 Link 스타일 | 취소에 Filled 버튼 (시각적 경쟁) |
-| Outline은 Secondary 계층에만 | Primary 액션에 Outline |
-| Benefit(purple)은 프로모션에만 극소량 | 일반 UI에 purple 버튼 |
+
+<Check>
+
+**Do**
+
+- 브랜드 컬러는 긍정적 CTA에만
+- 한 화면에 Brand 버튼은 1개
+- gray-800이 3개 이상 반복되면 Light로 전환
+- 파괴적 액션에 Destructive 색상
+- 취소/돌아가기는 항상 Link 스타일
+- Outline은 Secondary 계층에만
+- Benefit(purple)은 프로모션에만 극소량
+
+</Check>
+
+<Warning>
+
+**Don't**
+
+- 일반 확인에 브랜드 컬러 사용
+- 여러 Brand 버튼으로 주의 분산
+- gray-800 5개를 나란히 배치
+- "삭제"에 Brand 컬러 (부정적 학습)
+- 취소에 Filled 버튼 (시각적 경쟁)
+- Primary 액션에 Outline
+- 일반 UI에 purple 버튼
+
+</Warning>
 
 ## 설계 판단 기록
 

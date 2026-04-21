@@ -7,6 +7,10 @@ tags:
 - spacing
 ---
 
+import HeadingSpacing from '/snippets/heading-spacing.mdx';
+
+<HeadingSpacing />
+
 ## 철학
 SAZO의 간격 체계는 **4px 기반 스케일** 과 세 가지 리듬 원칙으로 구성된다.
 
@@ -152,17 +156,37 @@ Spacer 컴포넌트: PC `.horizontal-spacer`, Mobile `.mo-horizontal-spacer`
 
 <Accordion title="Do / Don't">
 
-| Do | Don't |
-|----|-------|
-| 메인 섹션 간격 `mb-12` (48px) 통일 | 섹션마다 다른 간격 (mb-8, mb-16 혼용) |
-| SectionTitle 아래 `mb-4` (16px) | SectionTitle 아래 `mb-2`나 `mb-8` |
-| FeaturedHeading 하단 `mb-10` (40px) | FeaturedHeading 하단 `mb-12` |
-| 독립 폼 필드 간격 `gap-7` (28px) | 폼 필드에 `gap-4`나 `gap-8` |
-| 밀접한 요소 내부 `gap-2` (8px) | 내부 요소에 `gap-4` 이상 |
-| 콘텐츠 영역은 `<Spacer>` 컴포넌트 | 직접 `px-*` 클래스 개별 적용 |
-| Mobile 오프셋은 CSS 변수 기반 유틸리티 | `mt-[100px]` 하드코딩 |
-| `padding`은 Wrapper(단일 자식) 책임, `gap`은 Container(다중 자식) 책임 — 분리 | 같은 요소에 `p-*`와 `gap-*` 동시 사용 |
-| 뷰포트 gutter는 `<Spacer>`·Page Shell에 위임 | 본문 내부 래퍼에 `md:px-0` 같은 "패딩 지우는" 조건부 유틸 |
+<Check>
+
+**Do**
+
+- 메인 섹션 간격 `mb-12` (48px) 통일
+- SectionTitle 아래 `mb-4` (16px)
+- FeaturedHeading 하단 `mb-10` (40px)
+- 독립 폼 필드 간격 `gap-7` (28px)
+- 밀접한 요소 내부 `gap-2` (8px)
+- 콘텐츠 영역은 `<Spacer>` 컴포넌트
+- Mobile 오프셋은 CSS 변수 기반 유틸리티
+- `padding`은 Wrapper(단일 자식) 책임, `gap`은 Container(다중 자식) 책임 — 분리
+- 뷰포트 gutter는 `<Spacer>`·Page Shell에 위임
+
+</Check>
+
+<Warning>
+
+**Don't**
+
+- 섹션마다 다른 간격 (mb-8, mb-16 혼용)
+- SectionTitle 아래 `mb-2`나 `mb-8`
+- FeaturedHeading 하단 `mb-12`
+- 폼 필드에 `gap-4`나 `gap-8`
+- 내부 요소에 `gap-4` 이상
+- 직접 `px-*` 클래스 개별 적용
+- `mt-[100px]` 하드코딩
+- 같은 요소에 `p-*`와 `gap-*` 동시 사용
+- 본문 내부 래퍼에 `md:px-0` 같은 "패딩 지우는" 조건부 유틸
+
+</Warning>
 
 <Note>
 

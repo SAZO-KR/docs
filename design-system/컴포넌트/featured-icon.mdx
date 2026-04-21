@@ -7,6 +7,10 @@ tags:
 - foundation
 ---
 
+import HeadingSpacing from '/snippets/heading-spacing.mdx';
+
+<HeadingSpacing />
+
 ## 언제 사용하는가
 아이콘을 시각적으로 **강조하여 표시** 하기 위한 컨테이너 컴포넌트. InfoPanel의 `lead` 슬롯이나 독립적인 상태 표시 아이콘으로 사용된다.
 
@@ -67,10 +71,27 @@ FeaturedIcon의 색상은 **연관 컴포넌트의 의미** 와 일치시킨다.
 | EmptyState | PC: **lg 타입** 피쳐드 헤딩 + 하단 후속 액션 버튼. MO: **md 타입** | 빈 목록 안내 영역 중앙 |
 
 ## Do / Don't
-| Do | Don't | 이유 |
-|----|-------|------|
-| InfoPanel의 `lead` 슬롯에 배치하여 메시지 유형 시각적 보강 | 버튼 대용으로 사용 | 클릭 가능한 아이콘은 IconButton |
-| `color`를 InfoPanel의 `color`와 동일한 의미 계열로 맞추기 | color를 장식 목적으로 임의 선택 | 의미 일관성이 깨지면 혼란 |
-| 아이콘 라이브러리의 아이콘을 children으로 전달 | 텍스트를 children에 넣기 | 아이콘 전용 컨테이너 |
-| `disabled`는 연관 기능이 비활성화되었을 때만 사용 | 장식용으로 disabled 상태 사용 | disabled는 기능 상태를 전달 |
-| `white` 색상은 어두운 배경 위에서 사용 | `white` 색상을 밝은 배경에 단독 사용 | 시각적 구분이 어려움 (`shadow-medium`으로 부분 보완되지만 한계 있음) |
+
+<Check>
+
+**Do**
+
+- InfoPanel의 `lead` 슬롯에 배치하여 메시지 유형 시각적 보강 — *클릭 가능한 아이콘은 IconButton*
+- `color`를 InfoPanel의 `color`와 동일한 의미 계열로 맞추기 — *의미 일관성이 깨지면 혼란*
+- 아이콘 라이브러리의 아이콘을 children으로 전달 — *아이콘 전용 컨테이너*
+- `disabled`는 연관 기능이 비활성화되었을 때만 사용 — *disabled는 기능 상태를 전달*
+- `white` 색상은 어두운 배경 위에서 사용 — *시각적 구분이 어려움 (`shadow-medium`으로 부분 보완되지만 한계 있음)*
+
+</Check>
+
+<Warning>
+
+**Don't**
+
+- 버튼 대용으로 사용
+- color를 장식 목적으로 임의 선택
+- 텍스트를 children에 넣기
+- 장식용으로 disabled 상태 사용
+- `white` 색상을 밝은 배경에 단독 사용
+
+</Warning>

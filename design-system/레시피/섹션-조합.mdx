@@ -8,6 +8,10 @@ tags:
 - section
 ---
 
+import HeadingSpacing from '/snippets/heading-spacing.mdx';
+
+<HeadingSpacing />
+
 ## 철학
 SAZO의 페이지 구조는 **예측 가능한 수직 리듬** 으로 구축된다. 핵심은 세 가지 숫자다.
 
@@ -275,16 +279,36 @@ PC & Mobile 공통 (간격만 동일)
 </AccordionGroup>
 
 ## Do / Don't
-| Do | Don't |
-|----|-------|
-| 메인 섹션 간격은 항상 `mb-12` (48px) | 섹션마다 다른 간격 (mb-8, mb-16 혼용) |
-| 하단 마진(`mb-*`)으로 섹션 간격 설정 | 상하 패딩(`py-*`)으로 섹션 간격 설정 |
-| PC 콘텐츠는 `<Spacer>` 컴포넌트로 감싸기 | 개별 섹션에 `max-w-6xl mx-auto px-12` 직접 작성 |
-| Mobile Footer에 `pb-[82px]` 포함 | 바텀 도크와 겹치게 방치 |
-| sticky 요소는 `--header-height` CSS 변수 참조 | `top` 값 하드코딩 |
-| PC 결제 페이지는 `bg-gray-50` 배경 | 기본 흰색 배경 |
-| Mobile은 `ThickDivider`로 섹션 구분 | 마진만으로 섹션 구분 (모바일에서 불분명) |
-| 상품 그리드에 `.card-gird-wrap` 클래스 사용 | 개별 gap 값 직접 지정 |
+
+<Check>
+
+**Do**
+
+- 메인 섹션 간격은 항상 `mb-12` (48px)
+- 하단 마진(`mb-*`)으로 섹션 간격 설정
+- PC 콘텐츠는 `<Spacer>` 컴포넌트로 감싸기
+- Mobile Footer에 `pb-[82px]` 포함
+- sticky 요소는 `--header-height` CSS 변수 참조
+- PC 결제 페이지는 `bg-gray-50` 배경
+- Mobile은 `ThickDivider`로 섹션 구분
+- 상품 그리드에 `.card-gird-wrap` 클래스 사용
+
+</Check>
+
+<Warning>
+
+**Don't**
+
+- 섹션마다 다른 간격 (mb-8, mb-16 혼용)
+- 상하 패딩(`py-*`)으로 섹션 간격 설정
+- 개별 섹션에 `max-w-6xl mx-auto px-12` 직접 작성
+- 바텀 도크와 겹치게 방치
+- `top` 값 하드코딩
+- 기본 흰색 배경
+- 마진만으로 섹션 구분 (모바일에서 불분명)
+- 개별 gap 값 직접 지정
+
+</Warning>
 
 ## 페이지 설계 의사결정 체크리스트
 

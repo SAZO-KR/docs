@@ -7,6 +7,10 @@ tags:
 - typography
 ---
 
+import HeadingSpacing from '/snippets/heading-spacing.mdx';
+
+<HeadingSpacing />
+
 ## 철학
 SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다. 모든 텍스트는 크기-굵기-색상의 3속성 조합으로 정해지며, 이 조합이 곧 정보의 중요도를 결정한다.
 
@@ -15,6 +19,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 - 색상은 `--text-strong` > `--text-default` > `--text-secondary` > `--text-tertiary` 순이다
 
 ### 5단계 계층표
+
+<Frame>
+
 ```
  계층       시각적 무게  ████████████████████████████████  <-- 높음
  ──────────────────────────────────────────────────────
@@ -24,6 +31,8 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
  4. Body                 ███████████████
  5. Caption              █████████
 ```
+
+</Frame>
 
 | 계층 | 역할 | 크기 | 굵기 | 색상 토큰 | 사용처 |
 | --- | --- | --- | --- | --- | --- |
@@ -210,13 +219,33 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 | `xs`      | `text-title-subsection-lg` |
 
 ## Do / Don't
-| Do | Don't |
-|----|-------|
-| Display는 화면당 1개만 | 한 화면에 2개 이상의 Display |
-| Title/Display 색상은 `--text-strong` | Title에 `--text-secondary` 사용 |
-| 카드 내 상품명은 `--fw-medium` (500) | 카드 상품명에 `--fw-semibold` (600) — Title과 혼동 |
-| 본문 설명은 `--text-secondary` | 본문에 `--text-default` — Subtitle과 구분 불가 |
-| 가격은 `--fw-semibold` (600) + `--text-default` | 가격에 `--fw-normal` (400) |
-| 읽혀야 하는 캡션은 `--text-secondary`, 보조 정보는 `--text-tertiary` | 모든 캡션을 `--text-tertiary`로 통일 |
-| 배지 텍스트는 `text-label-small` (12px/600) 또는 `text-caption-small` (12px/500) | 배지에 `--fw-normal` (400) — 작은 크기 보상 필요 |
-| Title-콘텐츠 사이는 `mb-4` (16px) | `mb-2`나 `mb-8` 사용 |
+
+<Check>
+
+**Do**
+
+- Display는 화면당 1개만
+- Title/Display 색상은 `--text-strong`
+- 카드 내 상품명은 `--fw-medium` (500)
+- 본문 설명은 `--text-secondary`
+- 가격은 `--fw-semibold` (600) + `--text-default`
+- 읽혀야 하는 캡션은 `--text-secondary`, 보조 정보는 `--text-tertiary`
+- 배지 텍스트는 `text-label-small` (12px/600) 또는 `text-caption-small` (12px/500)
+- Title-콘텐츠 사이는 `mb-4` (16px)
+
+</Check>
+
+<Warning>
+
+**Don't**
+
+- 한 화면에 2개 이상의 Display
+- Title에 `--text-secondary` 사용
+- 카드 상품명에 `--fw-semibold` (600) — Title과 혼동
+- 본문에 `--text-default` — Subtitle과 구분 불가
+- 가격에 `--fw-normal` (400)
+- 모든 캡션을 `--text-tertiary`로 통일
+- 배지에 `--fw-normal` (400) — 작은 크기 보상 필요
+- `mb-2`나 `mb-8` 사용
+
+</Warning>

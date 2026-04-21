@@ -8,6 +8,10 @@ tags:
 - automation
 ---
 
+import HeadingSpacing from '/snippets/heading-spacing.mdx';
+
+<HeadingSpacing />
+
 SAZO(사줘)의 UX Writing 가이드라인을 자동 검사하는 린터 시스템의 구현 가이드다. [문법 및 스타일](/design-system/콘텐츠/문법-및-스타일)에 정의된 권장/비권장 규칙을 프로그래매틱하게 체크하며, [보이스 및 톤](/design-system/콘텐츠/보이스-및-톤)과 [UI 패턴](/design-system/콘텐츠/UI-패턴)의 원칙도 함께 반영한다.
 
 ## 왜 만드는가
@@ -56,6 +60,9 @@ UX Writing 가이드를 아무리 잘 만들어도 **사람이 매번 읽고 판
 - 레이어 1로 잡히지 않는 나머지 20%를 담당
 
 ### 파이프라인
+
+<Frame>
+
 ```
 입력 텍스트
     │
@@ -79,6 +86,8 @@ UX Writing 가이드를 아무리 잘 만들어도 **사람이 매번 읽고 판
     ▼
 종합 점수 + 항목별 플래그
 ```
+
+</Frame>
 
 ## 구현 Phase
 
@@ -395,6 +404,8 @@ def word_difficulty(token):
 
 의존 구문 분석(dependency parsing)으로 종속절 깊이를 측정한다. 이것도 소형 모델(수십 MB)이지 LLM이 아니다.
 
+<Frame>
+
 ```
 단순: "결제가 완료되었습니다."
       결제가 ──→ 완료되었습니다   (깊이 1)
@@ -403,6 +414,8 @@ def word_difficulty(token):
       고객님이 ─→ 선택하신 ─→ 상품의 ─→ 결제가 ─→ 완료되었습니다
       (깊이 4, 수식어 체인)
 ```
+
+</Frame>
 
 측정 가능한 지표:
 
@@ -569,6 +582,8 @@ export function OrderComplete() {
 
 이걸 구분하는 건 TypeScript/Babel AST 파서로 가능하다:
 
+<Frame>
+
 ```
 TSX 소스
   │
@@ -591,6 +606,8 @@ AST 노드 순회
   │   └─ JSX 내부일 때만 ────────→ ✅ 추출
   └─ Comment ────────────────────→ ❌ 스킵
 ```
+
+</Frame>
 
 ESLint 플러그인으로 구현하면 기존 린트 파이프라인에 바로 붙는다:
 
