@@ -222,5 +222,14 @@
       "source": "/index",
       "destination": "/design-system"
     }
-  ]
+  ],
+  "interaction": {
+    "drilldown": true
+  },
+  "metadata": {
+    "timestamp": true
+  },
+  "seo": {
+    "indexing": "all"
+  }
 }
