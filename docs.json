@@ -1,10 +1,10 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "SAZO Design System",
   "colors": {
     "primary": "#eb4666",
-    "light": "#07C983",
+    "light": "#eb4666",
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
@@ -83,10 +83,7 @@
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
+  "logo": "/logo/light.svg",
   "navbar": {
     "links": [
       {
