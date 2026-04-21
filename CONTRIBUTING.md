@@ -1,3 +1,7 @@
+---
+created: 2026-04-21 14:47:37 +09:00
+updated: 2026-04-21 14:47:39 +09:00
+---
 > **Customize this file**: Tailor this template to your project by noting specific contribution types you're looking for, adding a Code of Conduct, or adjusting the writing guidelines to match your style.
 
 # Contribute to the documentation

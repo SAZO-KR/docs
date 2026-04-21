@@ -1,3 +1,7 @@
+---
+created: 2026-04-21 14:47:37 +09:00
+updated: 2026-04-21 14:47:39 +09:00
+---
 # Mintlify Starter Kit
 
 Use the starter kit to get your docs deployed and ready to customize.
