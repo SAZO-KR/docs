@@ -49,11 +49,11 @@ primary에서 brand로의 전환 참조.
 | **Destructive** | error-600 (primitive 직접) | `--text-inverse` | 삭제, 탈퇴 | 제한적 |
 | **Benefit** | purple-500 (primitive 직접) | `--text-inverse` | 혜택/프로모션 전용 | 매우 제한적 |
 
-<Note>
+<Info>
 
 버튼 배경색은 시맨틱 토큰이 아닌 **컴포넌트 레벨에서 primitive를 직접 참조** 한다. 이는 action 시맨틱 카테고리를 제거한 설계 결정에 따른 것이다.
 
-</Note>
+</Info>
 
 **+ Cancel (Link 스타일)** : 버튼이 아닌 텍스트 링크. "취소", "돌아가기" 전용.
 
@@ -142,7 +142,9 @@ Destructive와 Benefit은 특수 맥락에서만 등장한다.
 
 ## Do / Don't
 
-<Check>**Do**</Check>
+<Check>
+
+**Do**
 
 - 브랜드 컬러는 긍정적 CTA에만
 - 한 화면에 Brand 버튼은 1개
@@ -152,7 +154,11 @@ Destructive와 Benefit은 특수 맥락에서만 등장한다.
 - Outline은 Secondary 계층에만
 - Benefit(purple)은 프로모션에만 극소량
 
-<Warning>**Don't**</Warning>
+</Check>
+
+<Warning>
+
+**Don't**
 
 - 일반 확인에 브랜드 컬러 사용
 - 여러 Brand 버튼으로 주의 분산
@@ -161,6 +167,8 @@ Destructive와 Benefit은 특수 맥락에서만 등장한다.
 - 취소에 Filled 버튼 (시각적 경쟁)
 - Primary 액션에 Outline
 - 일반 UI에 purple 버튼
+
+</Warning>
 
 ## 설계 판단 기록
 

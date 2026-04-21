@@ -154,7 +154,9 @@ Spacer 컴포넌트: PC `.horizontal-spacer`, Mobile `.mo-horizontal-spacer`
 
 ## Do / Don't
 
-<Check>**Do**</Check>
+<Check>
+
+**Do**
 
 - 메인 섹션 간격 `mb-12` (48px) 통일
 - SectionTitle 아래 `mb-4` (16px)
@@ -166,7 +168,11 @@ Spacer 컴포넌트: PC `.horizontal-spacer`, Mobile `.mo-horizontal-spacer`
 - `padding`은 Wrapper(단일 자식) 책임, `gap`은 Container(다중 자식) 책임 — 분리
 - 뷰포트 gutter는 `<Spacer>`·Page Shell에 위임
 
-<Warning>**Don't**</Warning>
+</Check>
+
+<Warning>
+
+**Don't**
 
 - 섹션마다 다른 간격 (mb-8, mb-16 혼용)
 - SectionTitle 아래 `mb-2`나 `mb-8`
@@ -178,8 +184,10 @@ Spacer 컴포넌트: PC `.horizontal-spacer`, Mobile `.mo-horizontal-spacer`
 - 같은 요소에 `p-*`와 `gap-*` 동시 사용
 - 본문 내부 래퍼에 `md:px-0` 같은 "패딩 지우는" 조건부 유틸
 
-<Note>
+</Warning>
+
+<Info>
 
 Wrapper / Container 어휘 구분과 판단 트리는 레이아웃 프리미티브 어휘 참조. 결정 배경은 레이아웃 프리미티브 설계 판단.
 
-</Note>
+</Info>

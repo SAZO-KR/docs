@@ -79,15 +79,30 @@ a h2, a h3, a h4,
     font-size: inherit !important;
 }
 
-/* span[data-as=p] 본문 단락 간격 — Card/링크 내부는 제외 */
+/* span[data-as=p] 본문 단락 간격 — 본문 흐름에서만 적용 */
 #content-area div.mdx-content .prose > span[data-as=p],
 #content-area div.mdx-content.prose > span[data-as=p] {
     margin-bottom: 1.5em !important;
 }
+/* 컴포넌트 내부 span은 전부 마진 리셋 (Card, 콜아웃, Tab, Step, Accordion, 링크) */
 a span[data-as=p],
 [class*="card" i] span[data-as=p],
-[class*="Card"] span[data-as=p] {
+[class*="Card"] span[data-as=p],
+[class*="callout" i] span[data-as=p],
+[class*="note" i] span[data-as=p],
+[class*="info" i] span[data-as=p],
+[class*="check" i] span[data-as=p],
+[class*="Check"] span[data-as=p],
+[class*="warning" i] span[data-as=p],
+[class*="Warning"] span[data-as=p],
+[class*="tip" i] span[data-as=p],
+[class*="Tip"] span[data-as=p],
+[class*="accordion" i] span[data-as=p],
+[class*="tab" i] span[data-as=p],
+[class*="step" i] span[data-as=p],
+[class*="Step"] span[data-as=p] {
     margin-bottom: 0 !important;
+    margin-top: 0 !important;
 }
 
 /* 변경 로그 페이지 — Update 컴포넌트 내부 헤딩은 기본값 */

@@ -9,11 +9,11 @@ tags:
 
 콘텐츠 영역 사이에 시각적 구분선을 삽입하여 정보 계층을 명확히 하는 레이아웃 유틸리티 컴포넌트. **Divider** (Thin)와 **ThickDivider** 두 가지 하위 컴포넌트를 포함한다.
 
-<Note>
+<Info>
 
 상세 스펙(Anatomy, Props, 토큰 매핑)은 01 Project/SAZO/SAZO - 디자인 시스템 점검/디자인 시스템/03 AI 컨텍스트/context/components/divider-spec을 참조한다.
 
-</Note>
+</Info>
 
 ## 언제 사용하는가
 - **Divider (Thin)** : 카드 내부, 리스트 항목 사이 등 같은 맥락 안에서 정보를 가볍게 구분할 때.
@@ -28,7 +28,9 @@ tags:
 
 ## Do / Don't
 
-<Check>**Do**</Check>
+<Check>
+
+**Do**
 
 - 섹션 간 구분에 `Divider`(thin)를, 큰 영역 분리에 `ThickDivider`를 사용 — *ThickDivider는 큰 영역 분리 전용*
 - `children`에 "or", "또는" 등의 텍스트를 넣어 선택지 분리 — *콘텐츠 간 시각적 단절 발생*
@@ -36,13 +38,19 @@ tags:
 - `color="gray-200"` (기본값)을 대부분의 상황에서 사용 — *실제 방향과 반대되는 네이밍*
 - 디바이더의 상하 여백은 **동일** 하게 설정 (예외: 투명 배경 요소가 있으면 그쪽 여백을 줄여 시각적으로 동일한 간격 맞춤) — *PC에서는 카드/여백으로 구분 가능하므로 32px 마진의 Thin divider로 대응*
 
-<Warning>**Don't**</Warning>
+</Check>
+
+<Warning>
+
+**Don't**
 
 - 카드/컴포넌트 내부의 미세한 구분에 ThickDivider 사용
 - `margin`을 지나치게 크게 설정
 - `gray-400`을 일반 구분선에 사용
 - `direction` 네이밍 혼동 (`vertical`이 가로선)
 - ThickDivider를 PC에서 사용
+
+</Warning>
 
 ## Direction 네이밍 주의
 이 컴포넌트의 네이밍 컨벤션은 일반적 관례와 반대다:

@@ -143,11 +143,11 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 | 색상 (메타/날짜) | `--text-tertiary` | `--gray-500` |
 | 색상 (읽혀야 하는 정보) | `--text-secondary` | `--gray-700` |
 
-<Note>
+<Info>
 
 **배지 카운트의 굵기 600은 Caption이 아니라 `--type-label-small` (Label 계층, 12px/600) 토큰을 사용한다.**
 
-</Note>
+</Info>
 
 사용처: 주문 요약 연도, 쿠폰 만료일, 푸터 주소/사업자 정보, 결제 수단 설명
 
@@ -221,7 +221,9 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 
 ## Do / Don't
 
-<Check>**Do**</Check>
+<Check>
+
+**Do**
 
 - Display는 화면당 1개만
 - Title/Display 색상은 `--text-strong`
@@ -232,7 +234,11 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 - 배지 텍스트는 `text-label-small` (12px/600) 또는 `text-caption-small` (12px/500)
 - Title-콘텐츠 사이는 `mb-4` (16px)
 
-<Warning>**Don't**</Warning>
+</Check>
+
+<Warning>
+
+**Don't**
 
 - 한 화면에 2개 이상의 Display
 - Title에 `--text-secondary` 사용
@@ -242,3 +248,5 @@ SAZO의 텍스트 계층은 **5단계 시각적 무게 체계** 로 구축된다
 - 모든 캡션을 `--text-tertiary`로 통일
 - 배지에 `--fw-normal` (400) — 작은 크기 보상 필요
 - `mb-2`나 `mb-8` 사용
+
+</Warning>
