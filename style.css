@@ -42,6 +42,15 @@ h1 + h2 {
     padding-top: 0 !important;
 }
 
+/* H1 + H3 (드물지만 커버) */
+.prose h1 + h3,
+article h1 + h3,
+main h1 + h3,
+h1 + h3 {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
 /* H2 + H3 */
 .prose h2 + h3,
 article h2 + h3,
