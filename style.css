@@ -106,6 +106,36 @@ a span[data-as=p],
     margin-top: 0 !important;
 }
 
+/* Tab → 알약(pill/chip) 스타일 */
+[role="tablist"] button,
+[role="tablist"] [role="tab"] {
+    border-radius: 9999px !important;
+    padding: 4px 14px !important;
+    border: 1px solid #D0D5DD !important;
+    background: transparent !important;
+    font-size: 14px !important;
+    margin-right: 6px !important;
+    transition: all 0.15s ease !important;
+}
+[role="tablist"] button[aria-selected="true"],
+[role="tablist"] [role="tab"][aria-selected="true"],
+[role="tablist"] button[data-state="active"],
+[role="tablist"] [role="tab"][data-state="active"] {
+    background: #101828 !important;
+    color: white !important;
+    border-color: #101828 !important;
+}
+[role="tablist"] button:hover:not([aria-selected="true"]):not([data-state="active"]),
+[role="tablist"] [role="tab"]:hover:not([aria-selected="true"]):not([data-state="active"]) {
+    background: #F2F4F7 !important;
+    border-color: #98A1B2 !important;
+}
+/* 기존 탭 밑줄 제거 */
+[role="tablist"] {
+    border-bottom: none !important;
+    gap: 4px !important;
+}
+
 /* 변경 로그 페이지 — Update 컴포넌트 내부 헤딩은 기본값 */
 [class*="Update"] h2, [class*="Update"] h3,
 [class*="update"] h2, [class*="update"] h3,
