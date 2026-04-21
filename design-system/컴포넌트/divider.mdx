@@ -11,7 +11,7 @@ tags:
 
 > 상세 스펙(Anatomy, Props, 토큰 매핑)은 01 Project/SAZO/SAZO - 디자인 시스템 점검/디자인 시스템/03 AI 컨텍스트/context/components/divider-spec을 참조한다.
 
-### 언제 사용하는가
+## 언제 사용하는가
 - **Divider (Thin)** : 카드 내부, 리스트 항목 사이 등 같은 맥락 안에서 정보를 가볍게 구분할 때.
 - **ThickDivider** : 서로 다른 맥락의 큰 영역을 뚜렷하게 분리할 때 (예: 상품 상세와 리뷰 섹션 사이). **모바일 전용** 이며 항상 전체 너비(양 옆 패딩 없음)로 배치한다. PC에서는 카드/여백 또는 32px 마진의 Thin divider로 대응.
 - `children`에 "or", "또는" 등의 텍스트를 넣으면 선택지 분리 용도로 활용할 수 있다.
@@ -22,7 +22,7 @@ tags:
 | Thin (강한) | gray-300 (권장), gray-200도 허용 | PC에서 Thick 대응. 32px 마진과 함께 사용 |
 | Thick | gray-100 | 모바일 전용. 복잡/밀도 높은 섹션 구분 |
 
-### Do / Don't
+## Do / Don't
 | Do | Don't | 이유 |
 |----|-------|------|
 | 섹션 간 구분에 `Divider`(thin)를, 큰 영역 분리에 `ThickDivider`를 사용 | 카드/컴포넌트 내부의 미세한 구분에 ThickDivider 사용 | ThickDivider는 큰 영역 분리 전용 |
@@ -31,7 +31,7 @@ tags:
 | `color="gray-200"` (기본값)을 대부분의 상황에서 사용 | `direction` 네이밍 혼동 (`vertical`이 가로선) | 실제 방향과 반대되는 네이밍 |
 | 디바이더의 상하 여백은 **동일** 하게 설정 (예외: 투명 배경 요소가 있으면 그쪽 여백을 줄여 시각적으로 동일한 간격 맞춤) | ThickDivider를 PC에서 사용 | PC에서는 카드/여백으로 구분 가능하므로 32px 마진의 Thin divider로 대응 |
 
-### Direction 네이밍 주의
+## Direction 네이밍 주의
 이 컴포넌트의 네이밍 컨벤션은 일반적 관례와 반대다:
 
 | Prop 값 | 실제 선의 방향 |
