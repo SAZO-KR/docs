@@ -127,20 +127,22 @@ a span[data-as=p],
     display: inline-flex !important;
 }
 
-/* 실제 탭 UI — 내부 tab-button div가 border-b, pt-3 pb-2.5, text-primary를 갖고 있음 */
+/* 실제 탭 UI — 내부 tab-button div (SAZO Chip lg 사이즈 기준: 40px 높이) */
 [role="tablist"] [data-component-part="tab-button"],
 [role="tablist"] > * > div {
     all: unset !important;
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
+    height: 40px !important;
+    padding: 0 16px !important;
     border-radius: 9999px !important;
-    padding: 4px 12px !important;
     border: none !important;
     background: transparent !important;
     color: #667085 !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
     font-weight: 500 !important;
-    line-height: 1.4 !important;
+    line-height: 1 !important;
     transition: all 0.15s ease !important;
     cursor: pointer !important;
     white-space: nowrap !important;
