@@ -85,6 +85,14 @@ a h2, a h3, a h4,
     margin-bottom: 1.5em !important;
 }
 
+/* 변경 로그 페이지 — Update 컴포넌트 내부 헤딩은 기본값 */
+[class*="Update"] h2, [class*="Update"] h3,
+[class*="update"] h2, [class*="update"] h3,
+[class*="changelog"] h2, [class*="changelog"] h3 {
+    margin-top: revert !important;
+    margin-bottom: revert !important;
+}
+
 /* 페이지 최상단 — frontmatter title이 별도 header로 렌더되는 경우 */
 .prose > h2:first-child,
 .prose > *:first-child + h2,
