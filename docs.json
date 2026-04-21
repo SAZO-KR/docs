@@ -8,6 +8,18 @@
     "dark": "#EB4666"
   },
   "favicon": "/favicon.svg",
+  "fonts": {
+    "heading": {
+      "family": "Pretendard Variable",
+      "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
+      "format": "woff2"
+    },
+    "body": {
+      "family": "Pretendard Variable",
+      "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
+      "format": "woff2"
+    }
+  },
   "navigation": {
     "tabs": [
       {
