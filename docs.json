@@ -142,6 +142,10 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "변경 로그",
+        "href": "/changelog"
       }
     ],
     "global": {
